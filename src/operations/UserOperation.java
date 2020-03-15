@@ -18,6 +18,14 @@ public class UserOperation {
     * */
   }
 
+  private void requestNewRoute() {
+    // Get Stops, time
+    // Validate if route exists for stops and time or not
+    // if bus exists for route and time for stops, inform - route exists
+    // if not, proceed to create an routeRequest to Admin
+
+  }
+
   private void requestForBusPass() {
     // --- > Writes to Assets.BusPass Manager
     // Take user details for buspass - Route ID, Timing

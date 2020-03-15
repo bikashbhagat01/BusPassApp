@@ -42,6 +42,15 @@ public class AdminOperation {
     */
   }
 
+  public void approveRoute() {
+
+    /*if route requests table empty, display no request found
+    * if route requests exist, show details to Admin
+    *
+    * if route exists for stops mentioned but time doesn't, then admin assigns a Bus to the route
+    * if route doesn't exist for then admin creates route and creates/updates bus for the timing
+    * */
+  }
   private void changeBusType() {
   /* Get the busId and new Type from Console
   * send the busId, field as [Type] and newValue as String to BusManager.update(busId, field, newValue)
