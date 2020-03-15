@@ -16,7 +16,7 @@ public class Driver {
     * 2. User --> takes to User LogIn
     * 3. Visitor --> takes to user operation
     *
-    *
+
     * Notes - No Admin and Visitor DB implementation decided yet
     *
     * */
