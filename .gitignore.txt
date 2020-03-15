@@ -1,5 +1,5 @@
 # ignore production files
-out/*
+out
 
 # ignore iml
 BusPassApp.iml
