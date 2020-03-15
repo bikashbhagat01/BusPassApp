@@ -48,7 +48,7 @@ public class AdminOperation {
     * if route requests exist, show details to Admin
     *
     * if route exists for stops mentioned but time doesn't, then admin assigns a Bus to the route
-    * if route doesn't exist for then admin creates route and creates/updates bus for the timing
+    * if route doesn't exists then admin creates route and creates/updates bus for the timing
     * */
   }
   private void changeBusType() {

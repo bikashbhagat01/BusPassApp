@@ -20,8 +20,8 @@ public class UserOperation {
 
   private void requestNewRoute() {
     // Get Stops, time
-    // Validate if route exists for stops and time or not
-    // if bus exists for route and time for stops, inform - route exists
+    // Validate if route exists for stops or not, then if bus exists for routeId and time or not
+    // if bus exists for routeId and time, inform - route exists
     // if not, proceed to create an routeRequest to Admin
 
   }
