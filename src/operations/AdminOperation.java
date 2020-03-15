@@ -32,6 +32,10 @@ public class AdminOperation {
 
   private void addRoute() {
  /* create a Route object by taking details from Console
+    stopName(s) taken from user is searched via StopManager.search
+    to get their stopIds, if no stopId found we call create StopManager(Stop Object via factory)
+    to create a Stop
+    pass these to factoryFor route to get a routeObject
        send the route object to RouteManager.create()
     */
   }
@@ -46,9 +50,16 @@ public class AdminOperation {
 
     /*if route requests table empty, display no request found
     * if route requests exist, show details to Admin
-    *
+    * if routeExists flag is true, assign routeId and timing to a bus
+    * Search for Stops using StopManager.seacrh() - if found assign
+    * Start and end as relevant StopIds
+    * If stops not found,  ask Admin if they want to create a Stop using StopManager and get a stopId
+    * or they want to deny
+    * If they deny, delete the routeRequest
+    * RouteManager.searchRoute(start,end), which searches for the set of Stops and returns a
+    * set of routeIds where the Stops fall in
     * if route exists for stops mentioned but time doesn't, then admin assigns a Bus to the route
-    * if route doesn't exists then admin creates route and creates/updates bus for the timing
+    * if route doesn't exist then admin creates route and creates/updates bus for the timing
     * */
   }
   private void changeBusType() {

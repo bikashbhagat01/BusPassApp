@@ -20,10 +20,16 @@ public class UserOperation {
 
   private void requestNewRoute() {
     // Get Stops, time
-    // Validate if route exists for stops or not, then if bus exists for routeId and time or not
-    // if bus exists for routeId and time, inform - route exists
-    // if not, proceed to create an routeRequest to Admin
-
+    // Search and save array of stopIds from StopManager.search()
+    //  if stopIds do not exist create a routeRequest to Admin by calling RouteRequest Manager
+    //  with routeExists flag as False
+    //
+    // Validate if route(s) exist(s) for stopIds or not, by searching in Route-Stops look-up table
+    // via RouteManager.search(start, end)
+    // if route Doesn't exist, proceed to create a routeRequest to Admin by calling RouteRequest Manager
+    // with routeExists flag as False
+    // if route exists and a bus exists time, inform route exists
+    // else, proceed to create a routeRequest to Admin with routeExists flag as True
   }
 
   private void requestForBusPass() {

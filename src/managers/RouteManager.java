@@ -4,7 +4,9 @@ import assets.Route;
 
 public class RouteManager {
   public void create(Route route) {
+
     // Creates sqlQuery from Route Object and calls QueryExecutor.executeQuery(sqlQuery)
+    // Creates sqlQuery to write routeId and stopIds into route - stop table
   }
 
   public void update() {
@@ -28,5 +30,15 @@ public class RouteManager {
   }
   public void delete() {
     // No requirements found
+  }
+
+  public int[] search(int start, int end){
+    /*
+    * Creates SQL Query to find routeIds which have start and end stopIds in
+    * route-stops look-up table
+    * Calls QueryExecutor.validateQuery
+    * */
+    int[] result = {21,23};
+    return result;
   }
 }
