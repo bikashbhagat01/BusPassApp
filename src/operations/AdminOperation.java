@@ -17,6 +17,9 @@ public class AdminOperation {
     // implementations of Cases
   private void addBus() {
     /* create a Bus object by taking details from Console
+      How will the admin enter the Primary ID
+      Bus busObj = getBusObject(busType,....)
+
        send the bus object to BusManager.create()
     */
   }

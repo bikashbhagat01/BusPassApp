@@ -10,8 +10,11 @@ public class Bus {
   private int busType; // Capacity of the bus
   private String vehicleNo;
 
-  public Bus(int busId) {
+  public Bus(int busId, int availability, int busType, String vehicleNo) {
     this.busId = busId;
+    this.availability = availability;
+    this.busType = busType;
+    this.vehicleNo = vehicleNo;
   }
 
   //  Setters and Getters to be added

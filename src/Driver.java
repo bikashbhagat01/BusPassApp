@@ -20,7 +20,10 @@ public class Driver {
     * Notes - No Admin and Visitor DB implementation decided yet
     *
     * */
+    String[] fields = {"Id", "Name", "Age"};
+    QueryExecutor.getInstance().executeSQL("select * from emp; ", fields);
 
+    System.out.println("End Of Query \n");
 
     Connection conn = ConnectDatabase.getConnection();
     Statement stmt = conn.createStatement();
@@ -29,6 +32,8 @@ public class Driver {
     // Using QueryExecutor
     String[] str = {"just Something"};
     QueryExecutor.getInstance().executeSQL("show tables",str);
+
+
 
     // Creating Unsigned ID in long using UUID
     long uniqueID = UUID.randomUUID().getLeastSignificantBits()& 0x00000000ffffffffL;

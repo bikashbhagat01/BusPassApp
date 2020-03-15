@@ -1,8 +1,10 @@
 package managers;
 
-public class RouteManager {
-  public void create() {
+import assets.Route;
 
+public class RouteManager {
+  public void create(Route route) {
+    // Creates sqlQuery from Route Object and calls QueryExecutor.executeQuery(sqlQuery)
   }
 
   public void update() {

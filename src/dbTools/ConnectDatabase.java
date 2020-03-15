@@ -11,7 +11,7 @@ public class ConnectDatabase {
   public static Connection getConnection() throws SQLException, ClassNotFoundException {
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
-      con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bus_mgmt_db?serverTimezone=UTC", "root", "");
+      con = DriverManager.getConnection("jdbc:mysql://localhost:3306/newDb?serverTimezone=UTC", "root", "");
 //      Statement statement = con.createStatement();
 //      ResultSet rs = statement.executeQuery("show databases;");
 //      System.out.println(rs);

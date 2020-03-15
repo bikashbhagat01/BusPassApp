@@ -6,7 +6,7 @@ public class BusPassManager {
     public void create(BusPass busPass) {
       /*
       Create SQL String for insert
-      call QueryExecutor for db inser
+      call QueryExecutor for db insert
       * **/
     }
 
