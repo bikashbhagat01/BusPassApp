@@ -17,9 +17,7 @@ public class AdminOperation {
     // implementations of Cases
   private void addBus() {
     /* create a Bus object by taking details from Console
-      How will the admin enter the Primary ID
-      Bus busObj = getBusObject(busType,....)
-
+      After Creating Bus Object, Confirm if route and timing is to be added or not
        send the bus object to BusManager.create()
     */
   }
@@ -36,7 +34,8 @@ public class AdminOperation {
     to get their stopIds, if no stopId found we call create StopManager(Stop Object via factory)
     to create a Stop
     pass these to factoryFor route to get a routeObject
-       send the route object to RouteManager.create()
+    Ask Admin if Route should be attached to a Bus or not
+    Send the route object to RouteManager.create()
     */
   }
 

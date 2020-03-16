@@ -1,8 +1,9 @@
 package managers;
 
 import assets.Route;
+import interfaces.Creatable;
 
-public class RouteManager {
+public class RouteManager implements Creatable<Route> {
   public void create(Route route) {
 
     // Creates sqlQuery from Route Object and calls QueryExecutor.executeQuery(sqlQuery)
@@ -34,9 +35,10 @@ public class RouteManager {
 
   public int[] search(int start, int end){
     /*
-    * Creates SQL Query to find routeIds which have start and end stopIds in
-    * route-stops look-up table
-    * Calls QueryExecutor.validateQuery
+    * Find Lists of Route IDs for each start StopId and EndStopUId from
+    * Route-Stop lookUp Table
+    * Find Common RouteIds from the table
+    * return the result list of routeIds
     * */
     int[] result = {21,23};
     return result;
