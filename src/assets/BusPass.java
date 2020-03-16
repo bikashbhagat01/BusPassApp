@@ -9,11 +9,12 @@ public class BusPass {
   private int routeId;
   private int timing;
 
-  public BusPass(int busPassId, int userId, int busId, int routeId) {
+  public BusPass(int busPassId, int userId, int busId, int routeId, int timing) {
     this.busPassId = busPassId;
     this.userId = userId;
     this.busId = busId;
     this.routeId = routeId;
+    this.timing = timing;
   }
 
   //  Setters and Getters to be added

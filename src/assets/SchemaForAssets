@@ -1,0 +1,24 @@
+
+Table Name ---- List of Columns
+===========================================================================
+bus ------------ busid, routeid, availability, timing, bustype, vehicleo
+# String  - vehicleno. Integer - Remaining
+
+buspass -------- buspassid, userid, busid, routeid, timing
+#  Integer - All
+
+feedback ------- feedbackid, comment, userid
+# String - comment. Integer - Remaining
+
+routestoplookup - routeid, stopid, id
+# Integer - All. id - is primary key generated through Auto-Increment
+
+routerequest ---- routerequestid, startstop, endstop, requesterid, routeexists, timing
+# Boolean - routeExists. Integer - Remaining
+
+Stop ------------ stopid, stopname
+# String - stopname. Integer - stopid
+
+User ------------ employeeid, fname, lname, email, contactno, emergencycontactno,
+                  emergencycontactname, bloodgroup, password
+# Integer - employeeid. String - Remaining

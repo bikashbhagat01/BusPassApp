@@ -1,6 +1,7 @@
 package managers;
 
 import assets.Route;
+import assets.RouteRequest;
 import interfaces.Creatable;
 
 public class RouteManager implements Creatable<Route> {
@@ -33,12 +34,21 @@ public class RouteManager implements Creatable<Route> {
     // No requirements found
   }
 
-  public int[] search(int start, int end){
+  public int[] searchForRoute(int start, int end){
     /*
     * Find Lists of Route IDs for each start StopId and EndStopUId from
     * Route-Stop lookUp Table
     * Find Common RouteIds from the table
     * return the result list of routeIds
+    * */
+    int[] result = {21,23};
+    return result;
+  }
+
+  public int[] searchForRoute(int stopId) {
+    /*
+    * Returns an array of RouteIds when searched against the provided stopId
+    * from Route-Stop LookUp Table
     * */
     int[] result = {21,23};
     return result;

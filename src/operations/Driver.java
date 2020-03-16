@@ -1,6 +1,7 @@
+package operations;
+
 import java.sql.SQLException;
 import java.util.Scanner;
-import operations.AdminLogin;
 
 public class Driver {
   public static void main(String[] args) throws SQLException, ClassNotFoundException {

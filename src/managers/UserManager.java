@@ -1,6 +1,6 @@
 package managers;
-
 import assets.User;
+import dbTools.IdGenerator;
 
 public class UserManager {
   public void create(User user) {
@@ -17,6 +17,7 @@ public class UserManager {
 
   public void read() {
     // No requirements found
+
   }
 
   public void delete() {

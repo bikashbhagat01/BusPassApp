@@ -6,14 +6,16 @@ import java.util.List;
 
 public class RouteRequest {
   private int routeRequestId;
-  private List<String> stops;
+  private int startStop;
+  private int endStop;
   private int requesterId;
   private boolean routeExists;
   private int timing;
 // timimg to be added on a bus by admin while route creation
-  public RouteRequest(int routeRequestId, List<String> stops, int requesterId, boolean routeExists) {
+  public RouteRequest(int routeRequestId, int startStop, int endStop, int requesterId, boolean routeExists, int timing) {
     this.routeRequestId = routeRequestId;
-    this.stops = stops;
+    this.startStop = startStop;
+    this.endStop = endStop;
     this.requesterId = requesterId;
     this.routeExists = routeExists;
   }

@@ -12,6 +12,8 @@ public class AdminOperation {
        4. Display Number of Buses of each Type
        5. Display timings and route for each bus
     */
+
+
   }
 
     // implementations of Cases
@@ -74,10 +76,10 @@ public class AdminOperation {
   }
 
   private void timingInfo() {
-    /* Create String Array of all fields required from bus- busId, timing, routeId
-        Stops is present in Route Table, route must be included as Dependent Table of the Query
-        Create String Array of fields required from DependentTable - [stops]
-    * Call the BusManager.read(fields[], dependentTable, dependentTableFields[])
+    /*
+        Fields to Display - RouteId, Stops, Time
+        Get RouteIds and timings from Buses. Find Stops for each routeId
+        Display all 3 attributes on Console
     */
   }
 }

@@ -8,7 +8,6 @@ public class Route {
   private int routeId;
   private int[] stopIds;
   // Create map of Stop to routeId for lookUp
-  private String routeName; // Only keeps " FirstStop - LastStop "
 
   public Route(int routeId, int[] stopIds) {
     this.routeId = routeId;

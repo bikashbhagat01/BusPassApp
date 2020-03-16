@@ -57,4 +57,19 @@ public class QueryExecutor {
     // If found return true
     return false;
   }
+
+  public int getQueryNumber(String sqlQuery) throws SQLException, ClassNotFoundException {
+    Connection conn = ConnectDatabase.getConnection();
+    Statement statement = conn.createStatement();
+    ResultSet resultSet = statement.executeQuery(sqlQuery);
+    if(resultSet.next()){
+      return resultSet.getInt(1);
+    }
+    return -1;
+  }
+
+  /**
+   * Create a QueryExecutor which returns a List of fields for an Sql Query
+   * Used to get lists and perform local operation in modules such as AdminOperation
+   * */
 }

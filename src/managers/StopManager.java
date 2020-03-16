@@ -8,7 +8,8 @@ public class StopManager {
     // Send sqlQuery to QueryExecutor to create and stop
   }
   public int search(String stopName) {
-    // returns stopId for searched stopName
-    return 1;
+    // returns stopId for searched stopName from stopTable
+    int stopId = 1;
+    return stopId;
   }
 }

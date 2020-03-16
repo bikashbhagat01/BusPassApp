@@ -1,5 +1,7 @@
 package assets;
 
+// hardCoded Admin login credentials
+
 public class Admin {
   private String adminId;
   private String password;
@@ -13,7 +15,6 @@ public class Admin {
       admin = new Admin();
       admin.adminId = "ADMIN";
       admin.password = "ADMIN";
-      return admin;
     }
     return admin;
   }
