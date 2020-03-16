@@ -18,5 +18,6 @@ public class RouteRequest {
     this.endStop = endStop;
     this.requesterId = requesterId;
     this.routeExists = routeExists;
+    this.timing = timing;
   }
 }
