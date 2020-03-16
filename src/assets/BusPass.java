@@ -9,7 +9,7 @@ public class BusPass {
   private int routeId;
   private int timing;
 
-  public BusPass(int busPassId, int userId, int busId, int routeId, int timing) {
+  public BusPass(int busPassId, int userId, int routeId, int busId, int timing) {
     this.busPassId = busPassId;
     this.userId = userId;
     this.busId = busId;

@@ -7,7 +7,7 @@ public class Feedback {
   private String comment;
   private int userId;
 
-  public Feedback(int feedbackId, String comment, int userId) {
+  public Feedback(int feedbackId, int userId, String comment) {
     this.feedbackId = feedbackId;
     this.comment = comment;
     this.userId = userId;
