@@ -1,13 +1,21 @@
 package operations;
 import assets.Admin;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 // AdminLogin , Singleton as Only 1 ADMIN is Hard-Coded
-
 public class AdminLogin {
+  // Set Hard-Coded values of ADMIN object to variables
   private String adminID = Admin.getAdminInstance().getAdminId();
   private String password = Admin.getAdminInstance().getPassword();
+
+  private static int loginTries = 0;
+  private final static int maxLoginTries = 5;
+
+  private Scanner sc = OperationFactory.getScannerInstance();
+
   private static AdminLogin adminLogin;
+
   private AdminLogin(){}
 
   public static AdminLogin getInstance() {
@@ -17,27 +25,37 @@ public class AdminLogin {
     return adminLogin;
   }
 
-  private void login(String adminId, String password) {
-      //  true --> calls Assets.Admin Operations Menu
-    if(adminId.trim().equalsIgnoreCase(this.adminID) && password.equals(this.password)) {
-      AdminOperation adminOperation = new AdminOperation();
-      adminOperation.showMenu();
+  public void showMenu() throws SQLException, ClassNotFoundException {
+    setLoginDetails();
+  }
+
+  private void login(String adminId, String password) throws SQLException, ClassNotFoundException {
+    if(adminId.trim().equals(this.adminID) && password.equals(this.password)) {
+      OperationFactory.getAdminOperationInstance().showMenu();
     } else {
       System.out.println("Incorrect Credentials Entered \n Please enter correct credentials : \n");
       setLoginDetails();
-      /* Redirect to Driver Menu - Feature to be implemented
-         Potential Solution - Moving main menu functionality to current package
-         Throw an Exception and call Driver in Catch
-        */
     }
   }
 
-  public void setLoginDetails() {
-    Scanner in = new Scanner(System.in);
+  private void setLoginDetails() throws SQLException, ClassNotFoundException {
+    // Get Admin credentials
+    loginTries += 1;
     System.out.println("Enter Login ID : \n");
-    String userId=in.next();
+    String userId=sc.next();
     System.out.println("Enter Password : \n");
-    String password=in.next();
-    login(userId, password);
+    String password=sc.next();
+    if(loginTries < maxLoginTries) {
+      login(userId, password);
+    } else {
+      System.out.println("Maximum Login Tries Exceeded! \n Returning to Home.");
+      loginTries = 0;
+      OperationFactory.getAppDriverInstance().initiate();
+    }
   }
 }
+
+/**
+ * operations/AppDriver.initiate() is used to be exit to Main menu
+ * Alternative - use try-catch to reflect to operations/AppDriver.initiate()
+ **/

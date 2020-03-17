@@ -4,11 +4,11 @@ package assets;
 
 public class User {
   private int employeeId;
-  private String fName;
-  private String lName;
+  private String firstName;
+  private String lastName;
   private String email;
   private String contactNo;
-  private String emergencyContactNumber;
+  private String emergencyContactNo;
   private String emergencyContactName;
   private String bloodGroup;
   private String password;
@@ -18,11 +18,11 @@ public class User {
               String emergencyContactName, String bloodGroup,
               String password) {
     this.employeeId = employeeId;
-    this.fName = fName;
-    this.lName = lName;
+    this.firstName = fName;
+    this.lastName = lName;
     this.email = email;
     this.contactNo = contactNo;
-    this.emergencyContactNumber = emergencyContactNumber;
+    this.emergencyContactNo = emergencyContactNumber;
     this.emergencyContactName = emergencyContactName;
     this.bloodGroup = bloodGroup;
     this.password = password;
@@ -30,5 +30,37 @@ public class User {
 
   public int getEmployeeId() {
     return employeeId;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getContactNo() {
+    return contactNo;
+  }
+
+  public String getEmergencyContactNo() {
+    return emergencyContactNo;
+  }
+
+  public String getEmergencyContactName() {
+    return emergencyContactName;
+  }
+
+  public String getBloodGroup() {
+    return bloodGroup;
+  }
+
+  public String getPassword() {
+    return password;
   }
 }

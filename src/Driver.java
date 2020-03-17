@@ -1,34 +1,14 @@
 import java.sql.SQLException;
-import java.util.Scanner;
-import operations.AdminLogin;
+import operations.AppDriver;
 
 public class Driver {
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
-
     /*MAIN CLASS ::
-    * SWitch Case Routine to as for User type
-    * 1. Admin --> takes to Admin LogIn
-    * 2. User --> takes to User LogIn
-    * 3. Visitor --> takes to user operation
-    *
-
-    * Notes - No Admin and Visitor DB implementation decided yet
-    *
+    * System is Initiated by calling initiate function
     * */
-
-
-    Scanner in = new Scanner(System.in);
-
-    while (true) {
-      System.out.println("1. Admin operations.Login\n2. User operations.Login\n3. Visitor\n4. Exit \n");
-      String choice = in.next();
-      switch (choice) {
-        case "1":
-          System.out.println("Enter Admin Credentials");
-          AdminLogin.getInstance().setLoginDetails();
-      }
-    }
+    AppDriver appDriver = new AppDriver();
+    appDriver.initiate();
   }
 }
 

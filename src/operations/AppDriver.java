@@ -3,11 +3,10 @@ package operations;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class Driver {
-  public static void main(String[] args) throws SQLException, ClassNotFoundException {
+public class AppDriver {
+  public void initiate() throws SQLException, ClassNotFoundException {
 
-
-    /*MAIN CLASS ::
+    /* System Initiate class ::
     * SWitch Case Routine to as for User type
     * 1. Admin --> takes to Admin LogIn
     * 2. User --> takes to User LogIn
@@ -18,18 +17,34 @@ public class Driver {
     *
     * */
 
-
-    Scanner in = new Scanner(System.in);
-
-    while (true) {
-      System.out.println("1. Admin operations.Login\n2. User operations.Login\n3. Visitor\n4. Exit \n");
-      String choice = in.next();
+    Scanner sc = OperationFactory.getScannerInstance();
+    boolean exitCode = false;
+    while (!exitCode) {
+      System.out.println("Welcome to Amazon's Employee BusPass Management Application");
+      System.out.println("\nSelect User Type Option :");
+      System.out.println("\n1. Admin \n2. User\n3. Visitor \n4. Exit \n");
+      String choice = sc.next();
       switch (choice) {
         case "1":
-          System.out.println("Enter Admin Credentials");
-          AdminLogin.getInstance().setLoginDetails();
+          System.out.println("Welcome Administrator!\n");
+          OperationFactory.getAdminLoginInstance().showMenu();
+          break;
+        case "2":
+          System.out.println("Welcome User!\n");
+          OperationFactory.getUserLoginInstance().showMenu();
+          break;
+        case "3":
+          System.out.println("\nWelcome Visitor!\n");
+          OperationFactory.getVisitorOperationInstance().showMenu();
+          break;
+        case "4":
+          exitCode = true;
+          break;
+        default:
+          System.out.println("Please Enter Valid Option");
       }
     }
+    System.out.println("Thank You For Using Amazon's Employee BusPass Management Application\n");
   }
 }
 

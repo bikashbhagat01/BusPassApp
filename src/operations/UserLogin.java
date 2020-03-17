@@ -2,67 +2,109 @@ package operations;
 
 import assets.AssetFactory;
 import assets.User;
+import dbTools.Validate;
 import java.sql.SQLException;
 import java.util.Scanner;
 import managers.UserManager;
 
 public class UserLogin {
-  Scanner in = new Scanner(System.in).useDelimiter("\n");
 
-  public void showMenu(){
-    // Switch Menu --> Existing, New or Exit
+  private final static int maxLoginTries = 5;
+  private static int loginTries = 0;
+  private Scanner sc = OperationFactory.getScannerInstance();
+
+  public void showMenu() throws SQLException, ClassNotFoundException {
     boolean exCode = false;
     String choice = "";
-    while(!exCode) {
-      System.out.println( "\n1. Existing User " +
-                          "\n2. New User" +
-                          "\n3. Exit\n");
-      choice = in.nextLine();
+    while (!exCode) {
+      System.out.println("\n1. Existing User " +
+              "\n2. New User" +
+              "\n3. Exit\n");
+      choice = sc.nextLine();
       switch (choice) {
-        case("1"):
+        case "1":
           setLoginDetails();
           break;
 
-        case("2"):
+        case "2":
           createAccount();
           break;
 
+        case "3":
+          exCode = true;
+          break;
 
+        default:
+          System.out.println("Please Enter Valid Option");
       }
     }
-  }
-  private void login(int userId, String password) throws SQLException, ClassNotFoundException {
-    // If the user and passoword exist in user table
-    if(Validate.validateUserPassword(userId, password)) {
-      UserOperation.showMenu(userId);
-    }
+    System.out.println("Returning to Main Menu");
+    OperationFactory.getAppDriverInstance().initiate();
   }
 
   private void createAccount() throws SQLException, ClassNotFoundException {
-    // use the validate class to validate if user exists or not
-    System.out.println("Enter Employee ID : \n");
-    int employeeId = in.nextInt();
-    if(Validate.validateUsername(employeeId)){
+    // Creates a User Account and sends to login page
+    System.out.println("Please Enter the below details as prompted. " +
+            "\n Press Enter to confirm entry\n ");
+    System.out.println("Employee ID : \n");
+    int employeeId = sc.nextInt();
+    boolean userAlreadyExists = Validate.validateUsername(employeeId);
+    if (userAlreadyExists) {
       System.out.println("User Id for " + employeeId + " already exists\n");
       showMenu();
-    } else {
-      /*Get USer details*/
-      User user = AssetFactory.getUserInstance(113322, "Cynitha",
-                                    "PV", "cyniuthd@amazon.com"
-                            , "9876578888", "gadagd",
-              "adadad", "B+", "xffagdajh");
-      System.out.println(user.getEmployeeId() + "has been created !");
-      UserManager.create(user); // Create a Record in the DB
     }
-    // Create a new user object if no user of same id exists
-    // Pass the user object to UserManager.create()
+    if (!userAlreadyExists) {
+      System.out.println("\n First Name : \n");
+      String firstName = sc.next();
+      System.out.println("\n Last Name : \n");
+      String lastName = sc.next();
+      System.out.println("\n Email-ID : \n");
+      String email = sc.next();
+      System.out.println("\n Contact No. : \n");
+      String contactNo = sc.next();
+      System.out.println("\n Emergency Contact No. : \n");
+      String emergencyContactNo = sc.next();
+      System.out.println("\n Emergency Contact Name : \n");
+      String emergencyContactName = sc.next();
+      System.out.println("\n BloodGroup : \n");
+      String bloodGroup = sc.next();
+      System.out.println("\n Password : \n");
+      String password = sc.next();
+
+      User user = AssetFactory.getUserInstance(employeeId, firstName, lastName,
+              email, contactNo, emergencyContactNo,
+              emergencyContactName, bloodGroup,
+              password);
+      UserManager.create(user);
+      System.out.println("Your Account with User ID : " + user.getEmployeeId() +
+              " has been created ! \n");
+      System.out.println("Please Login with your User ID and Password below : \n");
+      setLoginDetails();
+    }
   }
 
-  public void setLoginDetails() throws SQLException, ClassNotFoundException {
+  private void login(int userId, String password) throws SQLException, ClassNotFoundException {
+    // If the user and password exist, redirect to UserOperations
+    if (Validate.validateUserWithPassword(userId, password)) {
+      OperationFactory.getUserOperationInstance().showMenu(userId);
+    } else {
+      System.out.println("\nIncorrect Credentials Entered \n Please enter correct credentials : \n");
+      setLoginDetails();
+    }
+  }
+
+  private void setLoginDetails() throws SQLException, ClassNotFoundException {
+    loginTries += 1;
     System.out.println("Enter Employee ID : \n");
-    int userId=in.nextInt();
+    int userId = sc.nextInt();
     System.out.println("Enter Password : \n");
-    String password=in.next();
-    login(userId, password);
+    String password = sc.next();
+    if (loginTries < maxLoginTries) {
+      login(userId, password);
+    } else {
+      System.out.println("Maximum Login Tries Exceeded! \n Returning to Home.");
+      loginTries = 0;
+      OperationFactory.getAppDriverInstance().initiate();
+    }
   }
 }
