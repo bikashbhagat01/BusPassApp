@@ -1,0 +1,64 @@
+===== Bustable ====
+create table bus (busid int NOT NULL PRIMARY KEY, routeid int, availability int,
+                  timing int, bustype int, vehicleno varchar(20));
+
+==== BussPass ===
+create table busspass(busspassid int NOT NULL PRIMARY KEY,userid int NOT NULL,
+                      busid int, routeid int, timing int,
+                      FOREIGN KEY(userid) REFERENCES user(userid));
+
+=== Feedback ===
+create table feedback(feedbackid int NOT NULL PRIMARY KEY, comments varchar(1000),
+                      userid int, FOREIGN KEY(userid) REFERENCES user(userid));
+
+=== RouteLookup ===
+create table routestoplookup(id INT NOT NULL PRIMARY KEY, routeid int, stopid int);
+
+=== RouteRequest ===
+create table routerequest(routerequestid int NOT NULL PRIMARY KEY, startstop int, endstop int,
+                            requesterid int, routeexists boolean, timing int);
+
+=== stop ===
+create table stop(stopid int NOT NULL PRIMARY KEY, stopname varchar(20));
+
+=== user ===
+create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50), lname varchar(50),
+                  email varchar(50), contactno int, emergencycontactno int,
+                  emergencycontactname varchar(50), bloodgroup varchar(20), password varchar(50));
+
+
+
+For reference:
+=================
+
+show databases;
+use bvino;
+show tables;
+
+create table idgenerator(objectname varchar(40), latestid int);
+
+create table bus (busid int NOT NULL PRIMARY KEY, routeid int, availability int,
+                  timing int, bustype int, vehicleno varchar(20));
+
+create table busspass(busspassid int NOT NULL PRIMARY KEY,userid int,
+                      busid int, routeid int, timing int,
+                      FOREIGN KEY(userid) REFERENCES user(userid));
+
+create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50),
+                  lname varchar(50), email varchar(50), contactno int,
+                  emergencycontactno int, emergencycontactname varchar(50),
+                  bloodgroup varchar(20), password varchar(50));
+
+create table feedback(feedbackid int NOT NULL PRIMARY KEY, comments varchar(1000),
+                      userid int, FOREIGN KEY(userid) REFERENCES user(userid));
+
+create table routestoplookup(id INT NOT NULL PRIMARY KEY, routeid int, stopid int);
+
+create table routerequest(routerequestid int NOT NULL PRIMARY KEY, startstop int, endstop int,
+                          requesterid int, routeexists boolean, timing int);
+
+create table stop(stopid int NOT NULL PRIMARY KEY, stopname varchar(20));
+
+create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50), lname varchar(50),
+                  email varchar(50), contactno int, emergencycontactno int,
+                  emergencycontactname varchar(50), bloodgroup varchar(20), password varchar(50));
