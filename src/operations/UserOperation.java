@@ -2,7 +2,7 @@ package operations;
 
 public class UserOperation {
 
-  public void showMenu(String userId) {
+  public static void showMenu(int userId) {
     // Switch Case menu which calls user functions
   }
 

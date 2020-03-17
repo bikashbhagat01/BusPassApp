@@ -10,5 +10,6 @@ public class VisitorOperation {
 
   public void displaySeatAvailability() {
     /* Call SeatManager.displaySeatAvailabilityPerRoute
-    */  }
+    */
+  }
 }

@@ -52,7 +52,7 @@ create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50),
 create table feedback(feedbackid int NOT NULL PRIMARY KEY, comments varchar(1000),
                       userid int, FOREIGN KEY(userid) REFERENCES user(userid));
 
-create table routestoplookup(id INT NOT NULL PRIMARY KEY, routeid int, stopid int);
+create table routestoplookup(id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, routeid int, stopid int);
 
 create table routerequest(routerequestid int NOT NULL PRIMARY KEY, startstop int, endstop int,
                           requesterid int, routeexists boolean, timing int);

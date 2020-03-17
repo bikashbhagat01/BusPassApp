@@ -3,7 +3,7 @@ import assets.User;
 import dbTools.IdGenerator;
 
 public class UserManager {
-  public void create(User user) {
+  public static void create(User user) {
   /* Create sqlQuery to insert user details from user object
   *  Send the sqlQuery to QueryExecutor,executeQuery(sqlQuery)
   * */

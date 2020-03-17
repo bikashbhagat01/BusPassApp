@@ -27,4 +27,8 @@ public class User {
     this.bloodGroup = bloodGroup;
     this.password = password;
   }
+
+  public int getEmployeeId() {
+    return employeeId;
+  }
 }

@@ -17,6 +17,10 @@ public class Bus {
     this.vehicleNo = vehicleNo;
   }
 
+  public int getBusId() {
+    return busId;
+  }
+
   //  Setters and Getters to be added
   //  Bus can only be created with a valid key
 

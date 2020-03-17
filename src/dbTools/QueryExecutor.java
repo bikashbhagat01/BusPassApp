@@ -26,8 +26,12 @@ public class QueryExecutor<T> {
   public void executeSQL(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectDatabase.getConnection();
     Statement statement = conn.createStatement();
-    ResultSet resultSet = statement.executeQuery(sqlQuery);
-    System.out.println(sqlQuery + " Success!" + resultSet.toString()); // For test purpose
+    int result = statement.executeUpdate(sqlQuery);
+    if (result != 0) {
+      System.out.println(sqlQuery + " Success!" + result);
+    } else {
+      System.out.println(sqlQuery + " Fail!" + result);
+    }
   }
 
   // Proposed implementation, Executes the Query as well as prints the result table, For Reads
@@ -55,9 +59,9 @@ public class QueryExecutor<T> {
     Connection conn = ConnectDatabase.getConnection();
     Statement statement = conn.createStatement();
     ResultSet resultSet = statement.executeQuery(sqlQuery);
-    // ResultSet should not be empty
-    // Condition to check if any result is found or not
-    // If found return true
+    if(resultSet.next()) {
+      return true;
+    }
     return false;
   }
 

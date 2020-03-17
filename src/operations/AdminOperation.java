@@ -2,6 +2,11 @@ package operations;
 
 // All operations that can be used by the Admin
 
+import assets.AssetFactory;
+import assets.Bus;
+import java.sql.SQLException;
+import managers.BusManager;
+
 public class AdminOperation {
 
   public void showMenu() {
@@ -12,14 +17,22 @@ public class AdminOperation {
        4. Display Number of Buses of each Type
        5. Display timings and route for each bus
     */
-
+    boolean exCode = false;
+    while(!exCode){
+      System.out.println( "1. Add Or remove Bus\n" +
+                          "2. Add Or remove Route\n" +
+                          "3. Change type of a Bus\n" +
+                          "4. Display Number of Buses of each Type\n" +
+                          "5. Display timings and route for each bus\n");
+    }
 
   }
 
     // implementations of Cases
-  private void addBus() {
+  private void addBus() throws SQLException, ClassNotFoundException {
     /* create a Bus object by taking details from Console
       After Creating Bus Object, Confirm if route and timing is to be added or not
+
        send the bus object to BusManager.create()
     */
   }
