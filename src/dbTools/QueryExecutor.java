@@ -76,7 +76,6 @@ public class QueryExecutor<T> {
     Statement statement = conn.createStatement();
     ResultSet resultSet = statement.executeQuery(sqlQuery);
     List<Integer> resultArray = new ArrayList<>();
-    T t;
     if (!resultSet.next()) {
       return resultArray;
     } else {
