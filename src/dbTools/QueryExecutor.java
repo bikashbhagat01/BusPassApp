@@ -4,15 +4,19 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 // Singleton to execute queries related to DBs, received from DB Managers
 // Only SQL Query Executor linked to DB
-public class QueryExecutor {
+public class QueryExecutor<T> {
   private static QueryExecutor queryExecutor;
-  private QueryExecutor() { }
+
+  private QueryExecutor() {
+  }
 
   public static QueryExecutor getInstance() {
-    if ( queryExecutor == null) {
+    if (queryExecutor == null) {
       queryExecutor = new QueryExecutor();
     }
     return queryExecutor;
@@ -32,10 +36,10 @@ public class QueryExecutor {
     Statement statement = conn.createStatement();
     ResultSet resultSet = statement.executeQuery(sqlQuery);
     System.out.println(resultSet);
-    for(String field : fields) {
+    for (String field : fields) {
       System.out.print(field + " ");
     }
-    if(!resultSet.next()){
+    if (!resultSet.next()) {
       System.out.println("record not found");
     } else {
       while (resultSet.next()) {
@@ -45,7 +49,6 @@ public class QueryExecutor {
       }
       System.out.println();
     }
-    conn.close();
   }
 
   public boolean validateQuery(String sqlQuery) throws SQLException, ClassNotFoundException {
@@ -62,14 +65,26 @@ public class QueryExecutor {
     Connection conn = ConnectDatabase.getConnection();
     Statement statement = conn.createStatement();
     ResultSet resultSet = statement.executeQuery(sqlQuery);
-    if(resultSet.next()){
+    if (resultSet.next()) {
       return resultSet.getInt(1);
     }
     return -1;
   }
 
-  /**
-   * Create a QueryExecutor which returns a List of fields for an Sql Query
-   * Used to get lists and perform local operation in modules such as AdminOperation
-   * */
-}
+  public List<Integer> getQueryList(String sqlQuery) throws SQLException, ClassNotFoundException {
+    Connection conn = ConnectDatabase.getConnection();
+    Statement statement = conn.createStatement();
+    ResultSet resultSet = statement.executeQuery(sqlQuery);
+    List<Integer> resultArray = new ArrayList<>();
+    T t;
+    if (!resultSet.next()) {
+      return resultArray;
+    } else {
+      while (resultSet.next()) {
+        resultArray.add(resultSet.getInt(1));
+      }
+    }
+    return resultArray;
+    }
+  }
+
