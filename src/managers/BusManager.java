@@ -3,12 +3,12 @@ package managers;
 import assets.Bus;
 
 public class BusManager {
-  public void create(Bus bus) {
-      // Create a query
-      // Call QueryExecutor(sqlQuery)
+  public static void create(Bus bus) {
+
+
   }
 
-  public void update(int busId, String field, int newValue) {
+  public static void update(int busId, String field, int newValue) {
     /*
     * Create SQL Query to update field of busId to newValue
     * Call QueryExecutor(sqlQuery)

@@ -48,7 +48,7 @@ public class UserLogin {
             "\n Press Enter to confirm entry\n ");
     System.out.println("Employee ID : \n");
     int employeeId = sc.nextInt();
-    boolean userAlreadyExists = Validate.validateUsername(employeeId);
+    boolean userAlreadyExists = Validate.isValidUser(employeeId);
     if (userAlreadyExists) {
       System.out.println("User Id for " + employeeId + " already exists\n");
       showMenu();
@@ -85,7 +85,7 @@ public class UserLogin {
 
   private void login(int userId, String password) throws SQLException, ClassNotFoundException {
     // If the user and password exist, redirect to UserOperations
-    if (Validate.validateUserWithPassword(userId, password)) {
+    if (Validate.isValidUserPassword(userId, password)) {
       OperationFactory.getUserOperationInstance().showMenu(userId);
     } else {
       System.out.println("\nIncorrect Credentials Entered \n Please enter correct credentials : \n");

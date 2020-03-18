@@ -14,6 +14,14 @@ public class Route {
     this.stopIds = stopIds;
   }
 
+  public int[] getStops() {
+    return new int[0];
+  }
+
+  public int getRouteId() {
+    return routeId;
+  }
+
   //  Setters and Getters to be added
   //  Route can only be created with a set of stops and a routeId
 }

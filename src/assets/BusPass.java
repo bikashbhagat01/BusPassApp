@@ -17,6 +17,9 @@ public class BusPass {
     this.timing = timing;
   }
 
-  //  Setters and Getters to be added
+  public int getBusPassId() {
+    return busPassId;
+  }
+//  Setters and Getters to be added
   //  BusPass can only be created with a valid key, user and busId
 }
