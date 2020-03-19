@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class BusPassManager {
-  public void create() throws ClassNotFoundException, SQLException {
+  public static void create() throws ClassNotFoundException, SQLException {
       /*
       Create SQL String for insert
       call QueryExecutor for db insert

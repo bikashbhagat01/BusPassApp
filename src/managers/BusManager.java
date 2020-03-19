@@ -1,18 +1,20 @@
 package managers;
 
 import assets.Bus;
+import dbTools.QueryExecutor;
+import java.sql.SQLException;
 
 public class BusManager {
+  private static String sqlQuery;
   public static void create(Bus bus) {
-
 
   }
 
-  public static void update(int busId, String field, int newValue) {
-    /*
-    * Create SQL Query to update field of busId to newValue
-    * Call QueryExecutor(sqlQuery)
-    * */
+  public static void update(int busId, String field, int newValue)
+          throws SQLException, ClassNotFoundException {
+    /* Updates field with new value */
+    sqlQuery = "update bus set " + field + "= " + newValue + " where busid = " + busId;
+    QueryExecutor.getInstance().executeSQL(sqlQuery);
   }
 
   public void read() {
@@ -30,15 +32,7 @@ public class BusManager {
      * */
   }
 
-  public void read(String[] fields, String dependentTable, String[] dependentFieldNames) {
-    /*
-     * Create SQL Query to read all fields from Bus and DependentTable
-     * Create new Fields with all combined results fields
-     * Call QueryExecutor(sqlQuery, newFields[])
-     * */
-  }
-
-  public void delete(String busId) {
+  public static void delete(int busId) {
   /*create SQL Query to delete the BusId from bus table
     * */
   }

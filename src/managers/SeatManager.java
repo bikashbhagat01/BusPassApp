@@ -44,10 +44,8 @@ public class SeatManager {
       newAvailability=resultSet.getInt(2)-1;
       PreparedStatement pstmt1 = conn.prepareStatement("UPDATE bus SET avaibility =?," +
               "vehicleno=? where busid=?");
-
       pstmt1.setInt(1, newAvailability);
       pstmt1.setInt(2, busBooked);
-
       pstmt1.executeUpdate();
       return busBooked;
     }

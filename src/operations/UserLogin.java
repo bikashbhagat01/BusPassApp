@@ -68,9 +68,26 @@ public class UserLogin {
       String emergencyContactName = sc.next();
       System.out.println("\n BloodGroup : \n");
       String bloodGroup = sc.next();
-      System.out.println("\n Password : \n");
-      String password = sc.next();
-
+      boolean exitCode = false;
+      String password = "";
+      while(!exitCode) {
+        System.out.println("\n Password : \n");
+        password = sc.next();
+        if (!Validate.isValidPassword(password)) {
+          System.out.println("Please Enter a Valid password :" +
+                  "\n 1. A password must have at least eight characters.\n" +
+                  " 2. A password consists of only letters and digits.\n" +
+                  " 3. A password must contain at least two digits \n");
+        } else {
+          System.out.println("\n Password Again: \n");
+          String passwordConfirm = sc.next();
+          if(!password.equals(passwordConfirm)) {
+            System.out.println("Both Passwords do not match");
+          } else {
+            exitCode = true;
+          }
+        }
+      }
       User user = AssetFactory.getUserInstance(employeeId, firstName, lastName,
               email, contactNo, emergencyContactNo,
               emergencyContactName, bloodGroup,

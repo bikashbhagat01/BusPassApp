@@ -22,11 +22,13 @@ public class UserManager {
     QueryExecutor.getInstance().executeSQL(sqlQuery);
   }
 
-  public void update(int userId, String[] fields, String[] newValues) {
-    /* Create query to update the listed fields of the userId
-    *  send the query to QueryExecutor.executeQuery(sqlQuery)
-    * */
+  public static void update(int employeeId, String field, String newValue)
+          throws SQLException, ClassNotFoundException {
+    /* Updates field with new value */
+    sqlQuery = "update user set " + field + "= " + newValue + " where employeeid = " + employeeId;
+    QueryExecutor.getInstance().executeSQL(sqlQuery);
   }
+
 
   public void read() {
     // No requirements found

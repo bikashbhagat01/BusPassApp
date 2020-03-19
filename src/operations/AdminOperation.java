@@ -4,11 +4,15 @@ package operations;
 
 import assets.AssetFactory;
 import assets.Bus;
+import assets.Route;
 import dbTools.QueryExecutor;
+import dbTools.Validate;
 import java.sql.SQLException;
 import java.util.Scanner;
 import managers.BusManager;
+import managers.RouteManager;
 import managers.SeatManager;
+import managers.StopManager;
 
 public class AdminOperation {
 
@@ -21,10 +25,11 @@ public class AdminOperation {
     while(!exCode){
       System.out.println( "\n1. Add Or remove Bus\n" +
                           "2. Add Or remove Route\n" +
-                          "3. Change type of a Bus\n" +
-                          "4. Display Number of Buses of each Type\n" +
-                          "5. Display timings and route for each bus\n" +
-                          "6. Exit to Main Menu");
+                          "3. Assign a Bus to Route" +
+                          "4. Change type of a Bus\n" +
+                          "5. Display Number of Buses of each Type\n" +
+                          "6. Display timings and route for each bus\n" +
+                          "7. Exit to Main Menu");
       choice = sc.nextLine();
       switch (choice) {
         case "1":
@@ -34,15 +39,17 @@ public class AdminOperation {
           addOrRemoveRoute();
           break;
         case "3":
+          addBusToRoute();
+        case "4":
           changeBusType();
           break;
-        case "4":
+        case "5":
           displayBusCount("bustype");
           break;
-        case "5":
+        case "6":
           displayBusTimingsAndRoute();
           break;
-        case "6":
+        case "7":
           exCode = true;
           break;
         default:
@@ -53,12 +60,34 @@ public class AdminOperation {
     OperationFactory.getAppDriverInstance().initiate();
   }
 
-  private void addOrRemoveRoute() {
+  private void addOrRemoveRoute() throws SQLException, ClassNotFoundException {
+    System.out.println("Please Select an Option : \n");
+    System.out.println("1. Add a New Route\n2. Remove an Existing Route\n" +
+            "\n3. Return to Admin Menu");
+    boolean exitCode = false;
+    while(!exitCode) {
+      switch (sc.next()) {
+        case "1":
+          addRoute();
+          break;
+        case "2":
+          removeRoute();
+          break;
+        case "3":
+          exitCode = true;
+          break;
+        default:
+          System.out.println("Please Enter Valid Option\n");
+      }
+      System.out.println("Returning to Admin Menu");
+      showMenu();
+    }
   }
 
   private void addOrRemoveBus() throws SQLException, ClassNotFoundException {
     System.out.println("Please Select an Option : \n");
-    System.out.println("1. Add a Bus\n2. Remove a Bus\n3. Return to Admin Menu");
+    System.out.println("1. Add a New Bus\n2. Remove an Existing Bus\n" +
+            "\n3. Return to Admin Menu");
     boolean exitCode = false;
     while(!exitCode) {
       switch (sc.next()) {
@@ -84,7 +113,6 @@ public class AdminOperation {
      * send the busId, field as [Type] and newValue as String to BusManager.update(busId, field, newValue)
      * */
     System.out.println("Enter Route Id");
-
     int routeid = sc.nextInt();
     String sql="SELECT * from bus where routeid="+routeid;
     QueryExecutor query = QueryExecutor.getInstance();
@@ -95,8 +123,7 @@ public class AdminOperation {
       int busid = sc.nextInt();
 
       String sql1="SELECT * from bus where busid="+busid;
-      if(query.validateQuery(sql))
-      {
+      if(query.validateQuery(sql)) {
         System.out.println("Enter BusType [Number Of Seats]");
         int bustype = sc.nextInt();
         System.out.println("Enter Vehicle No");
@@ -108,78 +135,113 @@ public class AdminOperation {
       else {
         System.out.println("Bus Not Found");
       }
-
     }
     else {
       System.out.println("Route Not Found");
     }
   }
-  private void addBus() throws SQLException, ClassNotFoundException {
-    /* create a Bus object by taking details from Console
-      After Creating Bus Object, Confirm if route and timing is to be added or not
-       send the bus object to BusManager.create()
-    */
+  private boolean addBus() throws SQLException, ClassNotFoundException {
+    // create a Bus object by taking details from Console
     System.out.println("Please Enter New Bus Details Below :\n");
     System.out.println("Vehicle Number:\n");
     String vehicleNo = sc.next();
+    if(Validate.isPresent("bus","vehicleno", vehicleNo)){
+      System.out.println(" Vehicle already Assigned to different BusId ");
+      return false;
+    }
     System.out.println("Bus Type [Capacity/Number of Seats]\n");
     int busType = sc.nextInt();
     Bus newBus = AssetFactory.getBusInstance(busType, busType, vehicleNo);
-    System.out.println("Would you like to add a Route and timing for this bus? " +
-            "Press 'Y' to confirm\n");
-    String choice = sc.next();
-    if (choice.equalsIgnoreCase("y")) {
-      System.out.println("Route ID:");
-      int routeId = sc.nextInt();
-      newBus.setRouteId(routeId);
-      System.out.println("Start Timing [in 24 hour format separated by : Or / or -]:\n");
-      String timingString = sc.next();
-      int timingInMinutes = convertIntoMinutes(timingString);
-      newBus.setBusType(busType);
-      newBus.setAvailability(busType);
-      BusManager.create(newBus);
-      System.out.println("Your new Bus with the below details has been created:\n");
-      System.out.println("Bus ID: " + newBus.getBusId() + " Bus Type: "+ newBus.getBusType()
-                      + " Route Id: " + newBus.getRouteId() + " Vehicle No: " + newBus.getVehicleNo() +
-                        " Start Time: " + newBus.getTiming());
-  } else {
-      BusManager.create(newBus);
-      System.out.println("Your new Bus with the below details has been created:\n");
-      System.out.println("Bus ID: " + newBus.getBusId() + " Bus Type: "+ newBus.getBusType()
-              + " Vehicle No: " + newBus.getVehicleNo());
-    }
+    BusManager.create(newBus);
+    System.out.println("Your new Bus with the below details has been created:\n");
+    System.out.println("Bus ID: " + newBus.getBusId() + " Bus Type: "+ newBus.getBusType()
+            + " Vehicle No: " + newBus.getVehicleNo());
+    return true;
   }
-  // implementations of Cases
 
   private int convertIntoMinutes(String timingString) {
     String[] timingArray = timingString.split(("[/:-]"));
     int hourPart = Integer.parseInt(timingArray[0]);
     int minutePart = Integer.parseInt(timingArray[1]);
-
     return (hourPart*60) + minutePart;
   }
 
-  private void removeBus() {
-    /*  Get the busId from Console
-        send the busId to BusManager.delete()
-    */
+  private boolean removeBus() throws SQLException, ClassNotFoundException {
+    // Checks if Bus Id exists or not. If yes removed it, else returns to main menu
+    System.out.println("Please enter Bus Id to remove : \n");
+    int removedBus = sc.nextInt();
+    String checkBus = "select * from bus where busid = " + removedBus;
+    if(!Validate.isPresent("bus", "busid", removedBus)) {
+      System.out.println("Invalid BusId entered \nReturning to previous Menu");
+      return false;
+    }
+    BusManager.delete(removedBus);
+    System.out.println("Bus : " + removedBus + " has been removed!");
+    return true;
   }
 
-  private void addRoute() {
- /* create a Route object by taking details from Console
-    stopName(s) taken from user is searched via StopManager.search
-    to get their stopIds, if no stopId found we call create StopManager(Stop Object via factory)
-    to create a Stop
-    pass these to factoryFor route to get a routeObject
-    Ask Admin if Route should be attached to a Bus or not
-    Send the route object to RouteManager.create()
-    */
+  private void addRoute() throws SQLException, ClassNotFoundException {
+  // Takes StopNames, validates them and creates Route record.
+    System.out.println("Pleas Enter New Route Details below :");
+    System.out.println("Number of Stops:\n");
+    int stopCount = sc.nextInt();
+    int[] stops = new int[stopCount];
+    String stopName = "";
+    int count = 0;
+    System.out.println("Stops [From StartStop to EndStop]\n");
+    while(count < stopCount){
+      System.out.println("Enter Stop Name. : " + (count+1));
+      stopName = sc.next();
+      if(Validate.isValidStopName(stopName)) {
+        stops[count] = StopManager.getStopIdForName(stopName);
+        ++count;
+      } else {
+        System.out.println("No such stop name found\n Please enter Valid Stop Name\n");
+      }
+    }
+    Route newRoute = AssetFactory.getRouteInstance(stops);
+    RouteManager.create(newRoute);
+
+    System.out.println("New Route with Route ID : " + newRoute.getRouteId() + "has been created");
+    System.out.println("Returning to Bus menu.");
   }
 
-  private void removeRoute() {
-  /*  Get the routeId from Console
-      send the routeId to RouteManager.delete()
-    */
+  private boolean removeRoute() throws SQLException, ClassNotFoundException {
+    // Checks if Route Id exists or not. If yes, remove from route table and all buses linked to it.
+    System.out.println("Please enter Route Id to remove : \n");
+    int removedRouteId = sc.nextInt();
+    if(!Validate.isPresent("routestoplookup" +
+            "", "busid", removedRouteId)) {
+      System.out.println("Invalid BusId entered \nReturning to previous Menu");
+      return false;
+    }
+    BusManager.delete(removedRouteId);
+    System.out.println("Bus : " + removedRouteId + " has been removed!");
+    return true;
+  }
+
+  private boolean addBusToRoute() throws SQLException, ClassNotFoundException {
+    System.out.println("Enter details :");
+    System.out.println("Route ID:");
+    int routeId = sc.nextInt();
+    if(!Validate.isPresent("route","routeid",routeId)) {
+      System.out.println("Route ID not found. Please create a Route from Admin Menu");
+      return false;
+    }
+    System.out.println("Bus Id : \n");
+    int busId = sc.nextInt();
+    if(!Validate.isPresent("bus","busid", busId)){
+      System.out.println("Bus ID not found. Please create a Bus from Bus Menu");
+      return false;
+    }
+    System.out.println("Start Timing [in 24 hour format separated by : Or / or -]:\n");
+    String timingString = sc.next();
+    int timeInMinutes = convertIntoMinutes(timingString);
+    BusManager.update(busId, "routeid", routeId);
+    BusManager.update(busId,"timing", timeInMinutes);
+    System.out.println("Route : " + routeId + " & timing " + timingString +
+            " has Been added for bus : " + busId);
+    return true;
   }
 
   public void approveRoute() {
@@ -198,14 +260,15 @@ public class AdminOperation {
     * */
   }
 
-    
   private void displayBusTimingsAndRoute() {
+  // Define Query for finding BusID, RouteId, Timing and stops
   }
 
-  private void displayBusCount(String criteria) {
-    /*  Fields to Display - RouteId, Stops, Time
-        Get RouteIds and timings from Buses. Find Stops for each routeId
-        Display all 3 attributes on Console
-    */
+  private void displayBusCount(String criteria) throws SQLException, ClassNotFoundException {
+    // Executes Query to find Bus Type and their count
+    String sqlQuery = "select " + criteria + ",count(*) " + "from bus group by " + criteria +
+            " order by " + criteria + " desc;";
+    String[] fields = {"Bus Type", "Number of Buses"};
+    QueryExecutor.getInstance().executeSQL(sqlQuery,fields);
   }
 }

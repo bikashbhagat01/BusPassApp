@@ -7,9 +7,9 @@ import assets.Route;
 import dbTools.QueryExecutor;
 import interfaces.Creatable;
 
-public class RouteManager implements Creatable<Route> {
-  String sql;
-  public void create(Route route) throws SQLException, ClassNotFoundException {
+public class RouteManager {
+  static String sql;
+  public static void create(Route route) throws SQLException, ClassNotFoundException {
 
     // Creates sqlQuery from Route Object and calls QueryExecutor.executeQuery(sqlQuery)
     // Creates sqlQuery to write routeId and stopIds into route - stop table
