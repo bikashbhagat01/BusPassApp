@@ -20,6 +20,18 @@ public class BusPass {
   public int getBusPassId() {
     return busPassId;
   }
+
+  public String getTableName() {
+    // For a Given Attribute Name, Returns the Column name from Table
+    return "buspass";
+  }
+
+  public String getColumnName(String attribute) {
+    if(attribute.trim().equalsIgnoreCase("userid")){
+      return "userid";
+    }
+    return "";
+  }
 //  Setters and Getters to be added
   //  BusPass can only be created with a valid key, user and busId
 }

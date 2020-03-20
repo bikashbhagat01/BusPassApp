@@ -125,12 +125,12 @@ public class AdminOperation {
       String sql1="SELECT * from bus where busid="+busid;
       if(query.validateQuery(sql)) {
         System.out.println("Enter BusType [Number Of Seats]");
-        int bustype = sc.nextInt();
+        int busType = sc.nextInt();
         System.out.println("Enter Vehicle No");
-        int vehicleno = sc.nextInt();
+        int vehicleNo = sc.nextInt();
 
         SeatManager update= SeatManager.getInstance();
-        update.updateSeatType(bustype, busid, vehicleno);
+        update.updateSeatType(busType, busid, vehicleNo);
       }
       else {
         System.out.println("Bus Not Found");

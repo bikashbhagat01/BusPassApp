@@ -4,7 +4,7 @@ public class VisitorOperation {
   public void showMenu(){
     // Available Routes, SeatAvailability, Exit
   }
-  public void viewRoutes() {
+  public void displayBusTimingsAndRoute() {
     // Calls the RouteManager.read()
   }
 

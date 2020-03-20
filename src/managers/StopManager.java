@@ -6,9 +6,6 @@ import java.sql.SQLException;
 
 public class StopManager {
 
-  public void create(Stop stop) {
-    // Send sqlQuery to QueryExecutor to create and stop
-  }
 
   public static int getStopIdForName(String stopName) throws SQLException, ClassNotFoundException {
     // returns stopId for searched stopName from stopTable

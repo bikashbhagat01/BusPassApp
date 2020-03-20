@@ -3,6 +3,7 @@ package operations;
 import dbTools.Validate;
 import java.sql.SQLException;
 import java.util.Scanner;
+import managers.BusPassManager;
 import managers.UserManager;
 
 public class UserOperation {
@@ -150,13 +151,14 @@ public class UserOperation {
     // else, proceed to create a routeRequest to Admin with routeExists flag as True
   }
 
-  private void requestForBusPass() {
+  private void requestForBusPass() throws SQLException, ClassNotFoundException {
     // --- > Writes to Assets.BusPass Manager
     // Take user details for buspass - Route ID, Timing
     // Validate BusPass is already with User or Not
     // Validate Seat Availability for the route and timing
     // Create a bussPass Object
     // send object to busPassManager.create()
+    BusPassManager.create();
   }
 
   private void provideFeedback() {
