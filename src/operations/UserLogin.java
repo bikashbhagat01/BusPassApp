@@ -2,7 +2,7 @@ package operations;
 
 import assets.AssetFactory;
 import assets.User;
-import dbTools.Validate;
+import dbTools.Validator;
 import java.sql.SQLException;
 import java.util.Scanner;
 import managers.UserManager;
@@ -48,7 +48,7 @@ public class UserLogin {
             "\n Press Enter to confirm entry\n ");
     System.out.println("Employee ID : \n");
     int employeeId = sc.nextInt();
-    boolean userAlreadyExists = Validate.isValidUser(employeeId);
+    boolean userAlreadyExists = Validator.isValidUser(employeeId);
     if (userAlreadyExists) {
       System.out.println("User Id for " + employeeId + " already exists\n");
       showMenu();
@@ -73,7 +73,7 @@ public class UserLogin {
       while(!exitCode) {
         System.out.println("\n Password : \n");
         password = sc.next();
-        if (!Validate.isValidPassword(password)) {
+        if (!Validator.isValidPassword(password)) {
           System.out.println("Please Enter a Valid password :" +
                   "\n 1. A password must have at least eight characters.\n" +
                   " 2. A password consists of only letters and digits.\n" +
@@ -102,7 +102,7 @@ public class UserLogin {
 
   private void login(int userId, String password) throws SQLException, ClassNotFoundException {
     // If the user and password exist, redirect to UserOperations
-    if (Validate.isValidUserPassword(userId, password)) {
+    if (Validator.isValidUserPassword(userId, password)) {
       OperationFactory.getUserOperationInstance().showMenu(userId);
     } else {
       System.out.println("\nIncorrect Credentials Entered \n Please enter correct credentials : \n");

@@ -40,6 +40,15 @@ public class AssetFactory {
     return routeRequest;
   }
 
+  public static RouteRequest getRouteRequestInstance(String startStopName, String endStopName,
+                                                     int requesterId, boolean routeExists,
+                                                     int timing) {
+    int routeRequestId = IdGenerator.getNewRouteRequestId();
+    RouteRequest routeRequest = new RouteRequest(routeRequestId, startStopName, endStopName,
+            requesterId, routeExists, timing);
+    return routeRequest;
+  }
+
   public static User getUserInstance(int employeeId, String fName, String lName,
                                      String email, String contactNo, String emergencyContactNumber,
                                      String emergencyContactName, String bloodGroup,

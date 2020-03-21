@@ -1,10 +1,12 @@
 package managers;
 
-import assets.Route;
 import assets.RouteRequest;
+import dbTools.QueryExecutor;
+import java.sql.SQLException;
 
 public class RouteRequestManager {
-  public void create(RouteRequest routeRequest) {
+  private static String sqlQuery;
+  public static void create(RouteRequest routeRequest) {
     // Creates sqlQuery from RouteRequest Object and calls QueryExecutor.executeQuery(sqlQuery)
   }
 
@@ -17,6 +19,11 @@ public class RouteRequestManager {
     * Create SQLQuery to remove routeRequestId
     * Call QueryExecutor.executeQuery(sqlQuery)
     * */
+  }
+
+  public static boolean isEmpty() throws SQLException, ClassNotFoundException {
+    sqlQuery = "select * from routerequest";
+    return QueryExecutor.getInstance().isValidQuery(sqlQuery);
   }
 
   public void read() {

@@ -12,7 +12,7 @@ create table feedback(feedbackid int NOT NULL PRIMARY KEY, comments varchar(1000
                       userid int, FOREIGN KEY(userid) REFERENCES user(userid));
 
 === RouteLookup ===
-create table routestoplookup(id INT NOT NULL PRIMARY KEY, routeid int, stopid int);
+create table route(id INT NOT NULL PRIMARY KEY auto_increment, routeid int, stopid int);
 
 === RouteRequest ===
 create table routerequest(routerequestid int NOT NULL PRIMARY KEY, startstop int, endstop int,
@@ -26,7 +26,22 @@ create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50), lname varc
                   email varchar(50), contactno int, emergencycontactno int,
                   emergencycontactname varchar(50), bloodgroup varchar(20), password varchar(50));
 
+==== routebusmap ====
+[view to get busid, routeid, stops and timings for display]
 
+create view routebusmap as
+select busid, stopname, routeid, timing from bus inner join(
+select routeid, stopname from route
+inner join stop using(stopid)) as b using(routeid) order by busid;
+
+===== availableroutebusmap =====
+[view to get busid, routeid, stops and timings with availability for display]
+
+create view availableroutebusmap as
+select busid, routeid, stopname, timing from bus inner join(
+select routeid, stopname from route
+inner join stop using(stopid)) as b using(routeid) where availability <= bustype and availability is not null
+and bustype is not null order by busid;
 
 For reference:
 =================
@@ -51,7 +66,7 @@ create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50),
 create table feedback(feedbackid int NOT NULL PRIMARY KEY, comments varchar(1000),
                       userid int, FOREIGN KEY(userid) REFERENCES user(userid));
 
-create table routestoplookup(id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, routeid int, stopid int);
+create table route(id INT NOT NULL PRIMARY KEY auto_increment, routeid int, stopid int);
 
 create table routerequest(routerequestid int NOT NULL PRIMARY KEY, startstop int, endstop int,
                           requesterid int, routeexists boolean, timing int);

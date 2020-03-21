@@ -55,7 +55,7 @@ public class QueryExecutor<T> {
     }
   }
 
-  public boolean validateQuery(String sqlQuery) throws SQLException, ClassNotFoundException {
+  public boolean isValidQuery(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectDatabase.getConnection();
     Statement statement = conn.createStatement();
     ResultSet resultSet = statement.executeQuery(sqlQuery);
@@ -88,6 +88,13 @@ public class QueryExecutor<T> {
       }
     }
     return resultArray;
+    }
+
+    public ResultSet getResultSet(String sqlQuery) throws SQLException, ClassNotFoundException {
+      Connection conn = ConnectDatabase.getConnection();
+      Statement statement = conn.createStatement();
+      ResultSet resultSet = statement.executeQuery(sqlQuery);
+      return resultSet;
     }
   }
 

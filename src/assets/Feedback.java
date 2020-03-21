@@ -13,7 +13,18 @@ public class Feedback {
     this.userId = userId;
   }
 
-  //  Setters and Getters to be added
+  public int getFeedbackId() {
+    return feedbackId;
+  }
+
+  public String getComment() {
+    return comment;
+  }
+
+  public int getUserId() {
+    return userId;
+  }
+//  Setters and Getters to be added
   //  Feedback can only be created with all 3 fields
 }
 

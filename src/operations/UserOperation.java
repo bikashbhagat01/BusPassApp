@@ -1,9 +1,19 @@
 package operations;
 
-import dbTools.Validate;
+import assets.AssetFactory;
+import assets.Feedback;
+import assets.Route;
+import assets.RouteRequest;
+import dbTools.TimeConverter;
+import dbTools.Validator;
 import java.sql.SQLException;
 import java.util.Scanner;
+import managers.BusManager;
 import managers.BusPassManager;
+import managers.FeedbackManager;
+import managers.RouteManager;
+import managers.RouteRequestManager;
+import managers.StopManager;
 import managers.UserManager;
 
 public class UserOperation {
@@ -27,12 +37,12 @@ public class UserOperation {
           updateProfile(userId);
           break;
         case "3":
-          requestNewRoute();
+          requestNewRoute(userId);
         case "4":
-          requestForBusPass();
+          requestForBusPass(userId);
           break;
         case "5":
-          provideFeedback();
+          provideFeedback(userId);
           break;
         case "6":
           exCode = true;
@@ -52,11 +62,7 @@ public class UserOperation {
   }
 
   private boolean updateProfile(int userId) throws SQLException, ClassNotFoundException {
-    /*
-    * Get the Fields from console to be updated and create an array
-    * Get the Values from Console to be updated and create an array
-    * send the values to UserManager().update(userId, fileds[],newValues[])
-    * */
+    //
     boolean exCode = false;
     String choice = "";
     while(!exCode){
@@ -112,7 +118,7 @@ public class UserOperation {
         case "6":
           System.out.println("Existing Password :\n");
           String oldPassword = sc.next();
-          if(!Validate.isValidUserPassword(userId, oldPassword)) {
+          if(!Validator.isValidUserPassword(userId, oldPassword)) {
             System.out.println("Incorrect Password Entered. Returning to Update Menu");
             break;
           }
@@ -137,33 +143,76 @@ public class UserOperation {
     return true;
   }
 
-  private void requestNewRoute() {
-    // Get Stops, time
-    // Search and save array of stopIds from StopManager.search()
-    //  if stopIds do not exist create a routeRequest to Admin by calling RouteRequest Manager
-    //  with routeExists flag as False
-    //
-    // Validate if route(s) exist(s) for stopIds or not, by searching in Route-Stops look-up table
-    // via RouteManager.search(start, end)
-    // if route Doesn't exist, proceed to create a routeRequest to Admin by calling RouteRequest Manager
-    // with routeExists flag as False
-    // if route exists and a bus exists time, inform route exists
-    // else, proceed to create a routeRequest to Admin with routeExists flag as True
+  private boolean requestNewRoute(int userId) throws SQLException, ClassNotFoundException {
+    /**Validates if requested stops are under a route with selected timing.
+     * if route(s) with selected timing and stops exist(s), then displays the information
+     * if such a route does not exist, creates a route request record in table.
+     */
+
+    System.out.println("Enter Details Below: \n");
+    System.out.println("Start Stop Name :\n");
+    String startStop = sc.next();
+    System.out.println("End Stop Name :\n");
+    String endStop = sc.next();
+    System.out.println("Start Timing [in 24 hour format separated by : Or / or -]:\n");
+    String timingString = sc.next();
+    int timeInMinutes = TimeConverter.getTimeAsMinutes(timingString);
+    boolean routeExists = true;
+    boolean stopsExist = true;
+    int startStopId = 0;
+    int endStopId = 0;
+    if(!(Validator.isPresent("stop","stopname",startStop) ||
+            Validator.isPresent("stop", "stopname", endStop))) {
+      stopsExist = false;
+    }
+    if(stopsExist == true){
+      startStopId = StopManager.getStopIdForName(startStop);
+      endStopId = StopManager.getStopIdForName(endStop);
+      int[] routeIds = RouteManager.findRoutesForStops(startStopId, endStopId);
+      if ( Validator.isBusAvailableForRoutesAndTiming(routeIds, timeInMinutes )) {
+        System.out.println("Available bus(es) for your request.");
+        BusManager.displayAvailableBusTimingsAndRoutes(routeIds, timeInMinutes);
+        return false;
+      } else {
+        routeExists = false;
+      }
+    }
+    RouteRequest routeRequest = null;
+    if(stopsExist == true) {
+      routeRequest = AssetFactory.getRouteRequestInstance(startStopId, endStopId, userId,
+              routeExists, timeInMinutes);
+    } else {
+      routeRequest = AssetFactory.getRouteRequestInstance(startStop, endStop,userId,
+              routeExists,timeInMinutes);
+    }
+    RouteRequestManager.create(routeRequest);
+    System.out.println("Your Route Request has been sent!");
+    return true;
   }
 
-  private void requestForBusPass() throws SQLException, ClassNotFoundException {
-    // --- > Writes to Assets.BusPass Manager
-    // Take user details for buspass - Route ID, Timing
-    // Validate BusPass is already with User or Not
-    // Validate Seat Availability for the route and timing
-    // Create a bussPass Object
-    // send object to busPassManager.create()
-    BusPassManager.create();
+
+  private void requestForBusPass(int userId) throws SQLException, ClassNotFoundException {
+    // Creates a BusPass for User
+    BusPassManager.createBusPass(userId);
   }
 
-  private void provideFeedback() {
+  private boolean provideFeedback(int userId) throws SQLException, ClassNotFoundException {
      // Gets Comment from User
     // Create Feedback Object with UserId, feedbackId, and userId
     // Send feedback object to feedbackManager.create()
+    System.out.println("Enter Your Valuable Comment below [Word Limit 100]\n To return to previous menu, press Enter\n");
+    String comment = sc.next();
+    if(Validator.isCommentBlank(comment)){
+      System.out.println("No Comment Found.\n Returning to User Menu");
+      return false;
+    }
+    if(!Validator.isValidComment(comment)) {
+      System.out.println("Comment exceeds word limit of 100 characters.\n Returning to User Menu");
+      return false;
+    }
+    Feedback feedback = AssetFactory.getFeedbackInstance(userId,comment);
+    FeedbackManager.create(feedback);
+    System.out.println("Thank You for Your Comment");
+    return true;
   }
 }

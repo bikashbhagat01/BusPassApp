@@ -1,6 +1,6 @@
 package interfaces;
 
-// Demo template
+// Demo template, Please AVOID
 
 import java.sql.SQLException;
 

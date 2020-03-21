@@ -9,6 +9,4 @@ public class Stop {
     this.stopId = stopId;
     this.stopName = stopName;
   }
-
-
 }

@@ -18,7 +18,6 @@ public class IdGenerator {
   }
 
   public static int getNewRouteId() {
-
     return 1;
   }
 

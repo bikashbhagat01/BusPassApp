@@ -1,61 +1,68 @@
 package managers;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import assets.Route;
 import dbTools.QueryExecutor;
 import interfaces.Creatable;
+import java.util.Arrays;
+import java.util.List;
 
 public class RouteManager {
-  static String sql;
+  static String sqlQuery;
   public static void create(Route route) throws SQLException, ClassNotFoundException {
 
     // Creates sqlQuery from Route Object and calls QueryExecutor.executeQuery(sqlQuery)
     // Creates sqlQuery to write routeId and stopIds into route - stop table
     for(int i=0;i<route.getStops().length;i++)
     {
-      sql="insert into routestoplookup routeid="+route.getRouteId()+"stopid="+route.getStops()[i];
-      QueryExecutor.getInstance().executeSQL(sql);
+      sqlQuery="insert into route routeid="+route.getRouteId()+"stopid="+route.getStops()[i];
+      QueryExecutor.getInstance().executeSQL(sqlQuery);
       System.out.println("RouteID and Stops updated\n");
     }
   }
 
-  public ArrayList<Integer> searchForRoute(int start, int end) throws Exception, SQLException{
-    String startsql,endsql;
-    /*
-     * Find Lists of Route IDs for each start StopId and EndStopUId from
-     * Route-Stop lookUp Table
-     * Find Common RouteIds from the table
-     * return the result list of routeIds
-     * common elements btw 2 arrays
-     * */
-//	int[] result = {21,23};
-//	return result;
-    ArrayList<Integer> startResult=new ArrayList<Integer>();
-    ArrayList<Integer> endResult=new ArrayList<Integer>();
-    ArrayList<Integer> finalResult=new ArrayList<Integer>();
-    startsql="select routeid from routestoplookup where stopid="+start;
-    endsql="select routeid from routestoplookup where stopid="+end;
-    startResult= (ArrayList<Integer>) QueryExecutor.getInstance().getQueryNumberList(startsql);
-    endResult= (ArrayList<Integer>) QueryExecutor.getInstance().getQueryNumberList(endsql);
-    for(int i=0;i<startResult.size();i++)
-    {
-      if(endResult.contains(startResult.get(i)))
-        finalResult.add(startResult.get(i));
+  public static int[] findRoutesForStops(int startStop, int endStop)
+          throws SQLException, ClassNotFoundException {
+    int[] startCommonRoutes = findRoutesForStops(startStop);
+    int[] endCommonRoutes = findRoutesForStops(endStop);
+    List<Integer> startRouteList = new ArrayList<>();
+    List<Integer> resultList = new ArrayList<>();
+    for(int startRouteId : startCommonRoutes) {
+      startRouteList.add(startRouteId);
     }
-    return finalResult;
+    for(int endRouteId : endCommonRoutes) {
+      if(startRouteList.contains(endRouteId)) {
+        resultList.add(endRouteId);
+      }
+    }
+    int[] resultArray = new int[resultList.size()];
+    for(int i = 0; i < resultList.size(); i++) {
+      resultArray[i] = resultList.get(i);
+    }
+    return resultArray;
   }
 
-  public ArrayList<Integer> searchForRoute(int stopId) throws ClassNotFoundException, SQLException {
-    ArrayList<Integer> result=new ArrayList<Integer>();
-    /*
-     * Returns an array of RouteIds when searched against the provided stopId
-     * from Route-Stop LookUp Table
-     * */
-    sql="select routeid from routestoplookup where stopid="+stopId;
-    result= (ArrayList<Integer>) QueryExecutor.getInstance().getQueryNumberList(sql);
-    return result;
+  public static int[] findRoutesForStops(int stopId) throws SQLException, ClassNotFoundException {
+    sqlQuery = "select routeid from route where stopid = " + stopId + ";";
+    ResultSet resultSet = QueryExecutor.getInstance().getResultSet(sqlQuery);
+    List<Integer> resultList = new ArrayList<>();
+    int count = 1;
+    while(resultSet.next()){
+      resultList.add(resultSet.getInt(count));
+      ++count;
+    }
+    int[] resultArray = new int[resultList.size()];
+    for(int i = 0; i < resultList.size(); i++) {
+      resultArray[i] = resultList.get(i);
+    }
+    return resultArray;
+  }
+
+  public static void delete(int routeId) {
+
   }
 }
 

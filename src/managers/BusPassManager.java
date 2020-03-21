@@ -2,29 +2,28 @@ package managers;
 
 import assets.AssetFactory;
 import dbTools.ConnectDatabase;
-import dbTools.Validate;
+import dbTools.Validator;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
+import operations.OperationFactory;
 
 public class BusPassManager {
-  public static void create() throws ClassNotFoundException, SQLException {
+  private static Scanner sc = OperationFactory.getScannerInstance();
+  public static void createBusPass(int employeeId) throws ClassNotFoundException, SQLException {
       /*
       Create SQL String for insert
       call QueryExecutor for db insert
       * **/
-    Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-    System.out.println("Enter Employee Id");
-    int employeeId = myObj.nextInt();
-    if (Validate.isValidBusPass(employeeId)) {
+    if (Validator.isValidBusPass(employeeId)) {
       System.out.println("BusPass for " + employeeId + " already exists\n");
       //showMenu();
     } else {
       System.out.println("Enter Route Id");
-      int routeId = myObj.nextInt();
+      int routeId = sc.nextInt();
       System.out.println("Enter Timing As 1 to 24 Hours");
-      int timing = myObj.nextInt();
+      int timing = sc.nextInt();
       SeatManager seat = SeatManager.getInstance();
       if (seat.updateSeatValue(routeId, timing) == 0) {
         System.out.println("No Seats Available for the same route and the preferred time");
