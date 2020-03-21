@@ -10,8 +10,9 @@ public class FeedbackManager {
   public static void create(Feedback feedback) throws SQLException, ClassNotFoundException {
     // Creates insert SQL Query from feedback Object details
     // Sends Query to QueryExecutor
-    sqlQuery="insert into feedback"+feedback.getFeedbackId()+"comment"+feedback.getComment()+
-            "user Id"+feedback.getUserId();
+    sqlQuery="insert into feedback(feedbackid, comment, user) VALUES(" + feedback.getFeedbackId() +
+            "comment" + feedback.getComment() +
+            "userid" + feedback.getUserId() + ");";
     QueryExecutor.getInstance().executeSQL(sqlQuery);
     System.out.println("Feedback is updated\n");
   }

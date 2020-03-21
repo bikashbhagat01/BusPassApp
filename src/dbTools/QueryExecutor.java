@@ -91,6 +91,7 @@ public class QueryExecutor<T> {
     }
 
     public ResultSet getResultSet(String sqlQuery) throws SQLException, ClassNotFoundException {
+      System.out.println("Log : " + sqlQuery);
       Connection conn = ConnectDatabase.getConnection();
       Statement statement = conn.createStatement();
       ResultSet resultSet = statement.executeQuery(sqlQuery);

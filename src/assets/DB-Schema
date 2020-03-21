@@ -3,7 +3,8 @@ create table bus (busid int NOT NULL PRIMARY KEY, routeid int, availability int,
                   timing int, vehicleno varchar(20));
 
 ==== BussPass ===
-create table buspass(busspassid int NOT NULL PRIMARY KEY,userid int NOT NULL,
+
+create table buspass(buspassid int NOT NULL PRIMARY KEY,userid int,
                       busid int, routeid int, timing int,
                       FOREIGN KEY(userid) REFERENCES user(userid));
 
@@ -54,7 +55,8 @@ create table idgenerator(objectname varchar(40), latestid int);
 
 create table bus (busid int NOT NULL PRIMARY KEY, routeid int, availability int, bustype int,
                   timing int, vehicleno varchar(20));
-create table buspass(busspassid int NOT NULL PRIMARY KEY,userid int,
+
+create table buspass(buspassid int NOT NULL PRIMARY KEY,userid int,
                       busid int, routeid int, timing int,
                       FOREIGN KEY(userid) REFERENCES user(userid));
 

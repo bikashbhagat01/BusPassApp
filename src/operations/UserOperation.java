@@ -24,7 +24,7 @@ public class UserOperation {
     while(!exCode){
       System.out.println( "\n1. View Available Routes\n" +
               "2. Update Profile\n" +
-              "3. Raise Request For a New Route" +
+              "3. Raise Request For a New Route \n" +
               "4. Raise Request for a Bus Pass\n" +
               "5. Provide Feedback\n" +
               "6. Exit to Main Menu\n");
@@ -56,9 +56,8 @@ public class UserOperation {
   }
 
 
-  private void viewRoute() {
-    // Create Query to read the same, Maybe delete stop object and just keep
-    // routeid with stopname
+  private void viewRoute() throws SQLException, ClassNotFoundException {
+    BusManager.displayAvailableBusTimingsAndRoutes();
   }
 
   private boolean updateProfile(int userId) throws SQLException, ClassNotFoundException {

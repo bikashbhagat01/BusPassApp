@@ -26,7 +26,7 @@ public class AdminOperation {
     while(!exCode){
       System.out.println( "\n1. Add Or remove Bus\n" +
                           "2. Add Or remove Route\n" +
-                          "3. Assign a Bus to Route" +
+                          "3. Assign a Bus to Route\n" +
                           "4. Change type of a Bus\n" +
                           "5. Display Number of Buses of each Type\n" +
                           "6. Display timings and route for each bus\n" +
@@ -124,11 +124,11 @@ public class AdminOperation {
       int busid = sc.nextInt();
 
       String sql1="SELECT * from bus where busid="+busid;
-      if(query.isValidQuery(sql)) {
+      if(query.isValidQuery(sql1)) {
         System.out.println("Enter BusType [Number Of Seats]");
         int busType = sc.nextInt();
         System.out.println("Enter Vehicle No");
-        int vehicleNo = sc.nextInt();
+        String vehicleNo = sc.next();
 
         SeatManager update= SeatManager.getInstance();
         update.updateSeatType(busType, busid, vehicleNo);
@@ -140,7 +140,9 @@ public class AdminOperation {
     else {
       System.out.println("Route Not Found");
     }
+    System.out.println("Bus Type and Vehicle Number Updated! ");
   }
+
   private boolean addBus() throws SQLException, ClassNotFoundException {
     // create a Bus object by taking details from Console
     System.out.println("Please Enter New Bus Details Below :\n");

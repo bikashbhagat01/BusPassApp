@@ -8,6 +8,7 @@ public class RouteRequestManager {
   private static String sqlQuery;
   public static void create(RouteRequest routeRequest) {
     // Creates sqlQuery from RouteRequest Object and calls QueryExecutor.executeQuery(sqlQuery)
+    //
   }
 
   public void update() {

@@ -38,8 +38,9 @@ public class BusPassManager {
         pstmt.setInt(2, employeeId);
         pstmt.setInt(3, busId);
         pstmt.setInt(4, routeId);
-        pstmt.setInt(4, timing);
-        int result = pstmt.executeUpdate();
+        pstmt.setInt(5, timing);
+        pstmt.executeUpdate();
+        System.out.println("Bus Pass Allocated with Bus Pass ID : " + buspassid);
       }
     }
   }

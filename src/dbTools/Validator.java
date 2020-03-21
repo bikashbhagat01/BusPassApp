@@ -8,9 +8,9 @@ public class Validator {
   private static String sqlQuery;
   private static int PASSWORD_LENGTH = 8;
 
-  public static boolean isValidUserPassword(int userName, String password) throws SQLException, ClassNotFoundException {
+  public static boolean isValidUserPassword(int userId, String password) throws SQLException, ClassNotFoundException {
     // Returns true if User with mentioned password exist
-    sqlQuery = "select userid from user where userid=" + userName + "and password =" + password;
+    sqlQuery = "select userid from user where userid = " + userId + " and password = \'" + password + "\';";
     return QueryExecutor.getInstance().isValidQuery(sqlQuery);
   }
 
@@ -22,7 +22,7 @@ public class Validator {
 
   public static boolean isValidBusPass(int userName) throws SQLException, ClassNotFoundException {
     // Returns true if user is linked to a BusPass or Not
-    sqlQuery = "select buspassid from buspass where userid=" + userName;
+    sqlQuery = "select buspassid from buspass where userid = " + userName + ";";
     return QueryExecutor.getInstance().isValidQuery(sqlQuery);
   }
 
