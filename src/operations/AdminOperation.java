@@ -19,7 +19,7 @@ public class AdminOperation {
 
   private Scanner sc = OperationFactory.getScannerInstance();
 
-  public void showMenu() throws SQLException, ClassNotFoundException {
+  public void showMenu() throws Exception {
     // Switch Case menu which calls other small functions in this class
     boolean exCode = false;
     String choice = "";
@@ -61,7 +61,7 @@ public class AdminOperation {
     OperationFactory.getAppDriverInstance().initiate();
   }
 
-  private void addOrRemoveRoute() throws SQLException, ClassNotFoundException {
+  private boolean addOrRemoveRoute() throws SQLException, ClassNotFoundException {
     System.out.println("Please Select an Option : \n");
     System.out.println("1. Add a New Route\n2. Remove an Existing Route\n" +
             "\n3. Return to Admin Menu");
@@ -80,12 +80,12 @@ public class AdminOperation {
         default:
           System.out.println("Please Enter Valid Option\n");
       }
-      System.out.println("Returning to Admin Menu");
-      showMenu();
     }
+    System.out.println("Returning to Admin Menu");
+    return true;
   }
 
-  private void addOrRemoveBus() throws SQLException, ClassNotFoundException {
+  private boolean addOrRemoveBus() throws SQLException, ClassNotFoundException {
     System.out.println("Please Select an Option : \n");
     System.out.println("1. Add a New Bus\n2. Remove an Existing Bus\n" +
             "\n3. Return to Admin Menu");
@@ -104,9 +104,9 @@ public class AdminOperation {
         default:
           System.out.println("Please Enter Valid Option\n");
       }
-      System.out.println("Returning to Admin Menu");
-      showMenu();
     }
+    System.out.println("Returning to Admin Menu");
+    return true;
   }
 
   private void changeBusType() throws SQLException, ClassNotFoundException{
@@ -217,7 +217,7 @@ public class AdminOperation {
     return true;
   }
 
-  private boolean addBusToRoute() throws SQLException, ClassNotFoundException {
+  private boolean addBusToRoute() throws Exception {
     // Takes a RouteId, Start Timing  and adds it to the Bus table
     System.out.println("Enter details :");
     System.out.println("Route ID:");

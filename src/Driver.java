@@ -1,5 +1,6 @@
 import java.sql.SQLException;
 import operations.AppDriver;
+import queryHelper.QueryBuilder;
 
 public class Driver {
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
@@ -9,8 +10,26 @@ public class Driver {
     * */
     AppDriver appDriver = new AppDriver();
     appDriver.initiate();
+
+    QueryBuilder qb = new QueryBuilder();
+    String query = null;
+    try {
+    query = qb
+            .Update()
+            .UpdateValue("name", "biku")
+            .WhereEq("name", "bikash")
+            .WhereEq("id", 7)
+            .WhereLte("salary", 45000)
+            .FromTable("user")
+            .build();
+
+  } catch (Exception e) {
+    e.printStackTrace();
   }
+
+    System.out.println(query);
 }
+  }
 
 
 

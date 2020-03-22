@@ -2,7 +2,6 @@ package operations;
 
 import assets.AssetFactory;
 import assets.Feedback;
-import assets.Route;
 import assets.RouteRequest;
 import dbTools.TimeConverter;
 import dbTools.Validator;
@@ -18,11 +17,12 @@ import managers.UserManager;
 
 public class UserOperation {
   Scanner sc = OperationFactory.getScannerInstance();
-  public  void showMenu(int userId) throws SQLException, ClassNotFoundException {
+
+  public void showMenu(int userId) throws SQLException, ClassNotFoundException {
     boolean exCode = false;
     String choice = "";
-    while(!exCode){
-      System.out.println( "\n1. View Available Routes\n" +
+    while (!exCode) {
+      System.out.println("\n1. View Available Routes\n" +
               "2. Update Profile\n" +
               "3. Raise Request For a New Route \n" +
               "4. Raise Request for a Bus Pass\n" +
@@ -64,9 +64,9 @@ public class UserOperation {
     //
     boolean exCode = false;
     String choice = "";
-    while(!exCode){
+    while (!exCode) {
       System.out.println("Select Field to Update");
-      System.out.println( "\n1. Name \n" +
+      System.out.println("\n1. Name \n" +
               "2. E-mail address\n" +
               "3. Contact Number\n" +
               "4. Emergency Contact Details\n" +
@@ -74,7 +74,7 @@ public class UserOperation {
               "6. Password\n" +
               "7. Return to User Menu");
       choice = sc.nextLine();
-      if(!choice.equalsIgnoreCase("7")) {
+      if (!choice.equalsIgnoreCase("7")) {
         System.out.println("Please enter values below : ");
       }
       switch (choice) {
@@ -83,20 +83,20 @@ public class UserOperation {
           String firstName = sc.next();
           System.out.println("Last Name :\n");
           String lastName = sc.next();
-          UserManager.update(userId,"fname", firstName);
-          UserManager.update(userId,"lname", lastName);
+          UserManager.update(userId, "fname", firstName);
+          UserManager.update(userId, "lname", lastName);
           System.out.println("Name Updated to : ");
           break;
         case "2":
           System.out.println("E-mail Address :\n");
           String email = sc.next();
-          UserManager.update(userId,"email",email);
+          UserManager.update(userId, "email", email);
           System.out.println("E-mail address Updated");
           break;
         case "3":
           System.out.println("Contact Number :");
           String contactNumber = sc.next();
-          UserManager.update(userId, "contactno",contactNumber);
+          UserManager.update(userId, "contactno", contactNumber);
           System.out.println("Contact Number Updated");
           break;
         case "4":
@@ -104,20 +104,20 @@ public class UserOperation {
           String emegergencyContactName = sc.next();
           System.out.println("Emergency Contact Number : \n");
           String emergencyContactNumber = sc.next();
-          UserManager.update(userId,"emergencycontactname", emegergencyContactName);
+          UserManager.update(userId, "emergencycontactname", emegergencyContactName);
           UserManager.update(userId, "emergencycontactno", emergencyContactNumber);
           System.out.println("Emergency Contact Details Updated");
           break;
         case "5":
           System.out.println("Blood Group :\n");
           String bloodGroup = sc.next();
-          UserManager.update(userId,"bloodgroup", bloodGroup);
+          UserManager.update(userId, "bloodgroup", bloodGroup);
           System.out.println("Blood Group Updated");
           break;
         case "6":
           System.out.println("Existing Password :\n");
           String oldPassword = sc.next();
-          if(!Validator.isValidUserPassword(userId, oldPassword)) {
+          if (!Validator.isValidUserPassword(userId, oldPassword)) {
             System.out.println("Incorrect Password Entered. Returning to Update Menu");
             break;
           }
@@ -125,11 +125,11 @@ public class UserOperation {
           String newPasswordOnce = sc.next();
           System.out.println("Enter New Password Again :\n");
           String newPasswordTwice = sc.next();
-          if(!newPasswordOnce.equals(newPasswordTwice)) {
+          if (!newPasswordOnce.equals(newPasswordTwice)) {
             System.out.println("Both Passwords do not match");
             break;
           }
-          UserManager.update(userId,"password", newPasswordTwice);
+          UserManager.update(userId, "password", newPasswordTwice);
           break;
         case "7":
           exCode = true;
@@ -160,15 +160,15 @@ public class UserOperation {
     boolean stopsExist = true;
     int startStopId = 0;
     int endStopId = 0;
-    if(!(Validator.isPresent("stop","stopname",startStop) ||
+    if (!(Validator.isPresent("stop", "stopname", startStop) ||
             Validator.isPresent("stop", "stopname", endStop))) {
       stopsExist = false;
     }
-    if(stopsExist == true){
+    if (stopsExist == true) {
       startStopId = StopManager.getStopIdForName(startStop);
       endStopId = StopManager.getStopIdForName(endStop);
       int[] routeIds = RouteManager.findRoutesForStops(startStopId, endStopId);
-      if ( Validator.isBusAvailableForRoutesAndTiming(routeIds, timeInMinutes )) {
+      if (Validator.isBusAvailableForRoutesAndTiming(routeIds, timeInMinutes)) {
         System.out.println("Available bus(es) for your request.");
         BusManager.displayAvailableBusTimingsAndRoutes(routeIds, timeInMinutes);
         return false;
@@ -177,12 +177,12 @@ public class UserOperation {
       }
     }
     RouteRequest routeRequest = null;
-    if(stopsExist == true) {
+    if (stopsExist == true) {
       routeRequest = AssetFactory.getRouteRequestInstance(startStopId, endStopId, userId,
               routeExists, timeInMinutes);
     } else {
-      routeRequest = AssetFactory.getRouteRequestInstance(startStop, endStop,userId,
-              routeExists,timeInMinutes);
+      routeRequest = AssetFactory.getRouteRequestInstance(startStop, endStop, userId,
+              routeExists, timeInMinutes);
     }
     RouteRequestManager.create(routeRequest);
     System.out.println("Your Route Request has been sent!");
@@ -196,22 +196,34 @@ public class UserOperation {
   }
 
   private boolean provideFeedback(int userId) throws SQLException, ClassNotFoundException {
-     // Gets Comment from User
+    // Gets Comment from User
     // Create Feedback Object with UserId, feedbackId, and userId
     // Send feedback object to feedbackManager.create()
-    System.out.println("Enter Your Valuable Comment below [Word Limit 100]\n To return to previous menu, press Enter\n");
+    System.out.println("Enter Your Valuable Comment below [Word Limit 100]\n " +
+            "To return to previous menu, press 'Enter' twice\n");
+
     String comment = sc.next();
-    if(Validator.isCommentBlank(comment)){
+
+    if (Validator.isCommentBlank(comment)) {
       System.out.println("No Comment Found.\n Returning to User Menu");
       return false;
     }
-    if(!Validator.isValidComment(comment)) {
+
+    if (!Validator.isValidComment(comment)) {
       System.out.println("Comment exceeds word limit of 100 characters.\n Returning to User Menu");
       return false;
     }
-    Feedback feedback = AssetFactory.getFeedbackInstance(userId,comment);
-    FeedbackManager.create(feedback);
+
+    Feedback feedback = AssetFactory.getFeedbackInstance(userId, comment);
+
+    try {
+      FeedbackManager.create(feedback);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     System.out.println("Thank You for Your Comment");
+
     return true;
   }
 }

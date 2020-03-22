@@ -5,6 +5,7 @@ import dbTools.QueryExecutor;
 import dbTools.TimeConverter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import queryHelper.QueryBuilderManager;
 
 public class BusManager {
   private static String sqlQuery;
@@ -14,9 +15,17 @@ public class BusManager {
   }
 
   public static void update(int busId, String field, int newValue)
-          throws SQLException, ClassNotFoundException {
+          throws Exception {
     /* Updates field with new value */
-    sqlQuery = "update bus set " + field + "= " + newValue + " where busid = " + busId;
+//    sqlQuery = "update bus set " + field + "= " + newValue + " where busid = " + busId;
+    sqlQuery = QueryBuilderManager
+              .getNewQueryBuilderInstance()
+            .Update()
+            .FromTable("bus")
+            .UpdateValue(field,newValue)
+            .WhereEq("busid",busId)
+            .build();
+    System.out.println(sqlQuery + "from update in BusManager");
     QueryExecutor.getInstance().executeSQL(sqlQuery);
   }
 

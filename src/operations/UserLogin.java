@@ -70,7 +70,7 @@ public class UserLogin {
       String bloodGroup = sc.next();
       boolean exitCode = false;
       String password = "";
-      while(!exitCode) {
+      while (!exitCode) {
         System.out.println("\n Password : \n");
         password = sc.next();
         if (!Validator.isValidPassword(password)) {
@@ -81,7 +81,7 @@ public class UserLogin {
         } else {
           System.out.println("\n Password Again: \n");
           String passwordConfirm = sc.next();
-          if(!password.equals(passwordConfirm)) {
+          if (!password.equals(passwordConfirm)) {
             System.out.println("Both Passwords do not match");
           } else {
             exitCode = true;
@@ -113,15 +113,16 @@ public class UserLogin {
   private void setLoginDetails() throws SQLException, ClassNotFoundException {
     loginTries += 1;
     System.out.println("Enter Employee ID : \n");
-    int userId = sc.nextInt();
-    System.out.println("Enter Password : \n");
-    String password = sc.next();
-    if (loginTries < maxLoginTries) {
-      login(userId, password);
-    } else {
-      System.out.println("Maximum Login Tries Exceeded! \n Returning to Home.");
-      loginTries = 0;
-      OperationFactory.getAppDriverInstance().initiate();
+      int userId = sc.nextInt();
+      System.out.println("Enter Password : \n");
+      String password = sc.next();
+      if (loginTries < maxLoginTries) {
+        login(userId, password);
+      } else {
+        System.out.println("Maximum Login Tries Exceeded! \n Returning to Home.");
+        loginTries = 0;
+        OperationFactory.getAppDriverInstance().initiate();
+      }
     }
   }
-}
+

@@ -25,11 +25,11 @@ public class AdminLogin {
     return adminLogin;
   }
 
-  public void showMenu() throws SQLException, ClassNotFoundException {
+  public void showMenu() throws Exception {
     setLoginDetails();
   }
 
-  private void login(String adminId, String password) throws SQLException, ClassNotFoundException {
+  private void login(String adminId, String password) throws Exception {
     if(adminId.trim().equals(this.adminID) && password.equals(this.password)) {
       OperationFactory.getAdminOperationInstance().showMenu();
     } else {
@@ -38,7 +38,7 @@ public class AdminLogin {
     }
   }
 
-  private void setLoginDetails() throws SQLException, ClassNotFoundException {
+  private void setLoginDetails() throws Exception {
     // Get Admin credentials
     loginTries += 1;
     System.out.println("Enter Login ID : \n");
