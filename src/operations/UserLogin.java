@@ -14,7 +14,7 @@ public class UserLogin {
 
   private Scanner sc = OperationFactory.getScannerInstance();
 
-  public boolean showMenu() throws SQLException, ClassNotFoundException {
+  public boolean showMenu() throws Exception {
     boolean exCode = false;
     String choice = "";
 
@@ -46,7 +46,7 @@ public class UserLogin {
     return true;
   }
 
-  private void createAccount() throws SQLException, ClassNotFoundException {
+  private void createAccount() throws Exception {
     // Creates a User Account and sends to login page
     System.out.println("Please Enter the below details as prompted. " +
             "\n Press Enter to confirm entry\n ");
@@ -105,7 +105,7 @@ public class UserLogin {
   }
 
   // If the user and password combination exist, redirect to UserOperations
-  private void login(int userId, String password) throws SQLException, ClassNotFoundException {
+  private void login(int userId, String password) throws Exception {
     if (Validator.isValidUserPassword(userId, password)) {
       OperationFactory.getUserOperationInstance().showMenu(userId);
     } else {
@@ -115,7 +115,7 @@ public class UserLogin {
     }
   }
 
-  private boolean setLoginDetails() throws SQLException, ClassNotFoundException {
+  private boolean setLoginDetails() throws Exception {
 
     loginTries += 1;
 

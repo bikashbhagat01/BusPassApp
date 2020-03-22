@@ -2,7 +2,7 @@ package managers;
 
 import assets.Feedback;
 import dbTools.QueryExecutor;
-import queryHelper.QueryBuilderManager;
+import queryHelper.QueryBuilder;
 
 public class FeedbackManager {
   private static String sqlQuery;
@@ -13,14 +13,14 @@ public class FeedbackManager {
 //            "comment" + feedback.getComment() +
 //            "userid" + feedback.getUserId() + ");";
 
-    sqlQuery = QueryBuilderManager
-              .getNewQueryBuilderInstance()
-              .Insert()
-              .InsertValue("feedbackid", feedback.getFeedbackId())
-              .InsertValue("comment", feedback.getComment())
-              .InsertValue("userid", feedback.getUserId())
-              .FromTable("feedback")
-              .build();
+    sqlQuery = QueryBuilder
+                .getInstance()
+                .Insert()
+                .InsertValue("feedbackid", feedback.getFeedbackId())
+                .InsertValue("comment", feedback.getComment())
+                .InsertValue("userid", feedback.getUserId())
+                .FromTable("feedback")
+                .build();
 
     QueryExecutor.getInstance().executeSQL(sqlQuery);
 

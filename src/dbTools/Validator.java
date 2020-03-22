@@ -10,6 +10,7 @@ public class Validator {
 
   private static int PASSWORD_LENGTH = 8;
 
+  // Refactor names to presence
   // Returns true if User with mentioned password exist
   public static boolean isValidUserPassword(int userId, String password) throws SQLException, ClassNotFoundException {
     sqlQuery = "select userid from user where userid = " + userId + " and password = \'" + password + "\';";

@@ -10,13 +10,17 @@ public class IdGenerator {
         write in the table
         return this value
     * */
-    String sqlQuery = "SELECT latestid from idgenerator where objectname = \"bus\";";
+    String sqlQuery = "SELECT latestid from idgenerator where objectname = \'bus\";";
 
-    int newBusId = QueryExecutor.getInstance().getQueryNumber(sqlQuery);
+    int newBusId =  QueryExecutor
+                    .getInstance()
+                    .getQueryNumber(sqlQuery);
 
-    sqlQuery = "update idgenerator set latestid = "+ newBusId + " where objectname = \"route\";";
+    sqlQuery = "update idgenerator set latestid = "+ newBusId + " where objectname = \'route\';";
 
-    QueryExecutor.getInstance().executeSQL(sqlQuery);
+    QueryExecutor
+            .getInstance()
+            .executeSQL(sqlQuery);
 
     return newBusId;
   }

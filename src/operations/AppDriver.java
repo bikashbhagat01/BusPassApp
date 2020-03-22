@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class AppDriver {
-  public void initiate() throws SQLException, ClassNotFoundException {
+  public void initiate() throws Exception {
 
     /* System Initiate class ::
     * SWitch Case Routine to as for User type

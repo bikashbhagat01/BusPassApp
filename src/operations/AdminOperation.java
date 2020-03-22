@@ -71,7 +71,9 @@ public class AdminOperation {
     System.out.println("Please Select an Option : \n");
     System.out.println("1. Add a New Route\n2. Remove an Existing Route\n" +
             "\n3. Return to Admin Menu");
+
     boolean exitCode = false;
+
     while(!exitCode) {
       switch (sc.next()) {
         case "1":
@@ -83,11 +85,13 @@ public class AdminOperation {
         case "3":
           exitCode = true;
           break;
+
         default:
           System.out.println("Please Enter Valid Option\n");
       }
     }
-    System.out.println("Returning to Admin Menu");
+    System.out.println("Returning to Previous Menu");
+
     return true;
   }
 
@@ -116,7 +120,8 @@ public class AdminOperation {
       }
     }
 
-    System.out.println("Returning to Admin Menu");
+    System.out.println("Returning to Previous Menu");
+
     return true;
   }
 
@@ -206,8 +211,9 @@ public class AdminOperation {
     int stopCount = sc.nextInt();
 
     int[] stops = new int[stopCount];
-    String stopName = "";
     int count = 0;
+
+    String stopName = "";
 
     System.out.println("Stops [From StartStop to EndStop]\n");
 

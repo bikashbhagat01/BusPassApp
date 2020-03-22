@@ -18,6 +18,9 @@ public class QueryBuilder {
 
   private boolean isSelectAllColumns;
 
+  public static QueryBuilder getInstance() {
+    return new QueryBuilder();
+  }
   public QueryBuilder() {
     this.isSelectAllColumns = false;
     this.whereOperations = new ArrayList<WhereOperation>();

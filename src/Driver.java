@@ -6,7 +6,7 @@ import queryHelper.QueryBuilder;
 
 public class Driver {
 
-  public static void main(String[] args) throws SQLException, ClassNotFoundException {
+  public static void main(String[] args) throws Exception {
     AppDriver appDriver = new AppDriver();
     appDriver.initiate();
 

@@ -26,7 +26,9 @@ public class QueryExecutor {
   public void executeSQL(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectDatabase.getConnection();
     Statement statement = conn.createStatement();
+
     int result = statement.executeUpdate(sqlQuery);
+
     if (result != 0) {
       System.out.println(sqlQuery + " Success!" + result);
     } else {
@@ -38,16 +40,21 @@ public class QueryExecutor {
   public void executeSQL(String sqlQuery, String[] fields) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectDatabase.getConnection();
     Statement statement = conn.createStatement();
+
     ResultSet resultSet = statement.executeQuery(sqlQuery);
+
     System.out.println(resultSet);
+
     for (String field : fields) {
       System.out.print(field + " ");
     }
+
     if (!resultSet.next()) {
       System.out.println("record not found");
     } else {
       while (resultSet.next()) {
         System.out.println();
+
         for (int i = 1; i <= fields.length; i++)
           System.out.print(resultSet.getString(i) + " ");
       }
@@ -58,7 +65,9 @@ public class QueryExecutor {
   public boolean isValidQuery(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectDatabase.getConnection();
     Statement statement = conn.createStatement();
+
     ResultSet resultSet = statement.executeQuery(sqlQuery);
+
     if(resultSet.next()) {
       return true;
     }
@@ -68,7 +77,9 @@ public class QueryExecutor {
   public int getQueryNumber(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectDatabase.getConnection();
     Statement statement = conn.createStatement();
+
     ResultSet resultSet = statement.executeQuery(sqlQuery);
+
     if (resultSet.next()) {
       return resultSet.getInt(1);
     }

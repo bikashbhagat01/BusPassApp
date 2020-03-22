@@ -18,7 +18,7 @@ import managers.UserManager;
 public class UserOperation {
   Scanner sc = OperationFactory.getScannerInstance();
 
-  public boolean showMenu(int userId) throws SQLException, ClassNotFoundException {
+  public boolean showMenu(int userId) throws Exception {
 
     boolean exCode = false;
     String choice = "";
@@ -67,7 +67,7 @@ public class UserOperation {
     BusManager.displayAvailableBusTimingsAndRoutes();
   }
 
-  private boolean updateProfile(int userId) throws SQLException, ClassNotFoundException {
+  private boolean updateProfile(int userId) throws Exception {
     boolean exCode = false;
     String choice = "";
 
