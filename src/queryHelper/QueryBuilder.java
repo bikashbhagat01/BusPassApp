@@ -17,7 +17,6 @@ public class QueryBuilder {
   private ArrayList<InsertOperation> insertOpertions;
 
   private boolean isSelectAllColumns;
-  private boolean hasWhere;
 
   public QueryBuilder() {
     this.isSelectAllColumns = false;
@@ -165,8 +164,6 @@ public class QueryBuilder {
           }
         }
       }
-
-
     }
 
     query += ";";
@@ -198,12 +195,9 @@ public class QueryBuilder {
 
     query += "(" + values + ")";
     query += " VALUES (" + actualVals + " )";
-
-
     query += ";";
     return query;
   }
-
 
   private String buildUpdate() throws Exception {
     String query = "UPDATE " + this.table + " ";

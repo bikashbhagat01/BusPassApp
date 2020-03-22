@@ -11,25 +11,27 @@ public class UserLogin {
 
   private final static int maxLoginTries = 5;
   private static int loginTries = 0;
+
   private Scanner sc = OperationFactory.getScannerInstance();
 
-  public void showMenu() throws SQLException, ClassNotFoundException {
+  public boolean showMenu() throws SQLException, ClassNotFoundException {
     boolean exCode = false;
     String choice = "";
+
     while (!exCode) {
       System.out.println("\n1. Existing User " +
               "\n2. New User" +
               "\n3. Exit\n");
+
       choice = sc.nextLine();
+
       switch (choice) {
         case "1":
           setLoginDetails();
           break;
-
         case "2":
           createAccount();
           break;
-
         case "3":
           exCode = true;
           break;
@@ -38,8 +40,10 @@ public class UserLogin {
           System.out.println("Please Enter Valid Option");
       }
     }
+
     System.out.println("Returning to Main Menu");
-    OperationFactory.getAppDriverInstance().initiate();
+
+    return true;
   }
 
   private void createAccount() throws SQLException, ClassNotFoundException {
@@ -100,29 +104,37 @@ public class UserLogin {
     }
   }
 
+  // If the user and password combination exist, redirect to UserOperations
   private void login(int userId, String password) throws SQLException, ClassNotFoundException {
-    // If the user and password exist, redirect to UserOperations
     if (Validator.isValidUserPassword(userId, password)) {
       OperationFactory.getUserOperationInstance().showMenu(userId);
     } else {
       System.out.println("\nIncorrect Credentials Entered \n Please enter correct credentials : \n");
+
       setLoginDetails();
     }
   }
 
-  private void setLoginDetails() throws SQLException, ClassNotFoundException {
+  private boolean setLoginDetails() throws SQLException, ClassNotFoundException {
+
     loginTries += 1;
+
     System.out.println("Enter Employee ID : \n");
       int userId = sc.nextInt();
+
       System.out.println("Enter Password : \n");
       String password = sc.next();
-      if (loginTries < maxLoginTries) {
-        login(userId, password);
-      } else {
-        System.out.println("Maximum Login Tries Exceeded! \n Returning to Home.");
-        loginTries = 0;
-        OperationFactory.getAppDriverInstance().initiate();
-      }
+
+    if (loginTries > maxLoginTries) {
+      System.out.println("Maximum Login Tries Exceeded! \n Returning to Home.");
+
+      loginTries = 0;
+      return false;
+    }
+
+    login(userId, password);
+
+    return true;
     }
   }
 

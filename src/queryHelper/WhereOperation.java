@@ -1,6 +1,7 @@
 package queryHelper;
 
 class WhereOperation {
+
   public String op; // eq, lte, gte
   public String key;
   public String type;

@@ -9,11 +9,11 @@ import java.util.List;
 
 // Singleton to execute queries related to DBs, received from DB Managers
 // Only SQL Query Executor linked to DB
-public class QueryExecutor<T> {
+public class QueryExecutor {
+
   private static QueryExecutor queryExecutor;
 
-  private QueryExecutor() {
-  }
+  private QueryExecutor() { }
 
   public static QueryExecutor getInstance() {
     if (queryExecutor == null) {
@@ -22,7 +22,7 @@ public class QueryExecutor<T> {
     return queryExecutor;
   }
 
-  // Proposed implementation, Only Executes a Query and returns Success, Only Write
+  // Only Executes a Query and returns Success, Only Write
   public void executeSQL(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectDatabase.getConnection();
     Statement statement = conn.createStatement();

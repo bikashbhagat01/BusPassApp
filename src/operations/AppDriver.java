@@ -19,11 +19,14 @@ public class AppDriver {
 
     Scanner sc = OperationFactory.getScannerInstance();
     boolean exitCode = false;
+
     while (!exitCode) {
       System.out.println("Welcome to Amazon's Employee BusPass Management Application");
       System.out.println("\nSelect User Type Option :");
       System.out.println("\n1. Admin \n2. User\n3. Visitor \n4. Exit \n");
+
       String choice = sc.next();
+
       switch (choice) {
         case "1":
           System.out.println("Welcome Administrator!\n");
@@ -44,10 +47,12 @@ public class AppDriver {
         case "4":
           exitCode = true;
           break;
+
         default:
           System.out.println("Please Enter Valid Option");
       }
     }
+
     System.out.println("Thank You For Using Amazon's Employee BusPass Management Application\n");
   }
 }

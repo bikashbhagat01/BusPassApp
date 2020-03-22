@@ -5,16 +5,22 @@ import java.util.Scanner;
 import managers.BusManager;
 
 public class VisitorOperation {
+
   private static Scanner sc = OperationFactory.getScannerInstance();
-  public void showMenu() throws SQLException, ClassNotFoundException {
-    // Available Routes, SeatAvailability, Exit
+
+  public boolean showMenu() throws SQLException, ClassNotFoundException {
+
     boolean exitCode = false;
     String choice = "";
-    while(!exitCode){
-      System.out.println( "\n1. View Details for Available Routes and buses \n" +
+
+    while (!exitCode) {
+
+      System.out.println("1. View Details for Available Routes and buses \n" +
               "2. Display Seat Availability\n" +
               "3. Exit to Main Menu\n");
+
       choice = sc.nextLine();
+
       switch (choice) {
         case "1":
           displayBusTimingsAndRoute();
@@ -25,16 +31,19 @@ public class VisitorOperation {
         case "3":
           exitCode = true;
           break;
+
         default:
           System.out.println("Please Enter Valid Option\n");
       }
     }
-    System.out.println("Returning to Main Menu");
-    OperationFactory.getAppDriverInstance().initiate();
+
+    System.out.println("Returning to Previous Menu");
+
+    return true;
   }
 
+  // Calls BusManager to Display all Available Buses with Available Routes and Timings
   public void displayBusTimingsAndRoute() throws SQLException, ClassNotFoundException {
-    // Calls the RouteManager.read()
     BusManager.displayAvailableBusTimingsAndRoutes();
   }
 

@@ -2,17 +2,17 @@ import java.sql.SQLException;
 import operations.AppDriver;
 import queryHelper.QueryBuilder;
 
-public class Driver {
-  public static void main(String[] args) throws SQLException, ClassNotFoundException {
+// System is Initiated by calling initiate function of AppDriver Class
 
-    /*MAIN CLASS ::
-    * System is Initiated by calling initiate function
-    * */
+public class Driver {
+
+  public static void main(String[] args) throws SQLException, ClassNotFoundException {
     AppDriver appDriver = new AppDriver();
     appDriver.initiate();
 
     QueryBuilder qb = new QueryBuilder();
     String query = null;
+
     try {
     query = qb
             .Update()

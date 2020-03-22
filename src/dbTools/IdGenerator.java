@@ -11,9 +11,13 @@ public class IdGenerator {
         return this value
     * */
     String sqlQuery = "SELECT latestid from idgenerator where objectname = \"bus\";";
+
     int newBusId = QueryExecutor.getInstance().getQueryNumber(sqlQuery);
+
     sqlQuery = "update idgenerator set latestid = "+ newBusId + " where objectname = \"route\";";
+
     QueryExecutor.getInstance().executeSQL(sqlQuery);
+
     return newBusId;
   }
 

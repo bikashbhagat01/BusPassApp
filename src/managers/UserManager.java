@@ -39,7 +39,6 @@ public class UserManager {
     QueryExecutor.getInstance().executeSQL(sqlQuery);
   }
 
-
   public void read() {
     // No requirements found
 

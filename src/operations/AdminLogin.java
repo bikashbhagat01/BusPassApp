@@ -1,10 +1,11 @@
 package operations;
+
 import assets.Admin;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 // AdminLogin , Singleton as Only 1 ADMIN is Hard-Coded
 public class AdminLogin {
+
   // Set Hard-Coded values of ADMIN object to variables
   private String adminID = Admin.getAdminInstance().getAdminId();
   private String password = Admin.getAdminInstance().getPassword();
@@ -16,7 +17,7 @@ public class AdminLogin {
 
   private static AdminLogin adminLogin;
 
-  private AdminLogin(){}
+  private AdminLogin() { }
 
   public static AdminLogin getInstance() {
     if(adminLogin == null) {
@@ -38,20 +39,27 @@ public class AdminLogin {
     }
   }
 
-  private void setLoginDetails() throws Exception {
+  private boolean setLoginDetails() throws Exception {
     // Get Admin credentials
     loginTries += 1;
+
     System.out.println("Enter Login ID : \n");
-    String userId=sc.next();
+    String userId = sc.next();
+
     System.out.println("Enter Password : \n");
-    String password=sc.next();
-    if(loginTries < maxLoginTries) {
-      login(userId, password);
-    } else {
+    String password = sc.next();
+
+    if (loginTries > maxLoginTries) {
       System.out.println("Maximum Login Tries Exceeded! \n Returning to Home.");
+
       loginTries = 0;
-      OperationFactory.getAppDriverInstance().initiate();
+
+      return false;
     }
+
+    login(userId, password);
+
+    return true;
   }
 }
 
