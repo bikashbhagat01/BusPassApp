@@ -17,7 +17,9 @@ create table route(id INT NOT NULL PRIMARY KEY auto_increment, routeid int, stop
 
 === RouteRequest ===
 create table routerequest(routerequestid int NOT NULL PRIMARY KEY, startstop int, endstop int,
-                            requesterid int, routeexists boolean, timing int);
+                           startstopname VARCHAR(20), endstopname VARCHAR(20),
+                            requesterid int, routeexists boolean, stopsexist boolean,
+                            timing int);
 
 === stop ===
 create table stop(stopid int NOT NULL PRIMARY KEY, stopname varchar(20));

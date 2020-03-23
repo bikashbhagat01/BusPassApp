@@ -3,6 +3,7 @@ package operations;
 import assets.AssetFactory;
 import assets.Feedback;
 import assets.RouteRequest;
+import customExceptions.ApplicationException;
 import dbTools.TimeConverter;
 import dbTools.Validator;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ import managers.UserManager;
 public class UserOperation {
   Scanner sc = OperationFactory.getScannerInstance();
 
-  public boolean showMenu(int userId) throws Exception {
+  public boolean showMenu(int userId) throws ApplicationException {
 
     boolean exCode = false;
     String choice = "";
@@ -63,11 +64,11 @@ public class UserOperation {
   }
 
 
-  private void viewRoute() throws SQLException, ClassNotFoundException {
-    BusManager.displayAvailableBusTimingsAndRoutes();
+  private void viewRoute() throws ApplicationException {
+    BusManager.getInstance().displayAvailableBusTimingsAndRoutes();
   }
 
-  private boolean updateProfile(int userId) throws Exception {
+  private boolean updateProfile(int userId) throws ApplicationException {
     boolean exCode = false;
     String choice = "";
 
@@ -93,20 +94,20 @@ public class UserOperation {
           String firstName = sc.next();
           System.out.println("Last Name :\n");
           String lastName = sc.next();
-          UserManager.update(userId, "fname", firstName);
-          UserManager.update(userId, "lname", lastName);
+          UserManager.getInstance().update(userId, "fname", firstName);
+          UserManager.getInstance().update(userId, "lname", lastName);
           System.out.println("Name Updated to : ");
           break;
         case "2":
           System.out.println("E-mail Address :\n");
           String email = sc.next();
-          UserManager.update(userId, "email", email);
+          UserManager.getInstance().update(userId, "email", email);
           System.out.println("E-mail address Updated");
           break;
         case "3":
           System.out.println("Contact Number :");
           String contactNumber = sc.next();
-          UserManager.update(userId, "contactno", contactNumber);
+          UserManager.getInstance().update(userId, "contactno", contactNumber);
           System.out.println("Contact Number Updated");
           break;
         case "4":
@@ -114,20 +115,20 @@ public class UserOperation {
           String emegergencyContactName = sc.next();
           System.out.println("Emergency Contact Number : \n");
           String emergencyContactNumber = sc.next();
-          UserManager.update(userId, "emergencycontactname", emegergencyContactName);
-          UserManager.update(userId, "emergencycontactno", emergencyContactNumber);
+          UserManager.getInstance().update(userId, "emergencycontactname", emegergencyContactName);
+          UserManager.getInstance().update(userId, "emergencycontactno", emergencyContactNumber);
           System.out.println("Emergency Contact Details Updated");
           break;
         case "5":
           System.out.println("Blood Group :\n");
           String bloodGroup = sc.next();
-          UserManager.update(userId, "bloodgroup", bloodGroup);
+          UserManager.getInstance().update(userId, "bloodgroup", bloodGroup);
           System.out.println("Blood Group Updated");
           break;
         case "6":
           System.out.println("Existing Password :\n");
           String oldPassword = sc.next();
-          if (!Validator.isValidUserPassword(userId, oldPassword)) {
+          if (!UserManager.getInstance().isValidUserPassword(userId, oldPassword)) {
             System.out.println("Incorrect Password Entered. Returning to Update Menu");
             break;
           }
@@ -139,7 +140,7 @@ public class UserOperation {
             System.out.println("Both Passwords do not match");
             break;
           }
-          UserManager.update(userId, "password", newPasswordTwice);
+          UserManager.getInstance().update(userId, "password", newPasswordTwice);
           break;
         case "7":
           exCode = true;
@@ -154,7 +155,7 @@ public class UserOperation {
     return true;
   }
 
-  private boolean requestNewRoute(int userId) throws SQLException, ClassNotFoundException {
+  private boolean requestNewRoute(int userId) throws ApplicationException {
     /**Validates if requested stops are under a route with selected timing.
      * if route(s) with selected timing and stops exist(s), then displays the information
      * if such a route does not exist, creates a route request record in table.
@@ -179,21 +180,21 @@ public class UserOperation {
     int startStopId = 0;
     int endStopId = 0;
 
-    if (!(Validator.isPresent("stop", "stopname", startStop) ||
-            Validator.isPresent("stop", "stopname", endStop))) {
+    if (!(StopManager.getInstance().isPresent("stop", "stopname", startStop) ||
+            StopManager.getInstance().isPresent("stop", "stopname", endStop))) {
       stopsExist = false;
     }
 
     if (stopsExist == true) {
-      startStopId = StopManager.getStopIdForName(startStop);
-      endStopId = StopManager.getStopIdForName(endStop);
+      startStopId = StopManager.getInstance().getStopIdForName(startStop);
+      endStopId = StopManager.getInstance().getStopIdForName(endStop);
 
-      int[] routeIds = RouteManager.findRoutesForStops(startStopId, endStopId);
+      int[] routeIds = RouteManager.getInstance().findRoutesForStops(startStopId, endStopId);
 
-      if (Validator.isBusAvailableForRoutesAndTiming(routeIds, timeInMinutes)) {
+      if (BusManager.getInstance().isBusAvailableForRoutesAndTiming(routeIds, timeInMinutes)) {
         System.out.println("Available bus(es) for your request.");
 
-        BusManager.displayAvailableBusTimingsAndRoutes(routeIds, timeInMinutes);
+        BusManager.getInstance().displayAvailableBusTimingsAndRoutes(routeIds, timeInMinutes);
 
         return false;
       } else {
@@ -211,7 +212,7 @@ public class UserOperation {
               routeExists, timeInMinutes);
     }
 
-    RouteRequestManager.create(routeRequest);
+    RouteRequestManager.getInstance().create(routeRequest);
 
     System.out.println("Your Route Request has been sent!");
 
@@ -219,12 +220,12 @@ public class UserOperation {
   }
 
   // Creates a BusPass for User
-  private void requestForBusPass(int userId) throws SQLException, ClassNotFoundException {
-    BusPassManager.createBusPass(userId);
+  private void requestForBusPass(int userId) throws ApplicationException {
+    BusPassManager.getInstance().createBusPass(userId);
   }
 
   // Creates a Feedback record for the user comment
-  private boolean provideFeedback(int userId) throws SQLException, ClassNotFoundException {
+  private boolean provideFeedback(int userId) throws ApplicationException {
     System.out.println( "Enter Your Valuable Comment below [Word Limit 100]\n " +
                         "To return to previous menu, press 'Enter' twice\n");
 
@@ -242,11 +243,8 @@ public class UserOperation {
 
     Feedback feedback = AssetFactory.getFeedbackInstance(userId, comment);
 
-    try {
-      FeedbackManager.create(feedback);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    FeedbackManager.getInstance().create(feedback);
+
 
     System.out.println("Thank You for Your Comment");
 

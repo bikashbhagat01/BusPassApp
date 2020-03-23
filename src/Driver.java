@@ -1,4 +1,3 @@
-import java.sql.SQLException;
 import operations.AppDriver;
 import queryHelper.QueryBuilder;
 
@@ -15,12 +14,12 @@ public class Driver {
 
     try {
     query = qb
-            .Update()
-            .UpdateValue("name", "biku")
-            .WhereEq("name", "bikash")
-            .WhereEq("id", 7)
-            .WhereLte("salary", 45000)
-            .FromTable("user")
+            .update()
+            .updateValue("name", "biku")
+            .whereEq("name", "bikash")
+            .whereEq("id", 7)
+            .whereLte("salary", 45000)
+            .onTable("user")
             .build();
 
   } catch (Exception e) {

@@ -1,50 +1,78 @@
 package managers;
 import assets.User;
+import customExceptions.ApplicationException;
 import dbTools.QueryExecutor;
 import java.sql.SQLException;
 import queryHelper.QueryBuilder;
 
 /**Simplify Sql Query Creation**/
-public class UserManager {
-  private static String sqlQuery;
-  public static void create(User user) throws SQLException, ClassNotFoundException {
-  // Extracts Details from User Object, create InsertSQL and sends to Execute
-    String quote = "\'";
-    String userValues = quote + user.getEmployeeId() + quote + ","
-            + quote + user.getFirstName() + quote + ","
-            + quote + user.getLastName() + quote + "," + quote + user.getEmail() + quote + "," +
-            quote + user.getContactNo() + quote + "," + quote + user.getEmergencyContactNo() + quote
-            + "," + quote + user.getEmergencyContactName() + quote + "," +
-            quote + user.getBloodGroup() + quote + "," +
-            quote + user.getPassword() + quote;
-    sqlQuery =  "insert into user (userid , fname, lname, email, " +
-                "contactno, emergencycontactno, emergencycontactname, " +
-                "bloodgroup, password) " +
-                "values (" + userValues + ");";
-    QueryExecutor.getInstance().executeSQL(sqlQuery);
+public class UserManager extends BaseManager {
+
+  private static UserManager userManager;
+
+  public static UserManager getInstance() {
+    if(userManager == null) {
+      userManager = new UserManager();
+    }
+    return userManager;
   }
 
-  public static void update(int employeeId, String field, String newValue)
-          throws Exception {
-    /* Updates field with new value */
-    sqlQuery = "update user set " + field + "= " + newValue + " where userid = " + employeeId;
-    sqlQuery = QueryBuilder
-              .getInstance()
-              .Update()
-              .UpdateValue(field,newValue)
-              .WhereEq("userid",employeeId)
-              .FromTable("user")
-              .build();
+  public void create(User user) throws ApplicationException {
 
-    QueryExecutor.getInstance().executeSQL(sqlQuery);
-  }
+    QueryBuilder queryBuilder = this.getInsertInstance()
+                                    .onTable("user")
+                                    .insertValue("userid", user.getEmployeeId())
+                                    .insertValue("fname", user.getFirstName())
+                                    .insertValue("lname", user.getLastName())
+                                    .insertValue("email", user.getEmail())
+                                    .insertValue("contactno", user.getContactNo())
+                                    .insertValue("emergencycontactno", user.getEmergencyContactNo())
+                                    .insertValue("emergencycontactname", user.getEmergencyContactName())
+                                    .insertValue("bloodgroup", user.getBloodGroup())
+                                    .insertValue("password", user.getPassword());
 
-  public void read() {
-    // No requirements found
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
 
   }
 
-  public void delete() {
-    // No requirements found
+  public void update(int employeeId, String field, String newValue) throws ApplicationException {
+
+    QueryBuilder queryBuilder = this.getUpdateInstance()
+                                    .updateValue(field,newValue)
+                                    .whereEq("userid",employeeId)
+                                    .onTable("user");
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
   }
+
+  public boolean isValidUserPassword(int userId, String password) throws ApplicationException {
+
+    QueryBuilder queryBuilder = this.getSelectInstance()
+                                    .selectColumns("userid")
+                                    .onTable("user")
+                                    .whereEq("userid",userId)
+                                    .whereEq("password", password);
+
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+
+    return this.hasResult(QueryExecutor.getInstance(),sqlQuery);
+  }
+
+  public boolean isValidUser(int userId) throws ApplicationException {
+;
+    QueryBuilder queryBuilder = this.getSelectInstance()
+            .selectColumns("userid")
+            .onTable("user")
+            .whereEq("userid",userId);
+
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    return this.hasResult(QueryExecutor.getInstance(),sqlQuery);
+
+  }
+
 }

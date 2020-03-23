@@ -52,7 +52,7 @@ public class UserLogin {
             "\n Press Enter to confirm entry\n ");
     System.out.println("Employee ID : \n");
     int employeeId = sc.nextInt();
-    boolean userAlreadyExists = Validator.isValidUser(employeeId);
+    boolean userAlreadyExists = UserManager.getInstance().isValidUser(employeeId);
     if (userAlreadyExists) {
       System.out.println("User Id for " + employeeId + " already exists\n");
       showMenu();
@@ -96,7 +96,7 @@ public class UserLogin {
               email, contactNo, emergencyContactNo,
               emergencyContactName, bloodGroup,
               password);
-      UserManager.create(user);
+      UserManager.getInstance().create(user);
       System.out.println("Your Account with User ID : " + user.getEmployeeId() +
               " has been created ! \n");
       System.out.println("Please Login with your User ID and Password below : \n");
@@ -106,7 +106,7 @@ public class UserLogin {
 
   // If the user and password combination exist, redirect to UserOperations
   private void login(int userId, String password) throws Exception {
-    if (Validator.isValidUserPassword(userId, password)) {
+    if (UserManager.getInstance().isValidUserPassword(userId, password)) {
       OperationFactory.getUserOperationInstance().showMenu(userId);
     } else {
       System.out.println("\nIncorrect Credentials Entered \n Please enter correct credentials : \n");

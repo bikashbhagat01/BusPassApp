@@ -36,7 +36,7 @@ public class TimeConverter {
       minuteString = "" + minutePart;
     }
 
-    String resultTimeString = hourString + " : " + minuteString;
+    String resultTimeString = hourString + ":" + minuteString;
 
     return resultTimeString;
   }

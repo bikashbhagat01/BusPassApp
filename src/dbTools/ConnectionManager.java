@@ -4,11 +4,11 @@ import java.sql.*;
 
 // Created Singleton, Only gateway to DB
 // Returns Connection Object
-public class ConnectDatabase {
+public class ConnectionManager {
 
   private static Connection con;
 
-  public ConnectDatabase() { }
+  public ConnectionManager() { }
 
   public static Connection getConnection() throws SQLException, ClassNotFoundException {
     try {

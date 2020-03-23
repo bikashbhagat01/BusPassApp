@@ -1,20 +1,17 @@
 package managers;
 
-import dbTools.ConnectDatabase;
+import customExceptions.ApplicationException;
 import dbTools.QueryExecutor;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import queryHelper.QueryBuilder;
 
-public class SeatManager {
+public class SeatManager extends BaseManager {
 
   // checking and updating seat capacity for a bus in a route while generating buss pass
 
   private static SeatManager seatManager;
 
-  private SeatManager() {
-  }
+  private SeatManager() { }
 
   public static SeatManager getInstance() {
     if (seatManager == null) {
@@ -23,92 +20,98 @@ public class SeatManager {
     return seatManager;
   }
 
-  public int updateSeatValue(int routeId, int time) throws SQLException, ClassNotFoundException{
-    Connection conn = ConnectDatabase.getConnection();
-    // Statement statement = conn.createStatement();
-    int newAvailability,busBooked;
-    // Map<Integer,Integer> object = new HashMap<>();
-    //where avaibility>0
-    PreparedStatement pstmt = conn.prepareStatement("SELECT busid,availability," +
-            "bustype from bus WHERE routeid=? AND timing=? AND availability>0 " +
-            "ORDER BY bustype DESC");
-    //SeatManager.PreparedStatement pstmt = conn.prepareStatement("SELECT busid,availability,
-    // bustype from bus WHERE routeid=? AND timing=? ORDER BY bustype DESC");
-    pstmt.setInt(1, routeId);
-    pstmt.setInt(2, time);
-    ResultSet resultSet = pstmt.executeQuery();
-    // ResultSet resultSet = statement.executeQuery("SELECT busid,availability from bus
-    // WHERE routeid='\" + rid + \"' AND timing='\" + time + \"' ORDER BY bustype");
+  public int updateSeatValue(int routeId, int time) throws ApplicationException {
 
-    if(resultSet.next()) {
-      busBooked= resultSet.getInt(1);
-      newAvailability=resultSet.getInt(2)-1;
-      PreparedStatement pstmt1 = conn.prepareStatement("UPDATE bus SET availability =?" +
-              " where busid=?");
-      pstmt1.setInt(1, newAvailability);
-      pstmt1.setInt(2, busBooked);
-      pstmt1.executeUpdate();
+    int newAvailability,busBooked;
+
+    String columns[] = {"busid", "availability", "bustype"};
+
+    QueryBuilder queryBuilder = this.getSelectInstance()
+                                    .selectColumns(columns)
+                                    .onTable("bus")
+                                    .whereEq("routeid", routeId)
+                                    .whereEq("timing", time)
+                                    .whereGt("availability", 0);
+
+    String sqlQuery = this.buildQuery(queryBuilder) + " ORDER BY bustype DESC;";
+
+    ResultSet resultSet = this.getResultSet(QueryExecutor.getInstance(), sqlQuery);
+
+    if(this.isNextPresent(resultSet)) {
+      busBooked= this.getInt(resultSet,1);
+      newAvailability=this.getInt(resultSet,2)-1;
+
+      queryBuilder =  this.getUpdateInstance()
+                          .onTable("bus")
+                          .updateValue("availability", newAvailability)
+                          .whereEq("busid", busBooked);
+      sqlQuery = this.buildQuery(queryBuilder);
+
+      this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+
       return busBooked;
     }
     return 0;
   }
 
-  public boolean updateSeatType(int type,int busId,String vehicleNo) throws SQLException, ClassNotFoundException{
+  public boolean updateSeatType(int type,int busId,String vehicleNo) throws ApplicationException {
     //this is to update seat type in a bus based on a route
     int dbSeatCapacity,dbSeatAvailability,reducedSeatAvailability,increasedSeatAvailability;
     int newVehicleType=type;
-    Connection conn = ConnectDatabase.getConnection();
-//    PreparedStatement pstmt = conn.prepareStatement("SELECT availability, bustype from bus WHERE busid=?;");
-//    pstmt.setInt(1, busId);
-//    ResultSet resultSet = pstmt.executeQuery();
-      String sqlQuery = "SELECT availability, bustype from bus WHERE busid = " + busId + ";";
-      ResultSet resultSet = QueryExecutor.getInstance().getResultSet(sqlQuery);
-    resultSet.next();
-    dbSeatAvailability=resultSet.getInt(1);
-    dbSeatCapacity=resultSet.getInt(2);
-    reducedSeatAvailability=dbSeatAvailability-(dbSeatCapacity-newVehicleType);
-    increasedSeatAvailability=dbSeatAvailability+newVehicleType-dbSeatCapacity;
+
+//    String sqlQuery = "SELECT availability, bustype from bus WHERE busid = " + busId + ";";
+
+    String[] columns = {"availability", "bustype"};
+
+    QueryBuilder queryBuilder = this.getSelectInstance()
+                                    .selectColumns(columns)
+                                    .onTable("bus")
+                                    .whereEq("busid",busId);
+
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    ResultSet resultSet = this.getResultSet(QueryExecutor.getInstance(), sqlQuery);
+
+    this.isNextPresent(resultSet);
+//    resultSet.next();
+    dbSeatAvailability = this.getInt(resultSet, 1);
+    dbSeatCapacity = this.getInt(resultSet,2);
+
+    reducedSeatAvailability = dbSeatAvailability-(dbSeatCapacity-newVehicleType);
+    increasedSeatAvailability = dbSeatAvailability+newVehicleType-dbSeatCapacity;
+
     if(newVehicleType>dbSeatCapacity) {
-      PreparedStatement pstmt1 = conn.prepareStatement("UPDATE bus SET availability=?,bustype=?  WHERE busid=?");
-      pstmt1.setInt(1,increasedSeatAvailability);
-      pstmt1.setInt(2,newVehicleType);
-      pstmt1.setInt(3,busId);
-      pstmt1.executeUpdate();
+
+      queryBuilder = this.getUpdateInstance()
+                          .onTable("bus")
+                          .updateValue("availability", increasedSeatAvailability)
+                          .updateValue("bustype", newVehicleType)
+                          .whereEq("busid",busId);
+
+      sqlQuery = this.buildQuery(queryBuilder);
+
+      this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+
       return true;
     }
 
     if(reducedSeatAvailability>=dbSeatAvailability) {
-      PreparedStatement pstmt1 = conn.prepareStatement("UPDATE bus SET availability=?,bustype=?,vehicleno=?  WHERE busid=?");
-      pstmt1.setInt(1,reducedSeatAvailability);
-      pstmt1.setInt(2,newVehicleType);
-      pstmt1.setString(3,vehicleNo);
-      pstmt1.setInt(4,busId);
-      pstmt1.executeUpdate();
+
+      queryBuilder =  this.getUpdateInstance()
+                          .onTable("bus")
+                          .updateValue("availability", reducedSeatAvailability)
+                          .updateValue("bustype", newVehicleType)
+                          .updateValue("vehicleno",vehicleNo)
+                          .whereEq("busid",busId);
+
+      sqlQuery = this.buildQuery(queryBuilder);
+
+      this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+
       return true;
     }
     return false;
   }
-
-		 /*  while(resultSet.next()) {
-
-		    	object.put(resultSet.getInt(1), resultSet.getInt(2));
-		    }
-		    for(Map.Entry index:object.entrySet()){
-		    	int check=(int) index.getValue();
-		    	if(check>0)
-		    	{
-		    		newavail=(int) index.getValue();
-		    		newavail=newavail-1;
-		    		busbooked=(int) index.getKey();
-		    		 PreparedStatement pstmt1 = conn.prepareStatement("UPDATE bus SET avaibility =? where busid=?");
-		 		    pstmt1.setInt(1, newavail);
-		 			 pstmt1.setInt(2, busbooked);
-		 			pstmt1.executeUpdate();
-		    		return busbooked;
-		    		}
-		    }
-		    */
-  //statement.executeUpdate("UPDATE bus SET avaibility =newavail where busid=busbooked");
 
   public void displaySeatAvailabilityPerRoute() {
     /*Create sqlQuery to find routeId, timing and availability per route

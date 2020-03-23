@@ -1,22 +1,30 @@
 package managers;
 
 import assets.AssetFactory;
-import dbTools.ConnectDatabase;
-import dbTools.Validator;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import customExceptions.ApplicationException;
+import dbTools.QueryExecutor;
 import java.util.Scanner;
 import operations.OperationFactory;
+import queryHelper.QueryBuilder;
 
-public class BusPassManager {
+public class BusPassManager extends BaseManager {
   private static Scanner sc = OperationFactory.getScannerInstance();
-  public static void createBusPass(int employeeId) throws ClassNotFoundException, SQLException {
+
+  private static BusPassManager busPassManager;
+
+  public static BusPassManager getInstance() {
+    if(busPassManager == null) {
+      busPassManager = new BusPassManager();
+    }
+    return busPassManager;
+  }
+
+  public void createBusPass(int employeeId) throws ApplicationException {
       /*
       Create SQL String for insert
       call QueryExecutor for db insert
       * **/
-    if (Validator.isValidBusPass(employeeId)) {
+    if (isValidBusPass(employeeId)) {
       System.out.println("BusPass for " + employeeId + " already exists\n");
       //showMenu();
     } else {
@@ -32,14 +40,18 @@ public class BusPassManager {
         int busId = seat.updateSeatValue(routeId, timing);
         int buspassid = AssetFactory.getBusPassInstance(employeeId, routeId, busId, timing)
                         .getBusPassId();
-        Connection conn = ConnectDatabase.getConnection();
-        PreparedStatement pstmt = conn.prepareStatement("insert into buspass values(?,?,?,?,?)");
-        pstmt.setInt(1, buspassid);
-        pstmt.setInt(2, employeeId);
-        pstmt.setInt(3, busId);
-        pstmt.setInt(4, routeId);
-        pstmt.setInt(5, timing);
-        pstmt.executeUpdate();
+
+        QueryBuilder queryBuilder = this.getInsertInstance()
+                                        .onTable("buspass")
+                                        .insertValue("buspassid",buspassid)
+                                        .insertValue("userid", employeeId)
+                                        .insertValue("busid", busId)
+                                        .insertValue("routeid", routeId)
+                                        .insertValue("timing", timing);
+        String sqlQuery = this.buildQuery(queryBuilder);
+
+        this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+
         System.out.println("Bus Pass Allocated with Bus Pass ID : " + buspassid);
       }
     }
@@ -50,5 +62,9 @@ public class BusPassManager {
      * Create SQL Query to update field of busPassId to newValue
      * Call QueryExecutor(sqlQuery)
      * */
+  }
+
+  public boolean isValidBusPass(int userId) throws ApplicationException {
+    return this.isPresent("buspass","userid", userId);
   }
 }

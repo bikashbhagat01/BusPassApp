@@ -12,28 +12,9 @@ public class Validator {
 
   // Refactor names to presence
   // Returns true if User with mentioned password exist
-  public static boolean isValidUserPassword(int userId, String password) throws SQLException, ClassNotFoundException {
-    sqlQuery = "select userid from user where userid = " + userId + " and password = \'" + password + "\';";
-    return QueryExecutor.getInstance().isValidQuery(sqlQuery);
-  }
 
   // Returns true if user with mentioned User exists
-  public static boolean isValidUser(int userName) throws SQLException, ClassNotFoundException {
-    sqlQuery = "select userid from user where userid=" + userName;
-    return QueryExecutor.getInstance().isValidQuery(sqlQuery);
-  }
 
-  // Returns true if user is linked to a BusPass or Not
-  public static boolean isValidBusPass(int userName) throws SQLException, ClassNotFoundException {
-    sqlQuery = "select buspassid from buspass where userid = " + userName + ";";
-    return QueryExecutor.getInstance().isValidQuery(sqlQuery);
-  }
-
-  // Returns true if stopName is linked to a stopId or Not
-  public static boolean isValidStopName(String stopName) throws SQLException, ClassNotFoundException {
-    sqlQuery = "select stopid from stop where stopname=" + stopName;
-    return QueryExecutor.getInstance().isValidQuery(sqlQuery);
-  }
 
   // Returns true if the table contains a fieldValue for the mentioned column in the table
   public static boolean isPresent(String tableName, String fieldName, int fieldValue)
@@ -93,25 +74,6 @@ public class Validator {
   public static boolean isCommentBlank(String comment) {
     if (comment.trim().equals("")) {
       return true;
-    }
-    return false;
-  }
-
-  public static boolean isBusAvailableForRoutesAndTiming(int[] routeIds, int timing)
-          throws SQLException, ClassNotFoundException {
-    if(routeIds.length == 0) {
-      return false;
-    }
-
-    for(int routeId : routeIds) {
-      sqlQuery = "select * from bus where routeId = " + routeId + " and timing = " + timing +
-              " and availability <= bustype;";
-
-      ResultSet resultSet = QueryExecutor.getInstance().getResultSet(sqlQuery);
-
-      if(resultSet.next()) {
-        return true;
-      }
     }
     return false;
   }

@@ -2,11 +2,13 @@ package queryHelper;
 
 class WhereOperation {
 
-  public String op; // eq, lte, gte
+  // Variables store the Operation(=,<,>,etc), key(columnName), type(integer, boolean, etc.) & value
+  public String op;
   public String key;
   public String type;
   public String value;
 
+  // Sets the value for each variable for an instance
   WhereOperation(String op, String key, int intVal) {
     this.op = op;
     this.key = key;
@@ -21,8 +23,8 @@ class WhereOperation {
     this.value = strVal + "";
   }
 
+  // Returns query which is added after WHERE Keyword
   public String getWhereQuery() {
-    String query = "";
     String value = "";
 
     if (this.type == "string") {

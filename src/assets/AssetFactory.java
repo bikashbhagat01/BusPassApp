@@ -7,7 +7,7 @@ public class AssetFactory {
 
   // returns Objects of various types
   public static Bus getBusInstance(int availability, int busType, String vehicleNo)
-          throws SQLException, ClassNotFoundException {
+          throws Exception {
     int busId = IdGenerator.getNewBusId();
     Bus bus = new Bus(busId, availability, busType, vehicleNo);
     return bus;

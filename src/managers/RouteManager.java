@@ -1,36 +1,48 @@
 package managers;
 
+import customExceptions.ApplicationException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import assets.Route;
 import dbTools.QueryExecutor;
-import interfaces.Creatable;
-import java.util.Arrays;
 import java.util.List;
+import queryHelper.QueryBuilder;
 
-public class RouteManager {
+public class RouteManager extends BaseManager {
 
-  static String sqlQuery;
+  private static RouteManager routeManager;
 
-  public static void create(Route route) throws SQLException, ClassNotFoundException {
+  public static RouteManager getInstance() {
+    if(routeManager == null) {
+      routeManager = new RouteManager();
+    }
+    return routeManager;
+  }
+
+  public boolean create(Route route) throws ApplicationException {
 
     // Creates sqlQuery from Route Object and calls QueryExecutor.executeQuery(sqlQuery)
     // Creates sqlQuery to write routeId and stopIds into route - stop table
+    //     String sqlQuery="insert into route routeid="+route.getRouteId()+"stopid="+route.getStops()[i];
+
     for(int i=0;i<route.getStops().length;i++) {
-      sqlQuery="insert into route routeid="+route.getRouteId()+"stopid="+route.getStops()[i];
+      QueryBuilder queryBuilder = this.getInsertInstance()
+                                      .insertValue("routeid", route.getRouteId())
+                                      .insertValue("stopid", route.getStops()[i])
+                                      .onTable("route");
 
-      QueryExecutor
-              .getInstance()
-              .executeSQL(sqlQuery);
+      String sqlQuery = this.buildQuery(queryBuilder);
 
-      System.out.println("RouteID and Stops updated\n");
+      this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+
     }
+    System.out.println("RouteID and Stops updated\n");
+    return true;
   }
 
-  public static int[] findRoutesForStops(int startStop, int endStop)
-          throws SQLException, ClassNotFoundException {
+  public int[] findRoutesForStops(int startStop, int endStop)
+          throws ApplicationException {
     int[] startCommonRoutes = findRoutesForStops(startStop);
     int[] endCommonRoutes = findRoutesForStops(endStop);
 
@@ -55,17 +67,26 @@ public class RouteManager {
     return resultArray;
   }
 
-  public static int[] findRoutesForStops(int stopId) throws SQLException, ClassNotFoundException {
-    sqlQuery = "select routeid from route where stopid = " + stopId + ";";
+  public int[] findRoutesForStops(int stopId) throws ApplicationException {
+//    String sqlQuery = "select routeid from route where stopid = " + stopId + ";";
 
-    ResultSet resultSet = QueryExecutor.getInstance().getResultSet(sqlQuery);
+    String[] columns = {"routeid"};
+
+    QueryBuilder queryBuilder = this.getSelectInstance()
+                                    .selectColumns(columns)
+                                    .onTable("route")
+                                    .whereEq("stopid", stopId);
+
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    ResultSet resultSet = this.getResultSet(QueryExecutor.getInstance(),sqlQuery);
 
     List<Integer> resultList = new ArrayList<>();
 
     int count = 1;
 
-    while(resultSet.next()){
-      resultList.add(resultSet.getInt(count));
+    while(this.isNextPresent(resultSet)){
+      resultList.add(this.getInt(resultSet,count));
       ++count;
     }
 
@@ -77,8 +98,8 @@ public class RouteManager {
     return resultArray;
   }
 
-  public static void delete(int routeId) {
-
+  public boolean delete(int routeIdToRemove) {
+    return false;
   }
 }
 

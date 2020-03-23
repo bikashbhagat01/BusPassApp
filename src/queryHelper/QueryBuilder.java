@@ -4,27 +4,32 @@ import java.util.ArrayList;
 
 public class QueryBuilder {
 
+  // Constants to store Object's state
   private static final String INSERT = "INSERT";
   private static final String SELECT = "SELECT";
   private static final String UPDATE = "UPDATE";
+  private static final String DELETE = "DELETE";
 
   private String state;
   private String[] columns;
   private String table;
 
-  // where name = "" and id = 45;
+  // Saves List of Where and Operation Key Value Pairs
   private ArrayList<WhereOperation> whereOperations;
-  private ArrayList<InsertOperation> insertOpertions;
+  private ArrayList<OperationKV> operationKVs;
 
   private boolean isSelectAllColumns;
 
+
   public static QueryBuilder getInstance() {
+
     return new QueryBuilder();
   }
+
   public QueryBuilder() {
     this.isSelectAllColumns = false;
     this.whereOperations = new ArrayList<WhereOperation>();
-    this.insertOpertions = new ArrayList<InsertOperation>();
+    this.operationKVs = new ArrayList<OperationKV>();
   }
 
   private void checkState() throws Exception {
@@ -33,100 +38,127 @@ public class QueryBuilder {
     }
   }
 
-  public QueryBuilder Select() throws Exception {
+  // Sets the State of Current Object after Instantiation
+  public QueryBuilder select() throws Exception {
     this.checkState();
     this.state = SELECT;
     return this;
   }
 
-  public QueryBuilder Insert() throws Exception {
+  public QueryBuilder insert() throws Exception {
     this.checkState();
     this.state = INSERT;
     return this;
   }
 
-  public QueryBuilder Update() throws Exception {
+  public QueryBuilder update() throws Exception {
     this.checkState();
     this.state = UPDATE;
     return this;
   }
 
+  public QueryBuilder delete() throws Exception {
+    this.checkState();
+    this.state = DELETE;
+    return this;
+  }
 
-  public QueryBuilder SelectColums(String[] columns) {
+  // keeps the column names to be added in a select state object
+  public QueryBuilder selectColumns(String[] columns) {
     this.columns = columns;
     return this;
   }
 
-  public QueryBuilder SelectAllColumns() {
+  public QueryBuilder selectColumns(String column) {
+    this.columns = new String[]{column};
+    return this;
+  }
+
+  public QueryBuilder selectAllColumns() {
     this.isSelectAllColumns = true;
     return this;
   }
 
-  public QueryBuilder WhereEq(String key, int val) {
+  // Adds the Key-Value pairs for WhereOperation
+  public QueryBuilder whereEq(String key, int val) {
     this.whereOperations.add(new WhereOperation("eq", key, val));
     return this;
   }
 
-  public QueryBuilder WhereEq(String key, String val) {
+  public QueryBuilder whereEq(String key, String val) {
     this.whereOperations.add(new WhereOperation("eq", key, val));
     return this;
   }
 
-  public QueryBuilder WhereLte(String key, int val) {
+  public QueryBuilder whereLte(String key, int val) {
     this.whereOperations.add(new WhereOperation("lte", key, val));
     return this;
   }
 
-  public QueryBuilder WhereGte(String key, int val) {
+  public QueryBuilder whereLte(String key, String val) {
+    this.whereOperations.add(new WhereOperation("lte", key, val));
+    return this;
+  }
+
+  public QueryBuilder whereGte(String key, int val) {
     this.whereOperations.add(new WhereOperation("gte", key, val));
     return this;
   }
 
-  public QueryBuilder WhereLt(String key, int val) {
+  public QueryBuilder whereLt(String key, int val) {
     this.whereOperations.add(new WhereOperation("lt", key, val));
     return this;
   }
 
-  public QueryBuilder WhereGt(String key, int val) {
+  public QueryBuilder whereGt(String key, int val) {
     this.whereOperations.add(new WhereOperation("gt", key, val));
     return this;
   }
 
-  public QueryBuilder WhereNeq(String key, int val) {
+  public QueryBuilder whereNeq(String key, int val) {
     this.whereOperations.add(new WhereOperation("neq", key, val));
     return this;
   }
 
-  public QueryBuilder WhereNeq(String key, String val) {
+  public QueryBuilder whereNeq(String key, String val) {
     this.whereOperations.add(new WhereOperation("neq", key, val));
     return this;
   }
 
-  public QueryBuilder InsertValue(String key, int val) {
-    this.insertOpertions.add(new InsertOperation(key, val));
+  // Adds the Key-Value pairs for InsertOperation
+  public QueryBuilder insertValue(String key, int val) {
+    this.operationKVs.add(new OperationKV(key, val));
     return this;
   }
 
-  public QueryBuilder InsertValue(String key, String val) {
-    this.insertOpertions.add(new InsertOperation(key, val));
+  public QueryBuilder insertValue(String key, String val) {
+    this.operationKVs.add(new OperationKV(key, val));
     return this;
   }
 
-  public QueryBuilder UpdateValue(String key, String val) {
-    this.InsertValue(key, val);
+  public QueryBuilder insertValue(String key, boolean val) {
+    this.operationKVs.add(new OperationKV(key, val));
     return this;
   }
 
-  public QueryBuilder UpdateValue(String key, int val) {
-    this.InsertValue(key, val);
+  // Adds the Key-Value pairs for UpdateOperation
+  public QueryBuilder updateValue(String key, String val) {
+    this.insertValue(key, val);
     return this;
   }
 
-  public QueryBuilder FromTable(String table) {
+  public QueryBuilder updateValue(String key, int val) {
+    this.insertValue(key, val);
+    return this;
+  }
+
+  // Sets the table on which query will act on
+  public QueryBuilder onTable(String table) {
     this.table = table;
     return this;
   }
 
+  // Returns the query based on state
   public String build() throws Exception {
     switch (this.state) {
       case QueryBuilder.SELECT:
@@ -135,11 +167,38 @@ public class QueryBuilder {
         return this.buildInsert();
       case QueryBuilder.UPDATE:
         return this.buildUpdate();
+      case QueryBuilder.DELETE:
+        return this.buildDelete();
     }
     return "";
   }
 
+  // Builds the query for Delete
+  private String buildDelete() {
+    String query = "DELETE from " + this.table;
 
+    if (this.whereOperations.size() > 0) {
+      query += " WHERE ";
+
+      if (this.whereOperations.size() == 1) {
+        query += this.whereOperations.get(0).getWhereQuery() + " ";
+      } else {
+        for (int i = 0; i < this.whereOperations.size(); i++) {
+          query += this.whereOperations.get(i).getWhereQuery() + " ";
+
+          if (i != this.whereOperations.size() - 1) {
+            query += "AND ";
+          }
+        }
+      }
+    }
+
+    query += ";";
+
+    return query;
+  }
+
+  // Builds the query for Select
   private String buildSelect() {
     String query = "SELECT ";
 
@@ -174,23 +233,23 @@ public class QueryBuilder {
     return query;
   }
 
-
+  // Builds the query for Insert
   private String buildInsert() throws Exception {
     String query = "INSERT INTO " + this.table + " ";
 
-    if (this.insertOpertions.size() == 0) {
+    if (this.operationKVs.size() == 0) {
       throw new Exception("Nothing to insert");
     }
 
     String values = "";
     String actualVals = "";
 
-    for (int i = 0; i < insertOpertions.size(); i++) {
-      InsertOperation operation = insertOpertions.get(i);
+    for (int i = 0; i < operationKVs.size(); i++) {
+      OperationKV operation = operationKVs.get(i);
       values += operation.key;
       actualVals += operation.type == "string" ? "\'" + operation.value + "\'" : operation.value;
 
-      if (i != insertOpertions.size() - 1) {
+      if (i != operationKVs.size() - 1) {
         values += ",";
         actualVals += ",";
       }
@@ -202,19 +261,20 @@ public class QueryBuilder {
     return query;
   }
 
+  // Builds the query for Update
   private String buildUpdate() throws Exception {
     String query = "UPDATE " + this.table + " ";
 
     String sets = "";
 
-    if (this.insertOpertions.size() == 0) {
+    if (this.operationKVs.size() == 0) {
       throw new Exception("No inserts");
     }
 
-    for (int i = 0; i < this.insertOpertions.size(); i++) {
-      sets += this.insertOpertions.get(i).getUpdateQuery();
+    for (int i = 0; i < this.operationKVs.size(); i++) {
+      sets += this.operationKVs.get(i).getAssignmentQuery();
 
-      if (i != this.insertOpertions.size() - 1) {
+      if (i != this.operationKVs.size() - 1) {
         sets += " , ";
       }
     }

@@ -1,5 +1,6 @@
 package operations;
 
+import customExceptions.ApplicationException;
 import java.sql.SQLException;
 import java.util.Scanner;
 import managers.BusManager;
@@ -8,7 +9,7 @@ public class VisitorOperation {
 
   private static Scanner sc = OperationFactory.getScannerInstance();
 
-  public boolean showMenu() throws SQLException, ClassNotFoundException {
+  public boolean showMenu() throws ApplicationException {
 
     boolean exitCode = false;
     String choice = "";
@@ -43,8 +44,8 @@ public class VisitorOperation {
   }
 
   // Calls BusManager to Display all Available Buses with Available Routes and Timings
-  public void displayBusTimingsAndRoute() throws SQLException, ClassNotFoundException {
-    BusManager.displayAvailableBusTimingsAndRoutes();
+  public void displayBusTimingsAndRoute() throws ApplicationException {
+    BusManager.getInstance().displayAvailableBusTimingsAndRoutes();
   }
 
   public void displaySeatAvailabilityPerRoute() {

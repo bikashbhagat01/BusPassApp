@@ -65,6 +65,10 @@ public class RouteRequest {
     return routeExists;
   }
 
+  public boolean isStopsExist() {
+    return stopsExist;
+  }
+
   public int getTiming() {
     return timing;
   }

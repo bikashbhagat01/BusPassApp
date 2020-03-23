@@ -1,19 +1,33 @@
 package managers;
 
-import assets.Stop;
+import customExceptions.ApplicationException;
 import dbTools.QueryExecutor;
-import java.sql.SQLException;
+import queryHelper.QueryBuilder;
 
-public class StopManager {
+public class StopManager extends BaseManager {
+
+  private static StopManager stopManager;
+
+  public static StopManager getInstance() {
+    if(stopManager == null) {
+      stopManager = new StopManager();
+    }
+    return stopManager;
+  }
 
 
-  public static int getStopIdForName(String stopName) throws SQLException, ClassNotFoundException {
+  public int getStopIdForName(String stopName) throws ApplicationException {
     // returns stopId for searched stopName from stopTable
-    String sqlQuery = "select stopid from stop where stopname = " + stopName;
 
-    int stopId = QueryExecutor
-            .getInstance()
-            .getQueryNumber(sqlQuery);
+    String[] columns = {"stopid"};
+
+    QueryBuilder queryBuilder = this.getSelectInstance()
+                                    .selectColumns(columns)
+                                    .onTable("stop")
+                                    .whereEq("stopname", stopName);
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    int stopId = this.getQueryNumber(QueryExecutor.getInstance(), sqlQuery);
 
     return stopId;
   }
