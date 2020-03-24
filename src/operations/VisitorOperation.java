@@ -1,7 +1,6 @@
 package operations;
 
 import customExceptions.ApplicationException;
-import java.sql.SQLException;
 import java.util.Scanner;
 import managers.BusManager;
 

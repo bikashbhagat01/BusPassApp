@@ -12,6 +12,9 @@ public class UserLogin extends BaseOperation {
   private final static int maxLoginTries = 5;
   private static int loginTries = 0;
 
+  // try combining userlogin and userOperation using states. Remove bottom to top layer routing via
+  // returns and state alterations
+
   public boolean showMenu() throws ApplicationException {
     boolean exitCode = false;
     String choice = "";
@@ -28,8 +31,10 @@ public class UserLogin extends BaseOperation {
       switch (choice) {
         case "1":
           try {
+            // setLoginDetails ka definition me ja
             setLoginDetails();
           } catch (UserException e) {
+            System.out.println("Returning to previous menu as the below exception has occurred.");
             System.out.println(e.getMessage());
           }
           break;
@@ -37,6 +42,7 @@ public class UserLogin extends BaseOperation {
           try {
             createAccount();
           } catch (UserException e) {
+            System.out.println("Returning to previous menu as the below exception has occurred.");
             System.out.println(e.getMessage());
           }
           break;
@@ -57,8 +63,8 @@ public class UserLogin extends BaseOperation {
   private void createAccount() throws ApplicationException, UserException {
     // Creates a User Account and sends to login page
     System.out.println("\nPlease Enter the below details as prompted." +
-            "\n Press Enter to confirm entry\n ");
-    System.out.println("Employee ID : \n");
+            "\nPress Enter to confirm entry\n ");
+    System.out.println("\n Employee ID : \n");
     Scanner sc = OperationFactory.getScannerInstance();
 
     int employeeId = sc.nextInt();
@@ -92,10 +98,11 @@ public class UserLogin extends BaseOperation {
       System.out.println("\n Password : \n" +
               "[Should be of at least 8 characters, contain only letters and digits and " +
               "must contain at least 2 digits]");
-
       String password = this.getPassword();
-      String confirmedPassword = this.getConfirmedPassword(password);
 
+      System.out.println("\n Confirm Password : \n" +
+              "[Should be the same value as entered before]");
+      String confirmedPassword = this.getConfirmedPassword(password);
 
       User user = AssetFactory.getInstance().getUserInstance(employeeId, firstName, lastName,
               email, contactNo, emergencyContactNo,
@@ -115,7 +122,7 @@ public class UserLogin extends BaseOperation {
   // If the user and password combination exist, redirect to UserOperations
   private void login(int userId, String password) throws ApplicationException, UserException {
     if (UserManager.getInstance().isValidUserPassword(userId, password)) {
-      OperationFactory.getUserOperationInstance().showMenu(userId);
+      OperationFactory.getUserOperationInstance().showMenu(userId); // So, yeha se return kar k kidhar setlogin pe?
     } else {
       System.out.println("\nIncorrect Credentials Entered \nPlease enter correct credentials : \n");
       setLoginDetails();
@@ -138,7 +145,7 @@ public class UserLogin extends BaseOperation {
       loginTries = 0;
       return false;
     }
-
+    // iska
     login(userId, password);
 
     return true;

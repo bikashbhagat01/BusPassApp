@@ -140,6 +140,42 @@ public class Validator {
   public static boolean arePasswordsMatching(String password, String confirmedPassword) {
     return password.equals(confirmedPassword);
   }
+
+  public static boolean isValidVehicleNo(String vehicleNo) {
+    if (vehicleNo == null) {
+      return false;
+    }
+
+    String vehicleNoRegex = "^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$";
+
+    Pattern pat = Pattern.compile(vehicleNoRegex);
+
+    return pat.matcher(vehicleNo).matches();
+  }
+
+  public static boolean isValidBusType(int busType) {
+    return busType < 50;
+  }
+
+  public static boolean isValidStopCount(int stopCount) {
+    return stopCount < 10;
+  }
+
+  public static boolean isValidStopName(String stopName) {
+    return stopName.length() < 100;
+  }
+
+  public static boolean isValidTimeString(String timeString) {
+    if (timeString == null) {
+      return false;
+    }
+
+    String timeStringRegex = "([01]?[0-9]|2[0-3])[/:-][0-5][0-9]$";
+
+    Pattern pat = Pattern.compile(timeStringRegex);
+
+    return pat.matcher(timeString).matches();
+  }
 }
 
 /**  "1. A password must have at least eight characters.\n" +

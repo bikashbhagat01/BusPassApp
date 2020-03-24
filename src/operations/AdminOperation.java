@@ -6,58 +6,73 @@ import assets.AssetFactory;
 import assets.Bus;
 import assets.Route;
 import customExceptions.ApplicationException;
+import customExceptions.UserException;
 import dbTools.TimeConverter;
-import java.util.Scanner;
 import managers.BusManager;
 import managers.RouteManager;
 import managers.SeatManager;
 import managers.StopManager;
 
-public class AdminOperation {
+public class AdminOperation extends BaseOperation {
 
-  private Scanner sc = OperationFactory.getScannerInstance();
+  // Switch Case menu which calls other small functions in this class
 
-  public boolean showMenu() throws Exception {
-    // Switch Case menu which calls other small functions in this class
+  public boolean showMenu() throws ApplicationException {
     boolean exitCode = false;
     String choice = "";
 
-    while(!exitCode){
-      System.out.println( "\n1. Add Or remove Bus\n" +
-                          "2. Add Or remove Route\n" +
-                          "3. Assign a Bus to Route\n" +
-                          "4. Change type of a Bus\n" +
-                          "5. Display Number of Buses of each Type\n" +
-                          "6. Display timings and route for each bus\n" +
-                          "0. Exit to Main Menu");
+    while (!exitCode) {
+      System.out.println("\n1. Add Or remove Bus\n" +
+              "2. Add Or remove Route\n" +
+              "3. Assign a Bus to Route\n" +
+              "4. Change type of a Bus\n" +
+              "5. Display Number of Buses of each Type\n" +
+              "6. Display timings and route for each bus\n" +
+              "0. Exit to Main Menu");
 
-      choice = sc.next();
+      choice = OperationFactory.getScannerInstance().next();
 
       switch (choice) {
         case "1":
           addOrRemoveBus();
           break;
+
         case "2":
           addOrRemoveRoute();
           break;
+
         case "3":
-          addBusToRoute();
+          try {
+            addBusToRoute();
+          } catch (UserException e) {
+            System.out.println("Returning to previous menu as the below exception has occurred.");
+            System.out.println(e.getMessage());
+          }
           break;
+
         case "4":
-          changeBusType();
+          try {
+            changeBusType();
+          } catch (UserException e) {
+            System.out.println("Returning to previous menu as the below exception has occurred.");
+            System.out.println(e.getMessage());
+          }
           break;
+
         case "5":
           displayBusCountOfEachType();
           break;
+
         case "6":
           displayBusTimingsAndRoutes();
           break;
+
         case "0":
           exitCode = true;
           break;
 
         default:
-        System.out.println("Please Enter Valid Option\n");
+          System.out.println("Please Enter Valid Option\n");
       }
     }
 
@@ -72,20 +87,34 @@ public class AdminOperation {
     boolean exitCode = false;
     String choice = "";
 
-    while(!exitCode) {
+    while (!exitCode) {
       System.out.println("Please Select an Option : \n");
-      System.out.println("1. Add a New Route\n2. Remove an Existing Route\n" +
+      System.out.println("1. Add a New Route" +
+              "\n2. Remove an Existing Route\n" +
               "\n0. Return to Admin Menu");
 
-      choice = sc.next();
+      choice = OperationFactory.getScannerInstance().next();
 
       switch (choice) {
+
         case "1":
-          addRoute();
+          try {
+            addRoute();
+          } catch (UserException e) {
+            System.out.println("Returning to previous menu as the below exception has occurred.");
+            System.out.println(e.getMessage());
+          }
           break;
+
         case "2":
-          removeRoute();
+          try {
+            removeRoute();
+          } catch (UserException e) {
+            System.out.println("Returning to previous menu as the below exception has occurred.");
+            System.out.println(e.getMessage());
+          }
           break;
+
         case "0":
           exitCode = true;
           break;
@@ -104,20 +133,30 @@ public class AdminOperation {
     boolean exitCode = false;
     String choice = "";
 
-    while(!exitCode) {
+    while (!exitCode) {
       System.out.println("Please Select an Option : \n");
-      System.out.println( "1. Add a New Bus\n" +
-                          "2. Remove an Existing Bus\n" +
-                          "0. Return to Admin Menu");
+      System.out.println("1. Add a New Bus\n" +
+              "2. Remove an Existing Bus\n" +
+              "0. Return to Admin Menu");
 
-      choice = sc.next();
+      choice = OperationFactory.getScannerInstance().next();
 
       switch (choice) {
         case "1":
-          addBus();
+          try {
+            addBus();
+          } catch (UserException e) {
+            System.out.println("Returning to previous menu as the below exception has occurred.");
+            System.out.println(e.getMessage());
+          }
           break;
         case "2":
-          removeBus();
+          try {
+            removeBus();
+          } catch (UserException e) {
+            System.out.println("Returning to previous menu as the below exception has occurred.");
+            System.out.println(e.getMessage());
+          }
           break;
         case "0":
           exitCode = true;
@@ -133,24 +172,24 @@ public class AdminOperation {
     return true;
   }
 
-  private void changeBusType() throws ApplicationException {
+  private void changeBusType() throws ApplicationException, UserException {
     /* Get the busId and new Type from Console
      * send the busId, field as [Type] and newValue as String to BusManager.update(busId, field, newValue)
      * */
     System.out.println("Enter Route Id");
-    int routeId = sc.nextInt();
+    int routeId = this.getRouteId();
 
     if (BusManager.getInstance().isPresent("bus", "routeid", routeId)) {
       //Show busIds under the route
       System.out.println("Enter Bus Id");
-      int busId = sc.nextInt();
+      int busId = this.getBusId();
 
       if (BusManager.getInstance().isPresent("bus", "busid", busId)) {
         System.out.println("Enter BusType [Number Of Seats]");
-        int busType = sc.nextInt();
+        int busType = this.getBusType();
 
         System.out.println("Enter Vehicle No");
-        String vehicleNo = sc.next();
+        String vehicleNo = this.getVehicleNo();
 
         SeatManager
                 .getInstance()
@@ -165,11 +204,11 @@ public class AdminOperation {
   }
 
   // create a Bus object by taking details from Console
-  private boolean addBus() throws ApplicationException {
+  private boolean addBus() throws ApplicationException, UserException {
     System.out.println("Please Enter New Bus Details Below :\n");
 
     System.out.println("Vehicle Number:\n");
-    String vehicleNo = sc.next();
+    String vehicleNo = this.getVehicleNo();
 
     if (BusManager.getInstance().isPresent("bus", "vehicleno", vehicleNo)) {
       System.out.println(" Vehicle already Assigned to different BusId ");
@@ -177,7 +216,7 @@ public class AdminOperation {
     }
 
     System.out.println("Bus Type [Capacity/Number of Seats]\n");
-    int busType = sc.nextInt();
+    int busType = this.getBusType();
 
     Bus newBus = AssetFactory.getInstance().getBusInstance(busType, busType, vehicleNo);
 
@@ -192,11 +231,11 @@ public class AdminOperation {
   }
 
   // Checks if Bus Id exists or not. If yes removed it, else returns to main menu
-  private boolean removeBus() throws ApplicationException {
+  private boolean removeBus() throws ApplicationException, UserException {
     System.out.println("Please enter Bus Id to remove : \n");
-    int removedBus = sc.nextInt();
+    int removedBus = this.getBusId();
 
-    if(!BusManager.getInstance().isPresent("bus", "busid", removedBus)) {
+    if (!BusManager.getInstance().isPresent("bus", "busid", removedBus)) {
       System.out.println("Invalid BusId entered \nReturning to previous Menu");
       return false;
     }
@@ -208,11 +247,11 @@ public class AdminOperation {
   }
 
   // Takes StopNames, validates them and creates Route record.
-  private void addRoute() throws ApplicationException {
+  private void addRoute() throws ApplicationException, UserException {
     System.out.println("Pleas Enter New Route Details below :");
 
     System.out.println("Number of Stops:\n");
-    int stopCount = sc.nextInt();
+    int stopCount = this.getStopCount();
 
     int[] stops = new int[stopCount];
     int count = 0;
@@ -221,11 +260,11 @@ public class AdminOperation {
 
     System.out.println("Stops [From StartStop to EndStop]\n");
 
-    while(count < stopCount){
-      System.out.println("Enter Stop Name. : " + (count+1));
-      stopName = sc.next();
+    while (count < stopCount) {
+      System.out.println("Enter Stop Name : " + (count + 1));
+      stopName = this.getStopName();
 
-      if(StopManager.getInstance().isPresent("stop", "stopname", stopName)) {
+      if (StopManager.getInstance().isPresent("stop", "stopname", stopName)) {
         stops[count] = StopManager.getInstance().getStopIdForName(stopName);
         ++count;
       } else {
@@ -241,11 +280,11 @@ public class AdminOperation {
   }
 
   // Checks if Route Id exists or not. If yes, remove route from route table
-  private boolean removeRoute() throws ApplicationException {
+  private boolean removeRoute() throws ApplicationException, UserException {
     System.out.println("Please enter Route Id to remove : \n");
-    int removedRouteId = sc.nextInt();
+    int removedRouteId = this.getRouteId();
 
-    if(!RouteManager.getInstance().isPresent("route", "routeid", removedRouteId)) {
+    if (!RouteManager.getInstance().isPresent("route", "routeid", removedRouteId)) {
       System.out.println("Invalid Route ID entered \nReturning to previous Menu");
       return false;
     }
@@ -260,54 +299,37 @@ public class AdminOperation {
   }
 
   // Takes a RouteId, Start Timing  and adds it to the Bus table
-  private boolean addBusToRoute() throws ApplicationException {
+  private boolean addBusToRoute() throws ApplicationException, UserException {
     System.out.println("Enter details :");
 
     System.out.println("Route ID:");
-    int routeId = sc.nextInt();
+    int routeId = this.getRouteId();
 
-    if(!RouteManager.getInstance().isPresent("route","routeid",routeId)) {
+    if (!RouteManager.getInstance().isPresent("route", "routeid", routeId)) {
       System.out.println("Route ID not found. Please add a Route from Route Menu");
       return false;
     }
 
     System.out.println("Bus Id : \n");
-    int busId = sc.nextInt();
+    int busId = this.getBusId();
 
-    if(!RouteManager.getInstance().isPresent("bus","busid", busId)){
+    if (!RouteManager.getInstance().isPresent("bus", "busid", busId)) {
       System.out.println("Bus ID not found. Please add a Bus from Route Menu");
       return false;
     }
 
     System.out.println("Start Timing [in 24 hour format separated by : Or / or -]:\n");
-    String timingString = sc.next();
+    String timeString = this.getTimeString();
 
-    int timeInMinutes = TimeConverter.getTimeAsMinutes(timingString);
+    int timeInMinutes = TimeConverter.getTimeAsMinutes(timeString);
 
     BusManager.getInstance().update(busId, "routeid", routeId);
-    BusManager.getInstance().update(busId,"timing", timeInMinutes);
+    BusManager.getInstance().update(busId, "timing", timeInMinutes);
 
-    System.out.println("Route : " + routeId + " & timing " + timingString +
+    System.out.println("Route : " + routeId + " & timing " + timeString +
             " has Been added for bus : " + busId);
 
     return true;
-  }
-
-  public void approveRoute() {
-    /*if route requests table empty, display no request found
-    * if route requests exist, show details to Admin
-    * if routeExists flag is true, assign routeId and timing to a bus
-    * Search for Stops using StopManager.seacrh() - if found assign
-    * Start and end as relevant StopIds
-    * If stops not found,  ask Admin if they want to create a Stop using StopManager and get a stopId
-    * or they want to deny
-    * If they deny, delete the routeRequest
-    * RouteManager.searchRoute(start,end), which searches for the set of Stops and returns a
-    * set of routeIds where the Stops fall in
-    * if route exists for stops mentioned but time doesn't, then admin assigns a Bus to the route
-    * if route doesn't exist then admin creates route and creates/updates bus for the timing
-    * */
-
   }
 
   private void displayBusTimingsAndRoutes() throws ApplicationException {
@@ -320,4 +342,22 @@ public class AdminOperation {
     // Executes Query to find Bus Type and their count
     BusManager.getInstance().displayBusCount("bustype");
   }
+
+  public void approveRoute() {
+    /*if route requests table empty, display no request found
+     * if route requests exist, show details to Admin
+     * if routeExists flag is true, assign routeId and timing to a bus
+     * Search for Stops using StopManager.seacrh() - if found assign
+     * Start and end as relevant StopIds
+     * If stops not found,  ask Admin if they want to create a Stop using StopManager and get a stopId
+     * or they want to deny
+     * If they deny, delete the routeRequest
+     * RouteManager.searchRoute(start,end), which searches for the set of Stops and returns a
+     * set of routeIds where the Stops fall in
+     * if route exists for stops mentioned but time doesn't, then admin assigns a Bus to the route
+     * if route doesn't exist then admin creates route and creates/updates bus for the timing
+     * */
+
+  }
+
 }

@@ -268,7 +268,7 @@ public class QueryBuilder {
     String sets = "";
 
     if (this.operationKVs.size() == 0) {
-      throw new Exception("No inserts");
+      throw new Exception("No update");
     }
 
     for (int i = 0; i < this.operationKVs.size(); i++) {

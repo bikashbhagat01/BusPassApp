@@ -4,8 +4,8 @@ import java.util.Scanner;
 
 public class OperationFactory {
 
-  public static AdminLogin getAdminLoginInstance() {
-    return AdminLogin.getInstance();
+  public static AdminLoginOperation getAdminLoginInstance() {
+    return AdminLoginOperation.getInstance();
   }
 
   public static AdminOperation getAdminOperationInstance() {

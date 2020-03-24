@@ -36,11 +36,12 @@ public class BusManager extends BaseManager {
   public void update(int busId, String field, int newValue) throws ApplicationException {
 
     QueryBuilder queryBuilder = this.getUpdateInstance()
-            .onTable("bus")
-            .updateValue(field, newValue)
-            .whereEq("busid", busId);
+                                    .onTable("bus")
+                                    .updateValue(field, newValue)
+                                    .whereEq("busid", busId);
 
     String sqlQuery = this.buildQuery(queryBuilder);
+
     System.out.println(sqlQuery + "from update in BusManager");
 
     this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
