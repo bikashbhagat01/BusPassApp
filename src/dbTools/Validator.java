@@ -1,7 +1,7 @@
 package dbTools;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Validator {
@@ -9,27 +9,6 @@ public class Validator {
   private static String sqlQuery;
 
   private static int PASSWORD_LENGTH = 8;
-
-  // Refactor names to presence
-  // Returns true if User with mentioned password exist
-
-  // Returns true if user with mentioned User exists
-
-
-  // Returns true if the table contains a fieldValue for the mentioned column in the table
-  public static boolean isPresent(String tableName, String fieldName, int fieldValue)
-          throws SQLException, ClassNotFoundException {
-    sqlQuery = "select * from " + tableName + " where " + fieldName + "= " + fieldValue;
-    return QueryExecutor.getInstance().isValidQuery(sqlQuery);
-  }
-
-  // Returns true if the table contains a fieldValue for the mentioned column in the table
-  public static boolean isPresent(String tableName, String fieldName, String fieldValue)
-          throws SQLException, ClassNotFoundException {
-    sqlQuery = "select * from " + tableName + " where " + fieldName + "= " + "\'" +
-            fieldValue + "\'";
-    return QueryExecutor.getInstance().isValidQuery(sqlQuery);
-  }
 
   public static boolean isValidPassword(String password) {
 
@@ -43,7 +22,7 @@ public class Validator {
     for (int i = 0; i < password.length(); i++) {
       char ch = password.charAt(i);
 
-      if (is_Numeric(ch)) {
+      if (isNumeric(ch)) {
         numCount++;
       } else if (is_Letter(ch)) {
         charCount++;
@@ -60,7 +39,7 @@ public class Validator {
   }
 
 
-  public static boolean is_Numeric(char ch) {
+  public static boolean isNumeric(char ch) {
     return (ch >= '0' && ch <= '9');
   }
 
@@ -78,8 +57,8 @@ public class Validator {
     return false;
   }
 
-  public static boolean isValidEmail(String emailId) {
-    if (emailId == null) {
+  public static boolean isValidEmail(String emailAddress) {
+    if (emailAddress == null) {
       return false;
     }
 
@@ -90,7 +69,76 @@ public class Validator {
 
     Pattern pat = Pattern.compile(emailRegex);
 
-    return pat.matcher(emailId).matches();
+    return pat.matcher(emailAddress).matches();
+  }
+
+  public static boolean isValidNameLength(String firstName) {
+    if(firstName.length() < 50){
+      return true;
+    }
+    return false;
+  }
+
+
+  public static boolean isValidPhoneNo(String contactNo) {
+    for(int i = 0; i < contactNo.length(); i++) {
+      if(!isNumeric(contactNo.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static boolean isValidPhoneNoLength(String contactNo) {
+    if(contactNo.length() > 12) {
+      return false;
+    }
+
+    if(contactNo.length() < 10) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public static boolean isValidFullNameLength(String fullName) {
+    if(fullName.length() < 50) {
+      return true;
+    }
+    return false;
+  }
+
+
+  public static boolean isValidName(String name) {
+    for(int i = 0; i < name.length(); i++) {
+      if(isNumeric(name.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static boolean isValidBloodGroup(String bloodGroup) {
+
+    List<String> bloodGroups = new ArrayList<String>();
+    bloodGroups.add("APOSITIVE");
+    bloodGroups.add("BPOSITIVE");
+    bloodGroups.add("OPOSITIVE");
+    bloodGroups.add("ABPOSITIVE");
+    bloodGroups.add("ANEGATIVE");
+    bloodGroups.add("BNEGATIVE");
+    bloodGroups.add("ONEGATIVE");
+    bloodGroups.add("ABNEGATIVE");
+
+    if( bloodGroups.contains(bloodGroup.trim().toUpperCase())) {
+      return true;
+    }
+    return false;
+  }
+
+
+  public static boolean arePasswordsMatching(String password, String confirmedPassword) {
+    return password.equals(confirmedPassword);
   }
 }
 

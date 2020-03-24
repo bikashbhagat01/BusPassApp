@@ -2,38 +2,46 @@ package operations;
 
 import assets.AssetFactory;
 import assets.User;
-import dbTools.Validator;
-import java.sql.SQLException;
+import customExceptions.ApplicationException;
+import customExceptions.UserException;
 import java.util.Scanner;
 import managers.UserManager;
 
-public class UserLogin {
+public class UserLogin extends BaseOperation {
 
   private final static int maxLoginTries = 5;
   private static int loginTries = 0;
 
-  private Scanner sc = OperationFactory.getScannerInstance();
-
-  public boolean showMenu() throws Exception {
-    boolean exCode = false;
+  public boolean showMenu() throws ApplicationException {
+    boolean exitCode = false;
     String choice = "";
+    Scanner sc = OperationFactory.getScannerInstance();
 
-    while (!exCode) {
-      System.out.println("\n1. Existing User " +
-              "\n2. New User" +
-              "\n3. Exit\n");
+    while (!exitCode) {
 
-      choice = sc.nextLine();
+        System.out.println("\n1. Existing User " +
+                "\n2. New User" +
+                "\n0. Exit\n");
+
+      choice = sc.next();
 
       switch (choice) {
         case "1":
-          setLoginDetails();
+          try {
+            setLoginDetails();
+          } catch (UserException e) {
+            System.out.println(e.getMessage());
+          }
           break;
         case "2":
-          createAccount();
+          try {
+            createAccount();
+          } catch (UserException e) {
+            System.out.println(e.getMessage());
+          }
           break;
-        case "3":
-          exCode = true;
+        case "0":
+          exitCode = true;
           break;
 
         default:
@@ -46,84 +54,83 @@ public class UserLogin {
     return true;
   }
 
-  private void createAccount() throws Exception {
+  private void createAccount() throws ApplicationException, UserException {
     // Creates a User Account and sends to login page
-    System.out.println("Please Enter the below details as prompted. " +
+    System.out.println("\nPlease Enter the below details as prompted." +
             "\n Press Enter to confirm entry\n ");
     System.out.println("Employee ID : \n");
+    Scanner sc = OperationFactory.getScannerInstance();
+
     int employeeId = sc.nextInt();
     boolean userAlreadyExists = UserManager.getInstance().isValidUser(employeeId);
     if (userAlreadyExists) {
       System.out.println("User Id for " + employeeId + " already exists\n");
-      showMenu();
     }
     if (!userAlreadyExists) {
+
       System.out.println("\n First Name : \n");
-      String firstName = sc.next();
+      String firstName = this.getFirstName();
+
       System.out.println("\n Last Name : \n");
-      String lastName = sc.next();
-      System.out.println("\n Email-ID : \n");
-      String email = sc.next();
+      String lastName = this.getLastName();
+
+      System.out.println("\n Email Address : \n");
+      String email = this.getEmail();
+
       System.out.println("\n Contact No. : \n");
-      String contactNo = sc.next();
+      String contactNo = this.getContactNo();
+
       System.out.println("\n Emergency Contact No. : \n");
-      String emergencyContactNo = sc.next();
+      String emergencyContactNo = this.getContactNo();
+
       System.out.println("\n Emergency Contact Name : \n");
-      String emergencyContactName = sc.next();
-      System.out.println("\n BloodGroup : \n");
-      String bloodGroup = sc.next();
-      boolean exitCode = false;
-      String password = "";
-      while (!exitCode) {
-        System.out.println("\n Password : \n");
-        password = sc.next();
-        if (!Validator.isValidPassword(password)) {
-          System.out.println("Please Enter a Valid password :" +
-                  "\n 1. A password must have at least eight characters.\n" +
-                  " 2. A password consists of only letters and digits.\n" +
-                  " 3. A password must contain at least two digits \n");
-        } else {
-          System.out.println("\n Password Again: \n");
-          String passwordConfirm = sc.next();
-          if (!password.equals(passwordConfirm)) {
-            System.out.println("Both Passwords do not match");
-          } else {
-            exitCode = true;
-          }
-        }
-      }
-      User user = AssetFactory.getUserInstance(employeeId, firstName, lastName,
+      String emergencyContactName = this.getFullName();
+
+      System.out.println("\n BloodGroup [Format : APOSITIVE, ABNEGATIVE,etc.] : \n");
+      String bloodGroup = this.getBloodGroup();
+
+      System.out.println("\n Password : \n" +
+              "[Should be of at least 8 characters, contain only letters and digits and " +
+              "must contain at least 2 digits]");
+
+      String password = this.getPassword();
+      String confirmedPassword = this.getConfirmedPassword(password);
+
+
+      User user = AssetFactory.getInstance().getUserInstance(employeeId, firstName, lastName,
               email, contactNo, emergencyContactNo,
               emergencyContactName, bloodGroup,
-              password);
+              confirmedPassword);
+
       UserManager.getInstance().create(user);
+
       System.out.println("Your Account with User ID : " + user.getEmployeeId() +
               " has been created ! \n");
       System.out.println("Please Login with your User ID and Password below : \n");
-      setLoginDetails();
+
+        setLoginDetails();
     }
   }
 
   // If the user and password combination exist, redirect to UserOperations
-  private void login(int userId, String password) throws Exception {
+  private void login(int userId, String password) throws ApplicationException, UserException {
     if (UserManager.getInstance().isValidUserPassword(userId, password)) {
       OperationFactory.getUserOperationInstance().showMenu(userId);
     } else {
-      System.out.println("\nIncorrect Credentials Entered \n Please enter correct credentials : \n");
-
+      System.out.println("\nIncorrect Credentials Entered \nPlease enter correct credentials : \n");
       setLoginDetails();
     }
   }
 
-  private boolean setLoginDetails() throws Exception {
+  private boolean setLoginDetails() throws ApplicationException, UserException {
 
     loginTries += 1;
 
     System.out.println("Enter Employee ID : \n");
-      int userId = sc.nextInt();
+    int userId = this.getUserId();
 
-      System.out.println("Enter Password : \n");
-      String password = sc.next();
+    System.out.println("Enter Password : \n");
+    String password = this.getPassword();
 
     if (loginTries > maxLoginTries) {
       System.out.println("Maximum Login Tries Exceeded! \n Returning to Home.");

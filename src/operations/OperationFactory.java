@@ -1,32 +1,26 @@
 package operations;
 
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class OperationFactory {
 
-  public static AdminLogin getAdminLoginInstance()
-          throws SQLException, ClassNotFoundException {
+  public static AdminLogin getAdminLoginInstance() {
     return AdminLogin.getInstance();
   }
 
-  public static AdminOperation getAdminOperationInstance()
-          throws SQLException, ClassNotFoundException {
+  public static AdminOperation getAdminOperationInstance() {
     return new AdminOperation();
   }
 
-  public static UserLogin getUserLoginInstance()
-          throws SQLException, ClassNotFoundException {
+  public static UserLogin getUserLoginInstance() {
     return new UserLogin();
   }
 
-  public static UserOperation getUserOperationInstance()
-          throws SQLException, ClassNotFoundException {
+  public static UserOperation getUserOperationInstance() {
     return new UserOperation();
   }
 
-  public static VisitorOperation getVisitorOperationInstance()
-          throws SQLException, ClassNotFoundException {
+  public static VisitorOperation getVisitorOperationInstance() {
     return new VisitorOperation();
   }
 

@@ -9,24 +9,25 @@ public class Driver {
     AppDriver appDriver = new AppDriver();
     appDriver.initiate();
 
-    QueryBuilder qb = new QueryBuilder();
-    String query = null;
-
-    try {
-    query = qb
-            .update()
-            .updateValue("name", "biku")
-            .whereEq("name", "bikash")
-            .whereEq("id", 7)
-            .whereLte("salary", 45000)
-            .onTable("user")
-            .build();
-
-  } catch (Exception e) {
-    e.printStackTrace();
-  }
-
-    System.out.println(query);
+    // Testing Query Builder for accuracy
+//    QueryBuilder qb = new QueryBuilder();
+//    String query = null;
+//
+//    try {
+//    query = qb
+//            .update()
+//            .updateValue("name", "biku")
+//            .whereEq("name", "bikash")
+//            .whereEq("id", 7)
+//            .whereLte("salary", 45000)
+//            .onTable("user")
+//            .build();
+//
+//  } catch (Exception e) {
+//    e.printStackTrace();
+////  }
+//
+//    System.out.println(query);
 }
   }
 

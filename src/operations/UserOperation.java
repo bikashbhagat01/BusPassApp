@@ -4,9 +4,9 @@ import assets.AssetFactory;
 import assets.Feedback;
 import assets.RouteRequest;
 import customExceptions.ApplicationException;
+import customExceptions.UserException;
 import dbTools.TimeConverter;
 import dbTools.Validator;
-import java.sql.SQLException;
 import java.util.Scanner;
 import managers.BusManager;
 import managers.BusPassManager;
@@ -21,36 +21,47 @@ public class UserOperation {
 
   public boolean showMenu(int userId) throws ApplicationException {
 
-    boolean exCode = false;
+    boolean exitCode = false;
     String choice = "";
+    boolean retry = false;
 
-    while (!exCode) {
-      System.out.println("\n1. View Available Routes\n" +
-              "2. Update Profile\n" +
-              "3. Raise Request For a New Route \n" +
-              "4. Raise Request for a Bus Pass\n" +
-              "5. Provide Feedback\n" +
-              "6. Exit to Main Menu\n");
+    while (!exitCode) {
 
-      choice = sc.nextLine();
+      if (retry == false) {
+        System.out.println("\n1. View Available Routes\n" +
+                "2. Update Profile\n" +
+                "3. Raise Request For a New Route \n" +
+                "4. Raise Request for a Bus Pass\n" +
+                "5. Provide Feedback\n" +
+                "0. Exit to Main Menu\n");
+        choice = sc.next();
+      } else {
+        retry = false;
+      }
 
       switch (choice) {
         case "1":
           viewRoute();
           break;
         case "2":
-          updateProfile(userId);
+          try {
+            updateProfile(userId);
+          } catch(UserException ue) {
+            retry = true;
+            System.out.println( ue.getMessage());
+          }
           break;
         case "3":
           requestNewRoute(userId);
+          break;
         case "4":
           requestForBusPass(userId);
           break;
         case "5":
           provideFeedback(userId);
           break;
-        case "6":
-          exCode = true;
+        case "0":
+          exitCode = true;
           break;
 
         default:
@@ -68,23 +79,23 @@ public class UserOperation {
     BusManager.getInstance().displayAvailableBusTimingsAndRoutes();
   }
 
-  private boolean updateProfile(int userId) throws ApplicationException {
+  private boolean updateProfile(int userId) throws ApplicationException, UserException {
     boolean exCode = false;
     String choice = "";
 
     while (!exCode) {
-      System.out.println("Select Field to Update");
-      System.out.println("\n1. Name \n" +
+      System.out.println("\nSelect Field to Update\n");
+      System.out.println("1. Name \n" +
               "2. E-mail address\n" +
               "3. Contact Number\n" +
               "4. Emergency Contact Details\n" +
               "5. Blood Group\n" +
               "6. Password\n" +
-              "7. Return to User Menu");
+              "0. Return to User Menu");
 
-      choice = sc.nextLine();
+      choice = sc.next();
 
-      if (!choice.equalsIgnoreCase("7")) {
+      if (!choice.equalsIgnoreCase("0")) {
         System.out.println("Please enter values below : ");
       }
 
@@ -96,11 +107,14 @@ public class UserOperation {
           String lastName = sc.next();
           UserManager.getInstance().update(userId, "fname", firstName);
           UserManager.getInstance().update(userId, "lname", lastName);
-          System.out.println("Name Updated to : ");
+          System.out.println("Name Updated");
           break;
         case "2":
           System.out.println("E-mail Address :\n");
           String email = sc.next();
+          if(!Validator.isValidEmail(email)){
+            throw new UserException("Invalid E-mail");
+          }
           UserManager.getInstance().update(userId, "email", email);
           System.out.println("E-mail address Updated");
           break;
@@ -112,10 +126,10 @@ public class UserOperation {
           break;
         case "4":
           System.out.println("Emergency Contact Name : \n");
-          String emegergencyContactName = sc.next();
+          String emergencyContactName = sc.next();
           System.out.println("Emergency Contact Number : \n");
           String emergencyContactNumber = sc.next();
-          UserManager.getInstance().update(userId, "emergencycontactname", emegergencyContactName);
+          UserManager.getInstance().update(userId, "emergencycontactname", emergencyContactName);
           UserManager.getInstance().update(userId, "emergencycontactno", emergencyContactNumber);
           System.out.println("Emergency Contact Details Updated");
           break;
@@ -142,7 +156,7 @@ public class UserOperation {
           }
           UserManager.getInstance().update(userId, "password", newPasswordTwice);
           break;
-        case "7":
+        case "0":
           exCode = true;
           break;
 
@@ -205,10 +219,10 @@ public class UserOperation {
     RouteRequest routeRequest = null;
 
     if (stopsExist == true) {
-      routeRequest = AssetFactory.getRouteRequestInstance(startStopId, endStopId, userId,
+      routeRequest = AssetFactory.getInstance().getRouteRequestInstance(startStopId, endStopId, userId,
               routeExists, timeInMinutes);
     } else {
-      routeRequest = AssetFactory.getRouteRequestInstance(startStop, endStop, userId,
+      routeRequest = AssetFactory.getInstance().getRouteRequestInstance(startStop, endStop, userId,
               routeExists, timeInMinutes);
     }
 
@@ -241,7 +255,7 @@ public class UserOperation {
       return false;
     }
 
-    Feedback feedback = AssetFactory.getFeedbackInstance(userId, comment);
+    Feedback feedback = AssetFactory.getInstance().getFeedbackInstance(userId, comment);
 
     FeedbackManager.getInstance().create(feedback);
 

@@ -11,8 +11,6 @@ import java.sql.SQLException;
 
 public class BaseManager {
 
-  protected String tableName;
-
   // Catch Exceptions for QueryBuilder Update, and throw ApplicationException
   protected QueryBuilder getUpdateInstance() throws ApplicationException {
     try {
@@ -36,7 +34,7 @@ public class BaseManager {
     try {
       return QueryBuilder.getInstance().insert();
     } catch (Exception e) {
-      throw new ApplicationException("Cannot create update instance");
+      throw new ApplicationException("Cannot create insert instance");
     }
   }
 
@@ -45,7 +43,7 @@ public class BaseManager {
     try {
       return QueryBuilder.getInstance().delete();
     } catch (Exception e) {
-      throw new ApplicationException("Cannot create update instance");
+      throw new ApplicationException("Cannot create delete instance");
     }
   }
 
@@ -135,27 +133,6 @@ public class BaseManager {
   // Catch Exception for incorrect Manager passed, throws ApplicationException
   public static BaseManager getInstance() throws ApplicationException {
     throw new ApplicationException("Class not implemented");
-  }
-
-  public boolean isPresent(String field, String value) throws ApplicationException{
-    QueryBuilder queryBuilder = this.getSelectInstance();
-
-    queryBuilder
-            .selectAllColumns()
-            .whereEq(field, value)
-            .onTable(this.tableName); // Ensure Child class has tableName
-
-    String query = this.buildQuery(queryBuilder);
-
-    try {
-      return QueryExecutor.getInstance().isValidQuery(query);
-    } catch (SQLException e) {
-      e.printStackTrace();
-      throw new ApplicationException("Invalid SQL");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-      throw new ApplicationException("SQL Class not found");
-    }
   }
 
   public boolean isPresent(String tableName, String field, String value) throws ApplicationException{

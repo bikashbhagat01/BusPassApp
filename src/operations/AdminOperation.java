@@ -7,8 +7,6 @@ import assets.Bus;
 import assets.Route;
 import customExceptions.ApplicationException;
 import dbTools.TimeConverter;
-import dbTools.Validator;
-import java.sql.SQLException;
 import java.util.Scanner;
 import managers.BusManager;
 import managers.RouteManager;
@@ -21,19 +19,19 @@ public class AdminOperation {
 
   public boolean showMenu() throws Exception {
     // Switch Case menu which calls other small functions in this class
-    boolean exCode = false;
+    boolean exitCode = false;
     String choice = "";
 
-    while(!exCode){
+    while(!exitCode){
       System.out.println( "\n1. Add Or remove Bus\n" +
                           "2. Add Or remove Route\n" +
                           "3. Assign a Bus to Route\n" +
                           "4. Change type of a Bus\n" +
                           "5. Display Number of Buses of each Type\n" +
                           "6. Display timings and route for each bus\n" +
-                          "7. Exit to Main Menu");
+                          "0. Exit to Main Menu");
 
-      choice = sc.nextLine();
+      choice = sc.next();
 
       switch (choice) {
         case "1":
@@ -44,6 +42,7 @@ public class AdminOperation {
           break;
         case "3":
           addBusToRoute();
+          break;
         case "4":
           changeBusType();
           break;
@@ -53,8 +52,8 @@ public class AdminOperation {
         case "6":
           displayBusTimingsAndRoutes();
           break;
-        case "7":
-          exCode = true;
+        case "0":
+          exitCode = true;
           break;
 
         default:
@@ -71,20 +70,23 @@ public class AdminOperation {
 
 
     boolean exitCode = false;
+    String choice = "";
 
     while(!exitCode) {
       System.out.println("Please Select an Option : \n");
       System.out.println("1. Add a New Route\n2. Remove an Existing Route\n" +
-              "\n3. Return to Admin Menu");
+              "\n0. Return to Admin Menu");
 
-      switch (sc.next()) {
+      choice = sc.next();
+
+      switch (choice) {
         case "1":
           addRoute();
           break;
         case "2":
           removeRoute();
           break;
-        case "3":
+        case "0":
           exitCode = true;
           break;
 
@@ -100,21 +102,24 @@ public class AdminOperation {
   private boolean addOrRemoveBus() throws ApplicationException {
 
     boolean exitCode = false;
+    String choice = "";
 
     while(!exitCode) {
       System.out.println("Please Select an Option : \n");
       System.out.println( "1. Add a New Bus\n" +
                           "2. Remove an Existing Bus\n" +
-                          "3. Return to Admin Menu");
+                          "0. Return to Admin Menu");
 
-      switch (sc.next()) {
+      choice = sc.next();
+
+      switch (choice) {
         case "1":
           addBus();
           break;
         case "2":
           removeBus();
           break;
-        case "3":
+        case "0":
           exitCode = true;
           break;
 
@@ -174,16 +179,8 @@ public class AdminOperation {
     System.out.println("Bus Type [Capacity/Number of Seats]\n");
     int busType = sc.nextInt();
 
-    Bus newBus = null;
-    try {
-      newBus = AssetFactory.getBusInstance(busType, busType, vehicleNo);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    Bus newBus = AssetFactory.getInstance().getBusInstance(busType, busType, vehicleNo);
+
     BusManager.getInstance().create(newBus);
 
     System.out.println("Your new Bus with the below details has been created:\n");
@@ -236,7 +233,7 @@ public class AdminOperation {
       }
     }
 
-    Route newRoute = AssetFactory.getRouteInstance(stops);
+    Route newRoute = AssetFactory.getInstance().getRouteInstance(stops);
     RouteManager.getInstance().create(newRoute);
 
     System.out.println("New Route with Route ID : " + newRoute.getRouteId() + "has been created");
@@ -263,13 +260,13 @@ public class AdminOperation {
   }
 
   // Takes a RouteId, Start Timing  and adds it to the Bus table
-  private boolean addBusToRoute() throws Exception {
+  private boolean addBusToRoute() throws ApplicationException {
     System.out.println("Enter details :");
 
     System.out.println("Route ID:");
     int routeId = sc.nextInt();
 
-    if(!Validator.isPresent("route","routeid",routeId)) {
+    if(!RouteManager.getInstance().isPresent("route","routeid",routeId)) {
       System.out.println("Route ID not found. Please add a Route from Route Menu");
       return false;
     }
@@ -277,7 +274,7 @@ public class AdminOperation {
     System.out.println("Bus Id : \n");
     int busId = sc.nextInt();
 
-    if(!Validator.isPresent("bus","busid", busId)){
+    if(!RouteManager.getInstance().isPresent("bus","busid", busId)){
       System.out.println("Bus ID not found. Please add a Bus from Route Menu");
       return false;
     }

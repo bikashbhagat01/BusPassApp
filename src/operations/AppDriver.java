@@ -23,7 +23,7 @@ public class AppDriver {
     while (!exitCode) {
       System.out.println("Welcome to Amazon's Employee BusPass Management Application");
       System.out.println("\nSelect User Type Option :");
-      System.out.println("\n1. Admin \n2. User\n3. Visitor \n4. Exit \n");
+      System.out.println("\n1. Admin \n2. User\n3. Visitor \n0. Exit \n");
 
       String choice = sc.next();
 
@@ -38,13 +38,17 @@ public class AppDriver {
           break;
         case "2":
           System.out.println("Welcome User!\n");
-          OperationFactory.getUserLoginInstance().showMenu();
+          try {
+            OperationFactory.getUserLoginInstance().showMenu();
+          } catch (Exception e) {
+            System.out.println(e.getMessage());
+          }
           break;
         case "3":
           System.out.println("\nWelcome Visitor!\n");
           OperationFactory.getVisitorOperationInstance().showMenu();
           break;
-        case "4":
+        case "0":
           exitCode = true;
           break;
 

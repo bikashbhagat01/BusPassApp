@@ -11,9 +11,7 @@ public class AdminLogin {
   private String password = Admin.getAdminInstance().getPassword();
 
   private static int loginTries = 0;
-  private final static int maxLoginTries = 5;
-
-  private Scanner sc = OperationFactory.getScannerInstance();
+  private final static int maxLoginTries = 3;
 
   private static AdminLogin adminLogin;
 
@@ -34,7 +32,7 @@ public class AdminLogin {
     if(adminId.trim().equals(this.adminID) && password.equals(this.password)) {
       OperationFactory.getAdminOperationInstance().showMenu();
     } else {
-      System.out.println("Incorrect Credentials Entered \n Please enter correct credentials : \n");
+      System.out.println("Incorrect Credentials Entered \nPlease enter correct credentials : \n");
       setLoginDetails();
     }
   }
@@ -42,6 +40,8 @@ public class AdminLogin {
   private boolean setLoginDetails() throws Exception {
     // Get Admin credentials
     loginTries += 1;
+
+    Scanner sc = OperationFactory.getScannerInstance();
 
     System.out.println("Enter Login ID : \n");
     String userId = sc.next();

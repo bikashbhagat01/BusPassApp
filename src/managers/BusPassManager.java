@@ -38,7 +38,7 @@ public class BusPassManager extends BaseManager {
         //showmenu();
       } else {
         int busId = seat.updateSeatValue(routeId, timing);
-        int buspassid = AssetFactory.getBusPassInstance(employeeId, routeId, busId, timing)
+        int buspassid = AssetFactory.getInstance().getBusPassInstance(employeeId, routeId, busId, timing)
                         .getBusPassId();
 
         QueryBuilder queryBuilder = this.getInsertInstance()

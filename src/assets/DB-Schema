@@ -26,8 +26,8 @@ create table stop(stopid int NOT NULL PRIMARY KEY, stopname varchar(20));
 
 === user ===
 create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50), lname varchar(50),
-                  email varchar(50), contactno int, emergencycontactno int,
-                  emergencycontactname varchar(50), bloodgroup varchar(20), password varchar(50));
+                  email varchar(50), contactno varchar(12), emergencycontactno varchar(12),
+                  emergencycontactname varchar(50), bloodgroup varchar(12), password varchar(50));
 
 ==== routebusmap ====
 [view to get busid, routeid, stops and timings for display]
@@ -78,5 +78,5 @@ create table routerequest(routerequestid int NOT NULL PRIMARY KEY, startstop int
 create table stop(stopid int NOT NULL PRIMARY KEY, stopname varchar(20));
 
 create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50), lname varchar(50),
-                  email varchar(50), contactno int, emergencycontactno int,
-                  emergencycontactname varchar(50), bloodgroup varchar(20), password varchar(50));
+                  email varchar(50), contactno varchar(12), emergencycontactno varchar(12),
+                  emergencycontactname varchar(50), bloodgroup varchar(12), password varchar(50));
