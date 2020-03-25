@@ -3,6 +3,7 @@ package operations;
 import customExceptions.ApplicationException;
 import java.util.Scanner;
 import managers.BusManager;
+import managers.SeatManager;
 
 public class VisitorOperation {
 
@@ -47,7 +48,11 @@ public class VisitorOperation {
     BusManager.getInstance().displayAvailableBusTimingsAndRoutes();
   }
 
-  public void displaySeatAvailabilityPerRoute() {
+  public void displaySeatAvailabilityPerRoute() throws ApplicationException {
+
+    // select timing as "Bus Timing", routeid,sum(availability), count(*) as "No of buses buses runnning at same time" from bus group by routeid, timing;
+
+    SeatManager.getInstance().displaySeatAvailabilityPerRoute();
 
   }
 }

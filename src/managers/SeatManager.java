@@ -11,7 +11,8 @@ public class SeatManager extends BaseManager {
 
   private static SeatManager seatManager;
 
-  private SeatManager() { }
+  private SeatManager() {
+  }
 
   public static SeatManager getInstance() {
     if (seatManager == null) {
@@ -22,29 +23,29 @@ public class SeatManager extends BaseManager {
 
   public int updateSeatValue(int routeId, int time) throws ApplicationException {
 
-    int newAvailability,busBooked;
+    int newAvailability, busBooked;
 
     String columns[] = {"busid", "availability", "bustype"};
 
     QueryBuilder queryBuilder = this.getSelectInstance()
-                                    .selectColumns(columns)
-                                    .onTable("bus")
-                                    .whereEq("routeid", routeId)
-                                    .whereEq("timing", time)
-                                    .whereGt("availability", 0);
+            .selectColumns(columns)
+            .onTable("bus")
+            .whereEq("routeid", routeId)
+            .whereEq("timing", time)
+            .whereGt("availability", 0);
 
     String sqlQuery = this.buildQuery(queryBuilder) + " ORDER BY bustype DESC;";
 
     ResultSet resultSet = this.getResultSet(QueryExecutor.getInstance(), sqlQuery);
 
-    if(this.isNextPresent(resultSet)) {
-      busBooked= this.getInt(resultSet,1);
-      newAvailability=this.getInt(resultSet,2)-1;
+    if (this.isNextPresent(resultSet)) {
+      busBooked = this.getInt(resultSet, 1);
+      newAvailability = this.getInt(resultSet, 2) - 1;
 
-      queryBuilder =  this.getUpdateInstance()
-                          .onTable("bus")
-                          .updateValue("availability", newAvailability)
-                          .whereEq("busid", busBooked);
+      queryBuilder = this.getUpdateInstance()
+              .onTable("bus")
+              .updateValue("availability", newAvailability)
+              .whereEq("busid", busBooked);
       sqlQuery = this.buildQuery(queryBuilder);
 
       this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
@@ -54,19 +55,17 @@ public class SeatManager extends BaseManager {
     return 0;
   }
 
-  public boolean updateSeatType(int type,int busId,String vehicleNo) throws ApplicationException {
+  public boolean updateSeatType(int type, int busId, String vehicleNo) throws ApplicationException {
     //this is to update seat type in a bus based on a route
-    int dbSeatCapacity,dbSeatAvailability,reducedSeatAvailability,increasedSeatAvailability;
-    int newVehicleType=type;
-
-//    String sqlQuery = "SELECT availability, bustype from bus WHERE busid = " + busId + ";";
+    int dbSeatCapacity, dbSeatAvailability, reducedSeatAvailability, increasedSeatAvailability;
+    int newVehicleType = type;
 
     String[] columns = {"availability", "bustype"};
 
     QueryBuilder queryBuilder = this.getSelectInstance()
-                                    .selectColumns(columns)
-                                    .onTable("bus")
-                                    .whereEq("busid",busId);
+            .selectColumns(columns)
+            .onTable("bus")
+            .whereEq("busid", busId);
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
@@ -75,18 +74,18 @@ public class SeatManager extends BaseManager {
     this.isNextPresent(resultSet);
 //    resultSet.next();
     dbSeatAvailability = this.getInt(resultSet, 1);
-    dbSeatCapacity = this.getInt(resultSet,2);
+    dbSeatCapacity = this.getInt(resultSet, 2);
 
-    reducedSeatAvailability = dbSeatAvailability-(dbSeatCapacity-newVehicleType);
-    increasedSeatAvailability = dbSeatAvailability+newVehicleType-dbSeatCapacity;
+    reducedSeatAvailability = dbSeatAvailability - (dbSeatCapacity - newVehicleType);
+    increasedSeatAvailability = dbSeatAvailability + newVehicleType - dbSeatCapacity;
 
-    if(newVehicleType>dbSeatCapacity) {
+    if (newVehicleType > dbSeatCapacity) {
 
       queryBuilder = this.getUpdateInstance()
-                          .onTable("bus")
-                          .updateValue("availability", increasedSeatAvailability)
-                          .updateValue("bustype", newVehicleType)
-                          .whereEq("busid",busId);
+              .onTable("bus")
+              .updateValue("availability", increasedSeatAvailability)
+              .updateValue("bustype", newVehicleType)
+              .whereEq("busid", busId);
 
       sqlQuery = this.buildQuery(queryBuilder);
 
@@ -95,14 +94,14 @@ public class SeatManager extends BaseManager {
       return true;
     }
 
-    if(reducedSeatAvailability>=dbSeatAvailability) {
+    if (reducedSeatAvailability >= dbSeatAvailability) {
 
-      queryBuilder =  this.getUpdateInstance()
-                          .onTable("bus")
-                          .updateValue("availability", reducedSeatAvailability)
-                          .updateValue("bustype", newVehicleType)
-                          .updateValue("vehicleno",vehicleNo)
-                          .whereEq("busid",busId);
+      queryBuilder = this.getUpdateInstance()
+              .onTable("bus")
+              .updateValue("availability", reducedSeatAvailability)
+              .updateValue("bustype", newVehicleType)
+              .updateValue("vehicleno", vehicleNo)
+              .whereEq("busid", busId);
 
       sqlQuery = this.buildQuery(queryBuilder);
 
@@ -113,7 +112,7 @@ public class SeatManager extends BaseManager {
     return false;
   }
 
-  public void displaySeatAvailabilityPerRoute() {
+  public void displaySeatAvailabilityPerRoute() throws ApplicationException {
     /*Create sqlQuery to find routeId, timing and availability per route
      * create Array for the filed names
      * send to QueryExecutor.executeQuery(sqlQuery,fields[])
@@ -123,5 +122,40 @@ public class SeatManager extends BaseManager {
      * SELECT routeid,timing, SUM(avaibility) FROM busid GROUP BY route id,timing
      *
      */
+    //  select timing as "Bus Timing", routeid,sum(availability), count(*)
+    //  as "No of buses buses runnning at same time" from bus group by routeid, timing;
+
+    String columns[] = {"timing", "routeid", "availability"};
+    QueryBuilder queryBuilder = this.getSelectInstance()
+            .selectColumns(columns)
+            .onTable("bus")
+            .groupBy("routeid")
+            .groupBy("timing");
+
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+
+    ResultSet resultSet = this.getResultSet(QueryExecutor.getInstance(), sqlQuery);
+
+    while (this.isNextPresent(resultSet))
+      System.out.println(this.getInt(resultSet, 1) + "  " +
+              this.getInt(resultSet, 2) + "  " +
+              this.getInt(resultSet, 3));
+  }
+
+
+  public static void main(String[] args) throws ApplicationException {
+    String columns[] = {"timing", "routeid", "availability"};
+
+    QueryBuilder queryBuilder = BusManager.getInstance().getSelectInstance()
+            .selectColumns(columns)
+            .onTable("bus")
+            .groupBy("routeid")
+            .groupBy("timing");
+
+    String sqlQuery = BusManager.getInstance().buildQuery(queryBuilder);
+    System.out.println(sqlQuery);
+
   }
 }

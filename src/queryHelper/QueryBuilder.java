@@ -17,6 +17,7 @@ public class QueryBuilder {
   // Saves List of Where and Operation Key Value Pairs
   private ArrayList<WhereOperation> whereOperations;
   private ArrayList<OperationKV> operationKVs;
+  private ArrayList<GroupByClause> groupByClauses;
 
   private boolean isSelectAllColumns;
 
@@ -30,6 +31,7 @@ public class QueryBuilder {
     this.isSelectAllColumns = false;
     this.whereOperations = new ArrayList<WhereOperation>();
     this.operationKVs = new ArrayList<OperationKV>();
+    this.groupByClauses = new ArrayList<GroupByClause>();
   }
 
   private void checkState() throws Exception {
@@ -122,6 +124,12 @@ public class QueryBuilder {
 
   public QueryBuilder whereNeq(String key, String val) {
     this.whereOperations.add(new WhereOperation("neq", key, val));
+    return this;
+  }
+
+  // Group By
+  public QueryBuilder groupBy(String column) {
+      this.groupByClauses.add(new GroupByClause(column));
     return this;
   }
 
@@ -228,6 +236,24 @@ public class QueryBuilder {
       }
     }
 
+    if(this.groupByClauses.size()>0) {
+      query=query+" GROUP BY ";
+
+      if (this.groupByClauses.size() == 1) {
+        query=query+this.groupByClauses.get(0).getGroupByQuery();
+      }else {
+        for(int i=0;i<this.groupByClauses.size();i++)
+        {
+          if(i == this.groupByClauses.size()-1)
+          {
+            query+=this.groupByClauses.get(i).getGroupByQuery();
+          }else {
+            query+=this.groupByClauses.get(i).getGroupByQuery()+", ";
+
+          }
+        }
+      }
+    }
     query += ";";
 
     return query;
