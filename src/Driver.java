@@ -6,7 +6,9 @@ import queryHelper.QueryBuilder;
 public class Driver {
 
   public static void main(String[] args) throws Exception {
+
     AppDriver appDriver = new AppDriver();
+
     appDriver.initiate();
 
     // Testing Query Builder for accuracy

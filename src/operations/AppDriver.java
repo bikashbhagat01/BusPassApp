@@ -1,10 +1,11 @@
 package operations;
 
+import customExceptions.ApplicationException;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class AppDriver {
-  public void initiate() throws Exception {
+  public void initiate()  {
 
     /* System Initiate class ::
     * SWitch Case Routine to as for User type
@@ -17,7 +18,6 @@ public class AppDriver {
     *
     * */
 
-    Scanner sc = OperationFactory.getScannerInstance();
     boolean exitCode = false;
 
     while (!exitCode) {
@@ -25,29 +25,39 @@ public class AppDriver {
       System.out.println("\nSelect User Type Option :");
       System.out.println("\n1. Admin \n2. User\n3. Visitor \n0. Exit \n");
 
-      String choice = sc.next();
+      String choice = OperationFactory.getScannerInstance().next();
 
       switch (choice) {
         case "1":
           System.out.println("Welcome Administrator!\n");
+
           try {
             OperationFactory.getAdminLoginInstance().showMenu();
-          } catch (Exception e) {
+          } catch (ApplicationException e) {
             e.printStackTrace();
           }
           break;
+
         case "2":
           System.out.println("Welcome User!\n");
+
           try {
             OperationFactory.getUserLoginInstance().showMenu();
-          } catch (Exception e) {
+          } catch (ApplicationException e) {
             System.out.println(e.getMessage());
           }
           break;
+
         case "3":
           System.out.println("\nWelcome Visitor!\n");
-          OperationFactory.getVisitorOperationInstance().showMenu();
+
+          try {
+            OperationFactory.getVisitorOperationInstance().showMenu();
+          } catch (ApplicationException e) {
+            System.out.println(e.getMessage());
+          }
           break;
+
         case "0":
           exitCode = true;
           break;

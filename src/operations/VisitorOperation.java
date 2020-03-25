@@ -16,9 +16,9 @@ public class VisitorOperation {
 
     while (!exitCode) {
 
-      System.out.println("1. View Details for Available Routes and buses \n" +
+      System.out.println("\n 1. View Details for Available Routes and buses \n" +
               "2. Display Seat Availability\n" +
-              "3. Exit to Main Menu\n");
+              "0. Exit to Main Menu\n");
 
       choice = sc.nextLine();
 
@@ -29,7 +29,7 @@ public class VisitorOperation {
         case "2":
           displaySeatAvailabilityPerRoute();
           break;
-        case "3":
+        case "0":
           exitCode = true;
           break;
 
@@ -43,14 +43,15 @@ public class VisitorOperation {
     return true;
   }
 
-  // Calls BusManager to Display all Available Buses with Available Routes and Timings
+//   Calls BusManager to Display all Available Buses with Available Routes and Timings
   public void displayBusTimingsAndRoute() throws ApplicationException {
     BusManager.getInstance().displayAvailableBusTimingsAndRoutes();
   }
 
   public void displaySeatAvailabilityPerRoute() throws ApplicationException {
 
-    // select timing as "Bus Timing", routeid,sum(availability), count(*) as "No of buses buses runnning at same time" from bus group by routeid, timing;
+    // select timing as "Bus Timing", routeid,sum(availability), count(*)
+    // as "No of buses buses runnning at same time" from bus group by routeid, timing;
 
     SeatManager.getInstance().displaySeatAvailabilityPerRoute();
 

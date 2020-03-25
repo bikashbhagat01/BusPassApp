@@ -113,19 +113,9 @@ public class SeatManager extends BaseManager {
   }
 
   public void displaySeatAvailabilityPerRoute() throws ApplicationException {
-    /*Create sqlQuery to find routeId, timing and availability per route
-     * create Array for the filed names
-     * send to QueryExecutor.executeQuery(sqlQuery,fields[])
-     * */
-
-    /*
-     * SELECT routeid,timing, SUM(avaibility) FROM busid GROUP BY route id,timing
-     *
-     */
-    //  select timing as "Bus Timing", routeid,sum(availability), count(*)
-    //  as "No of buses buses runnning at same time" from bus group by routeid, timing;
 
     String columns[] = {"timing", "routeid", "availability"};
+
     QueryBuilder queryBuilder = this.getSelectInstance()
             .selectColumns(columns)
             .onTable("bus")
@@ -134,28 +124,12 @@ public class SeatManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
-
     ResultSet resultSet = this.getResultSet(QueryExecutor.getInstance(), sqlQuery);
 
-    while (this.isNextPresent(resultSet))
-      System.out.println(this.getInt(resultSet, 1) + "  " +
-              this.getInt(resultSet, 2) + "  " +
-              this.getInt(resultSet, 3));
-  }
-
-
-  public static void main(String[] args) throws ApplicationException {
-    String columns[] = {"timing", "routeid", "availability"};
-
-    QueryBuilder queryBuilder = BusManager.getInstance().getSelectInstance()
-            .selectColumns(columns)
-            .onTable("bus")
-            .groupBy("routeid")
-            .groupBy("timing");
-
-    String sqlQuery = BusManager.getInstance().buildQuery(queryBuilder);
-    System.out.println(sqlQuery);
-
+    while (this.isNextPresent(resultSet)) {
+      System.out.println(this.getInt(resultSet, 1) + "\t\t" +
+              this.getInt(resultSet, 2) + "\t\t" +
+              this.getInt(resultSet, 3) + "\t\t");
+    }
   }
 }
