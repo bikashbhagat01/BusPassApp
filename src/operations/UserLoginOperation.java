@@ -7,7 +7,21 @@ import customExceptions.UserException;
 import java.util.Scanner;
 import managers.UserManager;
 
-public class UserLogin extends BaseOperation {
+/**
+ * This class is implements the sign-in/sign-up/account control page functionality for the USER.
+ * It is an extension of BaseOperation class.
+ *
+ * Existing Users can login with their employee id and password
+ *  - If login is successful, they are routed to the USER homepage of the application.
+ *  - If login is unsuccessful even after 3 tries, they are routed back to the USER Account Control
+ *  page.
+ *
+ *  New users can create a account by entering requested credentials.
+ *   - If create account is successful, they can proceed to login.
+ *   - If create account is unsuccessful, they are routed back to the USER Account Control page.
+ * **/
+
+public class UserLoginOperation extends BaseOperation {
 
   private final static int maxLoginTries = 5;
   private static int loginTries = 0;
@@ -124,7 +138,8 @@ public class UserLogin extends BaseOperation {
     if (UserManager.getInstance().isValidUserPassword(userId, password)) {
       OperationFactory.getUserOperationInstance().showMenu(userId); // So, yeha se return kar k kidhar setlogin pe?
     } else {
-      System.out.println("\nIncorrect Credentials Entered \nPlease enter correct credentials : \n");
+      System.out.println("\nUnable to load account with entered credentials. " +
+              "\nPlease make sure that the entered credentials are correct \n");
       setLoginDetails();
     }
   }

@@ -71,7 +71,7 @@ public class BaseManager {
   protected boolean hasResult(QueryExecutor queryExecutor, String query) throws ApplicationException {
     try {
       System.out.println("Checking query for valid results: " + query);
-      return queryExecutor.isValidQuery(query);
+      return queryExecutor.isRecordPresent(query);
     } catch (SQLException e) {
       throw new ApplicationException("SQL exception");
     } catch (ClassNotFoundException e) {
@@ -146,7 +146,7 @@ public class BaseManager {
     String query = this.buildQuery(queryBuilder);
 
     try {
-      return QueryExecutor.getInstance().isValidQuery(query);
+      return QueryExecutor.getInstance().isRecordPresent(query);
     } catch (SQLException e) {
       e.printStackTrace();
       throw new ApplicationException("Invalid SQL");
@@ -167,7 +167,7 @@ public class BaseManager {
     String query = this.buildQuery(queryBuilder);
 
     try {
-      return QueryExecutor.getInstance().isValidQuery(query);
+      return QueryExecutor.getInstance().isRecordPresent(query);
     } catch (SQLException e) {
       e.printStackTrace();
       throw new ApplicationException("Invalid SQL");

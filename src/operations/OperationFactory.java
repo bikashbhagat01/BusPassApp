@@ -12,8 +12,8 @@ public class OperationFactory {
     return new AdminOperation();
   }
 
-  public static UserLogin getUserLoginInstance() {
-    return new UserLogin();
+  public static UserLoginOperation getUserLoginInstance() {
+    return new UserLoginOperation();
   }
 
   public static UserOperation getUserOperationInstance() {

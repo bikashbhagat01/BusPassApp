@@ -13,9 +13,14 @@ import managers.RouteManager;
 import managers.SeatManager;
 import managers.StopManager;
 
-public class AdminOperation extends BaseOperation {
+/**
+ * This class is implements the login functionality for the ADMIN. It is an extension of
+ * BaseOperation class.
+ * If login is successful, they are routed to the ADMIN homepage of the application.
+ * If login is unsuccessful even after 3 tries, they are routed back to the application homepage.
+ * **/
 
-  // Switch Case menu which calls other small functions in this class
+public class AdminOperation extends BaseOperation {
 
   public boolean showMenu() throws ApplicationException {
     boolean exitCode = false;

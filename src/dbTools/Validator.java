@@ -146,7 +146,7 @@ public class Validator {
       return false;
     }
 
-    String vehicleNoRegex = "^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$";
+    String vehicleNoRegex = "^[A-Za-z]{2}-{1}[0-9]{2}[A-Za-z]{1}-{1}[0-9]{4}$";
 
     Pattern pat = Pattern.compile(vehicleNoRegex);
 
@@ -175,6 +175,10 @@ public class Validator {
     Pattern pat = Pattern.compile(timeStringRegex);
 
     return pat.matcher(timeString).matches();
+  }
+
+  public static boolean isValidUserIdLength(int userId) {
+    return userId < 12;
   }
 }
 

@@ -15,9 +15,9 @@ public class ConnectionManager {
       Class.forName("com.mysql.cj.jdbc.Driver");
       con = DriverManager.getConnection("jdbc:mysql://localhost:3306/newDb?serverTimezone=UTC",
                                       "root", "");
-
       return con;
     } catch (Exception e) {
+      System.out.println("Connection Issue Found");
       e.printStackTrace();
       throw e;
     }

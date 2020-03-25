@@ -62,7 +62,7 @@ public class QueryExecutor {
     }
   }
 
-  public boolean isValidQuery(String sqlQuery) throws SQLException, ClassNotFoundException {
+  public boolean isRecordPresent(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectionManager.getConnection();
     Statement statement = conn.createStatement();
 

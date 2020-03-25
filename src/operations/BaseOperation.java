@@ -7,6 +7,15 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import managers.UserManager;
 
+/**
+ * The class BaseOperation is a parent class for multiple Operation Classes in operations package.
+ * It works as a gateway between the operations package/Upper Layer/User and the managers
+ * package/Middle Layer.
+ * It provides an upper-layer exception enclosure around common functions being used by the child
+ * classes.
+ * The child classes interact with the manager layer and user via these functions, while any
+ * exceptions occurring due to user behaviour are thrown.
+ * **/
 
 public class BaseOperation {
 
@@ -251,11 +260,17 @@ public class BaseOperation {
       userId = sc.nextInt();
     } catch (InputMismatchException e) {
       throw new UserException("\n Please enter correct Employee ID. " +
-              "\n It is a 9-10 digit number" +
+              "\n It is a 9-12 digit number" +
               "\n You check your Phonetool Or, contact your manager to find further " +
               "information\n");
     }
 
+    if (!Validator.isValidUserIdLength(userId)) {
+      throw new UserException("The entered value is not a valid user id" +
+              "\nIt is a 9-12 digit number" +
+              "\nYou check your Phonetool Or, Contact your manager to find further " +
+              "information\n");
+    }
     return userId;
   }
 
@@ -291,9 +306,9 @@ public class BaseOperation {
     String vehicleNo;
 
     try {
-      vehicleNo = sc.next();
-    } catch (InputMismatchException e) {
-      throw new UserException(" Invalid Vehicle Number Entered.");
+      vehicleNo = sc.next().toUpperCase();
+    } catch (Exception e) {
+      throw new UserException("Invalid Vehicle Number Entered.");
     }
 
     if(!Validator.isValidVehicleNo(vehicleNo)) {
@@ -326,6 +341,7 @@ public class BaseOperation {
     } catch (InputMismatchException e) {
       throw new UserException("\n Please enter valid Bus ID. Bus ID is an integer number.");
     }
+    System.out.println(busId +  "===><====");
     return busId;
   }
 

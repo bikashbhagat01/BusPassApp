@@ -69,8 +69,3 @@ public class AdminLoginOperation extends BaseOperation {
     return true;
   }
 }
-
-/**
- * operations/AppDriver.initiate() is used to be exit to Main menu
- * Alternative - use try-catch to reflect to operations/AppDriver.initiate()
- **/

@@ -1,13 +1,17 @@
 package operations;
 
 import customExceptions.ApplicationException;
-import java.util.Scanner;
 import managers.BusManager;
 import managers.SeatManager;
 
 public class VisitorOperation {
 
-  private static Scanner sc = OperationFactory.getScannerInstance();
+  /**
+   * The class is for Visitors who do not have an existing account and want general information
+   * about the bus service.
+   * Visitors can View Details for Available Routes and Buses, or they can see the current seat
+   * availability for all the routes.
+   * **/
 
   public boolean showMenu() throws ApplicationException {
 
@@ -20,7 +24,7 @@ public class VisitorOperation {
               "2. Display Seat Availability\n" +
               "0. Exit to Main Menu\n");
 
-      choice = sc.nextLine();
+      choice = OperationFactory.getScannerInstance().next();
 
       switch (choice) {
         case "1":
