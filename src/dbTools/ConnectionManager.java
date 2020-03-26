@@ -13,6 +13,7 @@ public class ConnectionManager {
   public static Connection getConnection() throws SQLException, ClassNotFoundException {
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
+
       con = DriverManager.getConnection("jdbc:mysql://localhost:3306/newDb?serverTimezone=UTC",
                                       "root", "");
       return con;

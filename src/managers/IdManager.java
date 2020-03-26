@@ -1,7 +1,6 @@
 package managers;
 
 import customExceptions.ApplicationException;
-import dbTools.QueryExecutor;
 import queryHelper.QueryBuilder;
 
 public class IdManager extends BaseManager {
@@ -23,7 +22,7 @@ public class IdManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    int newId = this.getQueryNumber(QueryExecutor.getInstance(), sqlQuery) + 1;
+    int newId = this.getQueryNumber(sqlQuery) + 1;
 
     queryBuilder = this.getUpdateInstance()
             .onTable("idgenerator")
@@ -32,7 +31,7 @@ public class IdManager extends BaseManager {
 
     sqlQuery = this.buildQuery(queryBuilder);
 
-    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+    this.executeQuery(sqlQuery);
 
     return newId;
   }

@@ -2,7 +2,6 @@ package managers;
 
 import assets.AssetFactory;
 import customExceptions.ApplicationException;
-import dbTools.QueryExecutor;
 import java.util.Scanner;
 import operations.OperationFactory;
 import queryHelper.QueryBuilder;
@@ -26,7 +25,6 @@ public class BusPassManager extends BaseManager {
       * **/
     if (isValidBusPass(employeeId)) {
       System.out.println("BusPass for " + employeeId + " already exists\n");
-      //showMenu();
     } else {
       System.out.println("Enter Route Id");
       int routeId = sc.nextInt();
@@ -35,7 +33,6 @@ public class BusPassManager extends BaseManager {
       SeatManager seat = SeatManager.getInstance();
       if (seat.updateSeatValue(routeId, timing) == 0) {
         System.out.println("No Seats Available for the same route and the preferred time");
-        //showmenu();
       } else {
         int busId = seat.updateSeatValue(routeId, timing);
         int buspassid = AssetFactory.getInstance().getBusPassInstance(employeeId, routeId, busId, timing)
@@ -50,18 +47,11 @@ public class BusPassManager extends BaseManager {
                                         .insertValue("timing", timing);
         String sqlQuery = this.buildQuery(queryBuilder);
 
-        this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+        this.executeQuery(sqlQuery);
 
         System.out.println("Bus Pass Allocated with Bus Pass ID : " + buspassid);
       }
     }
-  }
-
-  public void update(String busPassId, String field, String newValue) {
-    /*
-     * Create SQL Query to update field of busPassId to newValue
-     * Call QueryExecutor(sqlQuery)
-     * */
   }
 
   public boolean isValidBusPass(int userId) throws ApplicationException {

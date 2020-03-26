@@ -1,11 +1,8 @@
 package managers;
 import assets.User;
 import customExceptions.ApplicationException;
-import dbTools.QueryExecutor;
-import java.sql.SQLException;
 import queryHelper.QueryBuilder;
 
-/**Simplify Sql Query Creation**/
 public class UserManager extends BaseManager {
 
   private static UserManager userManager;
@@ -33,7 +30,7 @@ public class UserManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+    this.executeQuery(sqlQuery);
 
   }
 
@@ -45,7 +42,7 @@ public class UserManager extends BaseManager {
                                     .onTable("user");
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+    this.executeQuery(sqlQuery);
   }
 
   public boolean isValidUserPassword(int userId, String password) throws ApplicationException {
@@ -59,7 +56,7 @@ public class UserManager extends BaseManager {
     String sqlQuery = this.buildQuery(queryBuilder);
 
 
-    return this.hasResult(QueryExecutor.getInstance(),sqlQuery);
+    return this.hasResult(sqlQuery);
   }
 
   public boolean isValidUser(int userId) throws ApplicationException {
@@ -71,8 +68,6 @@ public class UserManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    return this.hasResult(QueryExecutor.getInstance(),sqlQuery);
-
+    return this.hasResult(sqlQuery);
   }
-
 }

@@ -16,14 +16,18 @@ public class AssetFactory {
   }
 
   // returns Objects of various types
-  public Bus getBusInstance(int availability, int busType, String vehicleNo) throws ApplicationException {
+  public Bus getBusInstance(int availability, int busType, String vehicleNo)
+          throws ApplicationException {
     int busId = IdManager.getInstance().getNewId("bus");
+
     Bus bus = new Bus(busId, availability, busType, vehicleNo);
     return bus;
   }
 
-  public BusPass getBusPassInstance(int userId, int routeId, int busId, int timing) throws ApplicationException {
+  public BusPass getBusPassInstance(int userId, int routeId, int busId, int timing)
+          throws ApplicationException {
     int busPassId = IdManager.getInstance().getNewId("buspass");
+
     BusPass busPass = new BusPass(busPassId, userId, busId, routeId, timing);
     return busPass;
   }

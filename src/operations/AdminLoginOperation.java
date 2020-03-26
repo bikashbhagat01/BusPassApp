@@ -48,8 +48,6 @@ public class AdminLoginOperation extends BaseOperation {
     // Get Admin credentials
     loginTries += 1;
 
-    Scanner sc = OperationFactory.getScannerInstance();
-
     System.out.println("Enter Login ID : \n");
     String userId = this.getAdminId();
 

@@ -4,14 +4,14 @@ import customExceptions.ApplicationException;
 import managers.BusManager;
 import managers.SeatManager;
 
-public class VisitorOperation {
+/**
+ * The class is for Visitors who do not have an existing account and want general information
+ * about the bus service.
+ * Visitors can View Details for Available Routes and Buses, Or they can see the current seat
+ * availability for all the routes.
+ * **/
 
-  /**
-   * The class is for Visitors who do not have an existing account and want general information
-   * about the bus service.
-   * Visitors can View Details for Available Routes and Buses, or they can see the current seat
-   * availability for all the routes.
-   * **/
+public class VisitorOperation {
 
   public boolean showMenu() throws ApplicationException {
 
@@ -20,7 +20,7 @@ public class VisitorOperation {
 
     while (!exitCode) {
 
-      System.out.println("\n 1. View Details for Available Routes and buses \n" +
+      System.out.println("\n1. View Details for Available Routes and buses \n" +
               "2. Display Seat Availability\n" +
               "0. Exit to Main Menu\n");
 
@@ -28,7 +28,7 @@ public class VisitorOperation {
 
       switch (choice) {
         case "1":
-          displayBusTimingsAndRoute();
+          displayBusTimingsAndRoutes();
           break;
         case "2":
           displaySeatAvailabilityPerRoute();
@@ -48,7 +48,7 @@ public class VisitorOperation {
   }
 
 //   Calls BusManager to Display all Available Buses with Available Routes and Timings
-  public void displayBusTimingsAndRoute() throws ApplicationException {
+  public void displayBusTimingsAndRoutes() throws ApplicationException {
     BusManager.getInstance().displayAvailableBusTimingsAndRoutes();
   }
 

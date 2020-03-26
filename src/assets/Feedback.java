@@ -3,6 +3,7 @@ package assets;
 // POJO, Only holds data
 
 public class Feedback {
+
   private int feedbackId;
   private String comment;
   private int userId;
@@ -24,8 +25,6 @@ public class Feedback {
   public int getUserId() {
     return userId;
   }
-//  Setters and Getters to be added
-  //  Feedback can only be created with all 3 fields
 }
 
 

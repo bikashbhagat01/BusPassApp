@@ -2,7 +2,6 @@ package managers;
 
 import assets.RouteRequest;
 import customExceptions.ApplicationException;
-import dbTools.QueryExecutor;
 import queryHelper.QueryBuilder;
 
 public class RouteRequestManager extends BaseManager{
@@ -31,6 +30,6 @@ public class RouteRequestManager extends BaseManager{
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+    this.executeQuery(sqlQuery);
   }
 }

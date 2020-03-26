@@ -2,6 +2,7 @@ package dbTools;
 
 public class TimeConverter {
 
+  // Returns time in minutes from a time string with 24-hour format
   public static int getTimeAsMinutes(String timingString) {
     String[] timingArray = timingString.split(("[/:-]"));
 
@@ -13,6 +14,7 @@ public class TimeConverter {
     return timeInMinutes;
   }
 
+  // Returns a time string with 24-hour format from time in minutes
   public static String getTimeAsString(int timingInMinutes) {
     int hourPart = timingInMinutes/60;
     int minutePart = timingInMinutes%60;

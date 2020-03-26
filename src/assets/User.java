@@ -3,6 +3,7 @@ package assets;
 // POJO, Only holds data
 
 public class User {
+
   private int employeeId;
   private String firstName;
   private String lastName;

@@ -8,6 +8,11 @@ create table buspass(buspassid int NOT NULL PRIMARY KEY,userid int,
                       busid int, routeid int, timing int,
                       FOREIGN KEY(userid) REFERENCES user(userid));
 
+==== IdGenerator ===
+
+create table idgenerator(objectname varchar(40), latestid int);
+
+
 === Feedback ===
 create table feedback(feedbackid int NOT NULL PRIMARY KEY, comments varchar(1000),
                       userid int, FOREIGN KEY(userid) REFERENCES user(userid));
@@ -46,37 +51,21 @@ select routeid, stopname from route
 inner join stop using(stopid)) as b using(routeid) where availability <= bustype and availability is not null
 and bustype is not null order by busid;
 
-For reference:
-=================
+====== routestopname =====
+[view to get route and their stopnames]
 
-show databases;
-use bvino;
-show tables;
+create view routestopname as
+select routeid, stopname from route
+inner join stop using(stopid);
 
-create table idgenerator(objectname varchar(40), latestid int);
+====== routebusmap ======
+[view to get all information of the system without any availability filter]
 
-create table bus (busid int NOT NULL PRIMARY KEY, routeid int, availability int, bustype int,
-                  timing int, vehicleno varchar(20));
-
-create table buspass(buspassid int NOT NULL PRIMARY KEY,userid int,
-                      busid int, routeid int, timing int,
-                      FOREIGN KEY(userid) REFERENCES user(userid));
-
-create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50),
-                  lname varchar(50), email varchar(50), contactno int,
-                  emergencycontactno int, emergencycontactname varchar(50),
-                  bloodgroup varchar(20), password varchar(50));
-
-create table feedback(feedbackid int NOT NULL PRIMARY KEY, comments varchar(1000),
-                      userid int, FOREIGN KEY(userid) REFERENCES user(userid));
-
-create table route(id INT NOT NULL PRIMARY KEY auto_increment, routeid int, stopid int);
-
-create table routerequest(routerequestid int NOT NULL PRIMARY KEY, startstop int, endstop int,
-                          requesterid int, routeexists boolean, timing int);
-
-create table stop(stopid int NOT NULL PRIMARY KEY, stopname varchar(20));
-
-create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50), lname varchar(50),
-                  email varchar(50), contactno varchar(12), emergencycontactno varchar(12),
-                  emergencycontactname varchar(50), bloodgroup varchar(12), password varchar(50));
+create view routebusmap as
+SELECT busid, bus.routeid as routeidonbus, availability, bustype, timing,
+routestopname.routeid as routeidforstops, stopname FROM bus
+LEFT JOIN routestopname ON bus.routeid = routestopname.routeid
+UNION
+SELECT busid, bus.routeid as routeidonbus, availability, bustype, timing,
+routestopname.routeid as routeidforstops, stopname FROM bus
+RIGHT JOIN routestopname ON bus.routeid = routestopname.routeid;

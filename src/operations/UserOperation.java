@@ -33,7 +33,7 @@ public class UserOperation extends BaseOperation{
 
       switch (choice) {
         case "1":
-          viewRoute();
+          displayBusTimingsAndRoutes();
           break;
         case "2":
           updateProfile(userId);
@@ -72,7 +72,10 @@ public class UserOperation extends BaseOperation{
   }
 
 
-  private void viewRoute() throws ApplicationException {
+  private void displayBusTimingsAndRoutes() throws ApplicationException {
+    System.out.println("Below is information on Start Timings and Routes which have Active " +
+            "and Available Buses");
+
     BusManager.getInstance().displayAvailableBusTimingsAndRoutes();
   }
 

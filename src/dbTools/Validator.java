@@ -6,7 +6,11 @@ import java.util.regex.Pattern;
 
 public class Validator {
 
-  private static String sqlQuery;
+
+  /**"1. A password must have at least eight characters.\n" +
+   "2. A password consists of only letters and digits.\n" +
+   "3. A password must contain at least two digits \n" +
+   */
 
   private static int PASSWORD_LENGTH = 8;
 
@@ -24,7 +28,7 @@ public class Validator {
 
       if (isNumeric(ch)) {
         numCount++;
-      } else if (is_Letter(ch)) {
+      } else if (isAlphabetic(ch)) {
         charCount++;
       } else {
         return false;
@@ -33,14 +37,32 @@ public class Validator {
     return (charCount >= 2 && numCount >= 2);
   }
 
-  public static boolean is_Letter(char ch) {
+  public static boolean isAlphabetic(char ch) {
     ch = Character.toUpperCase(ch);
     return (ch >= 'A' && ch <= 'Z');
+  }
+
+  public static boolean isAlphabetic(String stringValue) {
+    for(int i = 0; i < stringValue.length(); i++) {
+      if(!isAlphabetic(stringValue.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
   }
 
 
   public static boolean isNumeric(char ch) {
     return (ch >= '0' && ch <= '9');
+  }
+
+  public static boolean isNumeric(String stringValue) {
+    for(int i = 0; i < stringValue.length(); i++) {
+      if(!isNumeric(stringValue.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public static boolean isValidComment(String comment) {
@@ -80,15 +102,6 @@ public class Validator {
   }
 
 
-  public static boolean isValidPhoneNo(String contactNo) {
-    for(int i = 0; i < contactNo.length(); i++) {
-      if(!isNumeric(contactNo.charAt(i))) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   public static boolean isValidPhoneNoLength(String contactNo) {
     if(contactNo.length() > 12) {
       return false;
@@ -106,16 +119,6 @@ public class Validator {
       return true;
     }
     return false;
-  }
-
-
-  public static boolean isValidName(String name) {
-    for(int i = 0; i < name.length(); i++) {
-      if(isNumeric(name.charAt(i))) {
-        return false;
-      }
-    }
-    return true;
   }
 
   public static boolean isValidBloodGroup(String bloodGroup) {
@@ -158,10 +161,10 @@ public class Validator {
   }
 
   public static boolean isValidStopCount(int stopCount) {
-    return stopCount < 10;
+    return stopCount < 10 && stopCount > 1;
   }
 
-  public static boolean isValidStopName(String stopName) {
+  public static boolean isValidStopNameLength(String stopName) {
     return stopName.length() < 100;
   }
 
@@ -178,12 +181,37 @@ public class Validator {
   }
 
   public static boolean isValidUserIdLength(int userId) {
+
     return userId < 12;
   }
-}
 
-/**  "1. A password must have at least eight characters.\n" +
-     "2. A password consists of only letters and digits.\n" +
-     "3. A password must contain at least two digits \n" +
-     "Input a password (You are agreeing to the above Terms and Conditions.):
- */
+  public static boolean isPositive(int number) {
+    return number > 0;
+  }
+
+  public static boolean isPositive(Long  longNumber) {
+    return longNumber > 0;
+  }
+
+  public static boolean isAlphabeticWithSpaceAndDots(String stringValue) {
+    int alphabetCount = 0, spaceCount = 0, dotCount = 0, totalCount = 0;
+
+    for(int i = 0; i < stringValue.length(); i++) {
+      if(isAlphabetic(stringValue.charAt(i))) {
+        ++alphabetCount;
+      } else if(stringValue.charAt(i) == '.') {
+        ++dotCount;
+      } else if(stringValue.charAt(i) == ' ') {
+        ++spaceCount;
+      }
+    }
+
+    totalCount = alphabetCount + dotCount + spaceCount;
+
+    if(totalCount == dotCount || totalCount == spaceCount || totalCount == (spaceCount+dotCount) ||
+      spaceCount > alphabetCount || dotCount > alphabetCount) {
+      return false;
+    }
+    return true;
+  }
+}

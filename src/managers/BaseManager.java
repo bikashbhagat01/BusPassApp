@@ -8,6 +8,9 @@ import queryHelper.QueryBuilder;
 import java.sql.SQLException;
 
 // Catches System Exceptions from child classes, and throws custom ApplicationException
+//Catch Exceptions for QueryExecutor executeSql, and throw ApplicationException
+// Each of the functions, perform execute DB layer operations, and throw all exceptions
+// as Application Exceptions
 
 public class BaseManager {
 
@@ -56,11 +59,11 @@ public class BaseManager {
     }
 
   }
-  // Catch Exceptions for QueryExecutor executeSql, and throw ApplicationException
-  protected void executeQuery(QueryExecutor queryExecutor, String query) throws ApplicationException {
+
+  // Executes an sqlQuery
+  protected void executeQuery(String sqlQuery) throws ApplicationException {
     try {
-      System.out.println("Executing query: " + query);
-      queryExecutor.executeSQL(query);
+      QueryExecutor.getInstance().executeSQL(sqlQuery);
     } catch (SQLException e) {
       throw new ApplicationException("SQL exception");
     } catch (ClassNotFoundException e) {
@@ -68,10 +71,10 @@ public class BaseManager {
     }
   }
 
-  protected boolean hasResult(QueryExecutor queryExecutor, String query) throws ApplicationException {
+  // Checks whether the sqlQuery has a non-empty result
+  protected boolean hasResult(String sqlQuery) throws ApplicationException {
     try {
-      System.out.println("Checking query for valid results: " + query);
-      return queryExecutor.isRecordPresent(query);
+      return QueryExecutor.getInstance().isRecordPresent(sqlQuery);
     } catch (SQLException e) {
       throw new ApplicationException("SQL exception");
     } catch (ClassNotFoundException e) {
@@ -79,11 +82,10 @@ public class BaseManager {
     }
   }
 
-  // Catch Exceptions for QueryExecutor executeSql, and throw ApplicationException
-  protected void executeQuery(QueryExecutor queryExecutor, String query, String[] fields) throws ApplicationException {
+  // Executes an sqlQuery, and adds fields as the header for each column
+  protected void executeQuery(String sqlQuery, String[] fields) throws ApplicationException {
     try {
-      System.out.println("Executing query: " + query);
-      queryExecutor.executeSQL(query,fields);
+      QueryExecutor.getInstance().executeSQL(sqlQuery,fields);
     } catch (SQLException e) {
       throw new ApplicationException("SQL exception");
     } catch (ClassNotFoundException e) {
@@ -91,10 +93,10 @@ public class BaseManager {
     }
   }
 
-  protected ResultSet getResultSet(QueryExecutor queryExecutor, String query) throws ApplicationException {
+  // Gets the ResultSet from a sqlQuery
+  protected ResultSet getResultSet(String query) throws ApplicationException {
     try {
-      System.out.println("Getting ResultSet from query: " + query);
-      return queryExecutor.getResultSet(query);
+      return QueryExecutor.getInstance().getResultSet(query);
     } catch (SQLException e) {
       throw new ApplicationException("SQL exception");
     } catch (ClassNotFoundException e) {
@@ -102,10 +104,10 @@ public class BaseManager {
     }
   }
 
-  protected int getQueryNumber(QueryExecutor queryExecutor, String query) throws ApplicationException {
+  // Gets the first Integer result from a sqlQuery
+  protected int getQueryNumber(String sqlQuery) throws ApplicationException {
     try {
-      System.out.println("Getting Integer field value from query: " + query);
-      return queryExecutor.getQueryNumber(query);
+      return QueryExecutor.getInstance().getQueryNumber(sqlQuery);
     } catch (SQLException e) {
       throw new ApplicationException("SQL exception");
     } catch (ClassNotFoundException e) {
@@ -113,18 +115,18 @@ public class BaseManager {
     }
   }
 
+  // Gets next Integer in a ResultSet for given columnIndex
   protected int getInt(ResultSet resultSet, int columnIndex) throws ApplicationException {
     try {
-      System.out.println("Getting next int in ResultSet for columnIndex : " + columnIndex);
       return resultSet.getInt(columnIndex);
     } catch (SQLException e) {
       throw new ApplicationException("SQL exception");
     }
   }
 
+  // Gets next String in a ResultSet for given columnIndex
   protected String getString(ResultSet resultSet, int columnIndex) throws ApplicationException {
     try {
-      System.out.println("Getting next String in ResultSet for columnIndex : " + columnIndex);
       return resultSet.getString(columnIndex);
     } catch (SQLException e) {
       throw new ApplicationException("SQL exception");
@@ -177,13 +179,12 @@ public class BaseManager {
     }
   }
 
+//  Checks for next row presence in a ResultSet
   protected boolean isNextPresent(ResultSet resultSet) throws ApplicationException {
     try {
-      System.out.println("Checking for next row in ResultSet");
       return resultSet.next();
     } catch (SQLException e) {
       throw new ApplicationException("SQL exception");
     }
   }
-
 }

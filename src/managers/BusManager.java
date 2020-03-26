@@ -2,7 +2,6 @@ package managers;
 
 import assets.Bus;
 import customExceptions.ApplicationException;
-import dbTools.QueryExecutor;
 import dbTools.TimeConverter;
 import java.sql.ResultSet;
 import queryHelper.QueryBuilder;
@@ -30,7 +29,7 @@ public class BusManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    this.executeQuery(QueryExecutor.getInstance(),sqlQuery);
+    this.executeQuery(sqlQuery);
   }
 
   public void update(int busId, String field, int newValue) throws ApplicationException {
@@ -42,9 +41,7 @@ public class BusManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    System.out.println(sqlQuery + "from update in BusManager");
-
-    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+    this.executeQuery(sqlQuery);
   }
 
   public void displayBusCount(String criteria) throws ApplicationException {
@@ -66,7 +63,7 @@ public class BusManager extends BaseManager {
 
     String[] fields = {"Bus Type", "Number of Buses"};
 
-    this.executeQuery(QueryExecutor.getInstance(), sqlQuery, fields);
+    this.executeQuery(sqlQuery, fields);
   }
 
   public boolean displayAvailableBusTimingsAndRoutes() throws ApplicationException {
@@ -78,22 +75,22 @@ public class BusManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    ResultSet resultSet = this.getResultSet(QueryExecutor.getInstance(), sqlQuery);
+    ResultSet resultSet = this.getResultSet(sqlQuery);
 
     if (!this.isNextPresent(resultSet)) {
+      System.out.println("No available Records found");
       return false;
     }
 
-    if (!displayDetailsFromResultSet(resultSet, true)) {
-      System.out.println("No available Values found");
-      return false;
-    }
+    displayDetailsFromResultSet(resultSet, true);
+
     return true;
   }
 
   public boolean displayAvailableBusTimingsAndRoutes(int[] routeIds, int timing)
           throws ApplicationException {
     System.out.println("Bus ID\t\tRoute ID\t\tStops\t\tStart Timing");
+
     int foundResultsCounter = 0;
 
     for (int routeId : routeIds) {
@@ -107,10 +104,11 @@ public class BusManager extends BaseManager {
               .whereEq("timing", timing);
       String sqlQuery = this.buildQuery(queryBuilder);
 
-      ResultSet resultSet = this.getResultSet(QueryExecutor.getInstance(), sqlQuery);
+      ResultSet resultSet = this.getResultSet(sqlQuery);
 
-      if (displayDetailsFromResultSet(resultSet, false)) {
+      if (this.isNextPresent(resultSet)) {
         foundResultsCounter++;
+        displayDetailsFromResultSet(resultSet, false);
       }
     }
 
@@ -126,7 +124,7 @@ public class BusManager extends BaseManager {
     }
 
     if(headingSwitch) {
-      System.out.println("Bus ID\t\tRoute ID\t\tStops\t\tStart Timing");
+      System.out.println("Bus ID\tRoute ID\t\tStops\t\t\t\t\tStart Timing");
     }
 
     int previousBusId = this.getInt(resultSet, 1);
@@ -146,17 +144,17 @@ public class BusManager extends BaseManager {
       currentStopName = this.getString(resultSet, 3);
 
       if (currentBusId == previousBusId && currentRouteId == previousRouteId) {
-        stopNamesString += currentStopName + " ";
+        stopNamesString += "-->" + currentStopName;
         currentTiming = this.getInt(resultSet, 4);
       } else {
-        eachRecord = previousBusId + "\t\t" +
+        eachRecord = previousBusId + "\t\t\t\t" +
                 previousRouteId + "\t\t" +
                 stopNamesString + "\t\t" +
                 TimeConverter.getTimeAsString(currentTiming);
 
         System.out.println(eachRecord);
 
-        stopNamesString = currentStopName + " ";
+        stopNamesString = currentStopName;
 
         currentTiming = this.getInt(resultSet, 4);
         previousBusId = currentBusId;
@@ -164,17 +162,16 @@ public class BusManager extends BaseManager {
       }
     } while (this.isNextPresent(resultSet));
 
-    System.out.println(currentBusId + "\t\t" +
-            currentRouteId + "\t\t" +
+    System.out.println(currentBusId + "\t\t\t\t" +
+            currentRouteId + "\t\t" + "-->" +
             stopNamesString + "\t\t" +
             TimeConverter.getTimeAsString(currentTiming));
 
     return true;
   }
 
-
+  // Clears routeId presence from all records in the bus table
   public boolean clearRouteAssignments(int routeId) throws ApplicationException {
-    // Checks for availability of any buses linked to routeId
 
     QueryBuilder queryBuilder = this.getSelectInstance()
             .selectAllColumns()
@@ -183,7 +180,7 @@ public class BusManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    ResultSet resultSetOfBus = this.getResultSet(QueryExecutor.getInstance(), sqlQuery);
+    ResultSet resultSetOfBus = this.getResultSet(sqlQuery);
 
     if (!this.isNextPresent(resultSetOfBus)) { // No Buses are linked, No update required
       return false;
@@ -198,7 +195,7 @@ public class BusManager extends BaseManager {
 
     sqlQuery = this.buildQuery(queryBuilder);
 
-    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+    this.executeQuery(sqlQuery);
 
     return true;
   }
@@ -210,7 +207,7 @@ public class BusManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    this.executeQuery(QueryExecutor.getInstance(), sqlQuery);
+    this.executeQuery(sqlQuery);
   }
 
 
@@ -229,12 +226,31 @@ public class BusManager extends BaseManager {
 
       String sqlQuery = this.buildQuery(queryBuilder);
 
-      ResultSet resultSet = this.getResultSet(QueryExecutor.getInstance(), sqlQuery);
+      ResultSet resultSet = this.getResultSet(sqlQuery);
 
       if (this.isNextPresent(resultSet)) {
         return true;
       }
     }
     return false;
+  }
+
+  public boolean displayAllBuses() throws ApplicationException {
+    String[] columns = {"busid", "routeid","availability","bustype","timing", "vehicleno"};
+
+    QueryBuilder queryBuilder = this.getSelectInstance()
+            .selectColumns(columns)
+            .onTable("bus");
+
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    if(!this.hasResult(sqlQuery)) {
+      return false;
+    }
+
+    String[] headers = {"BUS ID", "ROUTE ID", "AVAILABILITY", "BUS TYPE", "TIMING", "VEHICLE NO"};
+    this.executeQuery(sqlQuery,headers);
+
+    return true;
   }
 }

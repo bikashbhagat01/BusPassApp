@@ -5,6 +5,7 @@ import customExceptions.UserException;
 import dbTools.Validator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import managers.StopManager;
 import managers.UserManager;
 
 /**
@@ -15,7 +16,7 @@ import managers.UserManager;
  * classes.
  * The child classes interact with the manager layer and user via these functions, while any
  * exceptions occurring due to user behaviour are thrown.
- * **/
+ **/
 
 public class BaseOperation {
 
@@ -38,8 +39,9 @@ public class BaseOperation {
       throw new UserException("First Name should be below 50 characters ");
     }
 
-    if (!Validator.isValidName(firstName)) {
-      throw new UserException("First Name should not contain digits");
+    if (!Validator.isAlphabeticWithSpaceAndDots(firstName)) {
+      throw new UserException("First Name can only contain alphabets, spaces and dots in " +
+              "appropriate manner\n");
     }
     return firstName;
   }
@@ -59,13 +61,37 @@ public class BaseOperation {
       throw new UserException("Last Name not Valid. Should be below - 50 characters ");
     }
 
-    if (!Validator.isValidName(lastName)) {
-      throw new UserException("Last Name should not contain digits");
+    if (!Validator.isAlphabeticWithSpaceAndDots(lastName)) {
+      throw new UserException("Last Name can only contain alphabets, spaces and dots in " +
+              "appropriate manner");
     }
 
     return lastName;
   }
 
+  protected String getFullName() throws UserException {
+    Scanner sc = OperationFactory.getScannerInstance();
+
+    String fullName;
+
+    try {
+      fullName = sc.next();
+    } catch (InputMismatchException e) {
+      throw new UserException("Entered Name is Invalid ");
+    }
+
+    if (!Validator.isValidFullNameLength(fullName)) {
+      throw new UserException("Full Name should be under 50 Characters.\n" +
+              "Please shorten the name by abbreviating it. E.g.- G.V.Sindhu, MD.Zeeshan, B.Bhagat");
+    }
+
+    if (!Validator.isAlphabeticWithSpaceAndDots(fullName)) {
+      throw new UserException("Full Name can only contain alphabets, spaces and dots " +
+              "in appropriate manner");
+    }
+
+    return fullName;
+  }
 
   protected String getEmail() throws UserException {
     Scanner sc = OperationFactory.getScannerInstance();
@@ -82,7 +108,6 @@ public class BaseOperation {
       throw new UserException("Email Address not Valid.\n Format should be : abcd@amazon.com," +
               "xyz@gmail.com,etc. ");
     }
-
     return emailAddress;
   }
 
@@ -102,34 +127,17 @@ public class BaseOperation {
               "Phone Number can be of 10 digits without country code or, 12 digits with country code\n");
     }
 
-    if (!Validator.isValidPhoneNo(contactNo)) {
+    if (!Validator.isNumeric(contactNo)) {
       throw new UserException("Entered Phone number should only contain digits");
     }
 
+    long contactAsLong = Long.parseLong(contactNo);
+
+    if (!Validator.isPositive(contactAsLong)) {
+      throw new UserException("Entered Phone number should not be negative");
+    }
+
     return contactNo;
-  }
-
-  protected String getFullName() throws UserException {
-    Scanner sc = OperationFactory.getScannerInstance();
-
-    String fullName;
-
-    try {
-      fullName = sc.next();
-    } catch (InputMismatchException e) {
-      throw new UserException("Entered Name is Invalid ");
-    }
-
-    if (!Validator.isValidFullNameLength(fullName)) {
-      throw new UserException("Full Name should be under 50 Characters.\n" +
-              "Please shorten the name by abbreviating it. E.g.- G.V.Sindhu, MD.Zeeshan, B.Bhagat ");
-    }
-
-    if (!Validator.isValidName(fullName)) {
-      throw new UserException("Name should not contain Numbers.");
-    }
-
-    return fullName;
   }
 
   protected String getBloodGroup() throws UserException {
@@ -199,7 +207,7 @@ public class BaseOperation {
     }
 
     while (passwordConfirmTries <= MAX_PASSWORD_CONFIRM_TRIES) {
-      if (!Validator.arePasswordsMatching(password,confirmedPassword)) {
+      if (!Validator.arePasswordsMatching(password, confirmedPassword)) {
         ++passwordConfirmTries;
         System.out.println("Please Enter a password which matches previous password value " +
                 "[Only 3 tries Allowed]: \n");
@@ -265,8 +273,12 @@ public class BaseOperation {
               "information\n");
     }
 
+    if (!Validator.isPositive(userId)) {
+      throw new UserException("\n Employee ID cannot be a negative number.");
+    }
+
     if (!Validator.isValidUserIdLength(userId)) {
-      throw new UserException("The entered value is not a valid user id" +
+      throw new UserException("The entered value is not a valid Employee id" +
               "\nIt is a 9-12 digit number" +
               "\nYou check your Phonetool Or, Contact your manager to find further " +
               "information\n");
@@ -311,7 +323,7 @@ public class BaseOperation {
       throw new UserException("Invalid Vehicle Number Entered.");
     }
 
-    if(!Validator.isValidVehicleNo(vehicleNo)) {
+    if (!Validator.isValidVehicleNo(vehicleNo)) {
       throw new UserException(" Vehicle Number is only accepted in the below format : \n" +
               "AB-11X-9999\n");
     }
@@ -328,6 +340,11 @@ public class BaseOperation {
     } catch (InputMismatchException e) {
       throw new UserException("\n Please enter valid Route ID. Route ID is an integer number.");
     }
+
+    if (!Validator.isPositive(routeId)) {
+      throw new UserException("\nRoute ID cannot be negative");
+    }
+
     return routeId;
   }
 
@@ -341,7 +358,11 @@ public class BaseOperation {
     } catch (InputMismatchException e) {
       throw new UserException("\n Please enter valid Bus ID. Bus ID is an integer number.");
     }
-    System.out.println(busId +  "===><====");
+
+    if (!Validator.isPositive(busId)) {
+      throw new UserException("\nBus ID cannot be negative");
+    }
+
     return busId;
   }
 
@@ -357,8 +378,12 @@ public class BaseOperation {
               "Bus Type is an integer number.");
     }
 
-    if(!Validator.isValidBusType(busType)) {
+    if (!Validator.isValidBusType(busType)) {
       throw new UserException("Bus Type/Capacity value exceeds maximum limit of 50");
+    }
+
+    if (!Validator.isPositive(busType)) {
+      throw new UserException("\nBus Type/Capacity cannot be negative");
     }
     return busType;
   }
@@ -374,8 +399,13 @@ public class BaseOperation {
       throw new UserException("\n Please enter valid Stop Count as an integer value");
     }
 
-    if(!Validator.isValidStopCount(stopCount)) {
-      throw new UserException("Stop Count value exceeds maximum limit of 10");
+    if (!Validator.isPositive(stopCount)) {
+      throw new UserException("\n Stop Count cannot be negative");
+    }
+
+    if (!Validator.isValidStopCount(stopCount)) {
+      throw new UserException("\nPlease enter valid Stop Count. " +
+              "Minimum Value : 2 | Maximum Value : 10");
     }
     return stopCount;
   }
@@ -391,8 +421,13 @@ public class BaseOperation {
       throw new UserException("\n Please enter valid Stop Name ");
     }
 
-    if(!Validator.isValidStopName(stopName)) {
+    if (!Validator.isValidStopNameLength(stopName)) {
       throw new UserException("Stop Name value exceeds maximum size of 100 characters");
+    }
+
+    if(!Validator.isAlphabeticWithSpaceAndDots(stopName)) {
+      throw new UserException("Currently, only stop names with alphabets, spaces and dots are supported.\n" +
+              "You may type in the numbers in letters, if required.\n");
     }
     return stopName;
   }
@@ -408,7 +443,7 @@ public class BaseOperation {
       throw new UserException("\n Please enter valid Timing info in 24 hour format ");
     }
 
-    if(!Validator.isValidTimeString(timeString)) {
+    if (!Validator.isValidTimeString(timeString)) {
       throw new UserException("Please enter valid Timing value as per the below format :" +
               "1. Should start with two digits from 00 to 23 for Hours.\n" +
               "2. Must be followed by either of the following separators - ':' or '-' or '/' .\n" +
@@ -436,5 +471,23 @@ public class BaseOperation {
       throw new UserException("Please enter comments within a character limit of 100 ");
     }
     return comment;
+  }
+
+  protected int getStopId() throws UserException {
+    Scanner sc = OperationFactory.getScannerInstance();
+
+    int stopId;
+
+    try {
+      stopId = sc.nextInt();
+    } catch (InputMismatchException e) {
+      throw new UserException("\nNo valid data recorded");
+    }
+
+    if (!Validator.isPositive(stopId)) {
+      throw new UserException("\nStop ID cannot be negative");
+    }
+
+    return stopId;
   }
 }

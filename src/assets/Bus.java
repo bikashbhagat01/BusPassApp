@@ -3,10 +3,11 @@ package assets;
 // POJO, Only holds data
 
 public class Bus {
+
   private int busId;
   private int routeId;
   private int availability; // number of available seats
-  private int timing; // In minutes
+  private int timing; // In minutes. If no
   private int busType; // Capacity of the bus
   private String vehicleNo;
 
@@ -15,6 +16,7 @@ public class Bus {
     this.availability = availability;
     this.busType = busType;
     this.vehicleNo = vehicleNo;
+    this.timing = -1;
   }
 
   public int getBusId() {
@@ -41,27 +43,7 @@ public class Bus {
     return routeId;
   }
 
-  public void setRouteId(int routeId) {
-    this.routeId = routeId;
-  }
-
-  public void setAvailability(int availability) {
-    this.availability = availability;
-  }
-
   public void setTiming(int timing) {
     this.timing = timing;
   }
-
-  public void setBusType(int busType) {
-    this.busType = busType;
-  }
-
-  public void setVehicleNo(String vehicleNo) {
-    this.vehicleNo = vehicleNo;
-  }
-
-  //  Setters and Getters to be added
-  //  Bus can only be created with a valid key
-
 }
