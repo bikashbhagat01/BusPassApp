@@ -55,6 +55,7 @@ public class StopManager extends BaseManager {
 
   public void create(Stop stop) throws ApplicationException {
     QueryBuilder queryBuilder = this.getInsertInstance()
+            .onTable("stop")
             .insertValue("stopid", stop.getStopId())
             .insertValue("stopname", stop.getStopName());
 

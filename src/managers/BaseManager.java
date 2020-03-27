@@ -187,4 +187,12 @@ public class BaseManager {
       throw new ApplicationException("SQL exception");
     }
   }
+
+  protected boolean goToPrevious(ResultSet resultSet) throws ApplicationException {
+    try {
+      return resultSet.previous();
+    } catch (SQLException e) {
+      throw new ApplicationException("SQL exception");
+    }
+  }
 }

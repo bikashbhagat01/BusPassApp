@@ -69,3 +69,9 @@ UNION
 SELECT busid, bus.routeid as routeidonbus, availability, bustype, timing,
 routestopname.routeid as routeidforstops, stopname FROM bus
 RIGHT JOIN routestopname ON bus.routeid = routestopname.routeid;
+
+====== seatavailability ======
+[Shows visitor the route id, their timing and available seats]
+
+create view seatavailability as
+select timing, routeid, sum(availability) from bus where timing > -1 group by routeid, timing;

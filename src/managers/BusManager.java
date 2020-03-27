@@ -61,9 +61,9 @@ public class BusManager extends BaseManager {
             criteria +
             " desc;";
 
-    String[] fields = {"Bus Type", "Number of Buses"};
+    String[] headers = {"BUS TYPE", "NUMBER OF BUSES"};
 
-    this.executeQuery(sqlQuery, fields);
+    this.executeQuery(sqlQuery, headers);
   }
 
   public boolean displayAvailableBusTimingsAndRoutes() throws ApplicationException {
@@ -82,6 +82,8 @@ public class BusManager extends BaseManager {
       return false;
     }
 
+    this.goToPrevious(resultSet);
+
     displayDetailsFromResultSet(resultSet, true);
 
     return true;
@@ -89,7 +91,7 @@ public class BusManager extends BaseManager {
 
   public boolean displayAvailableBusTimingsAndRoutes(int[] routeIds, int timing)
           throws ApplicationException {
-    System.out.println("Bus ID\t\tRoute ID\t\tStops\t\tStart Timing");
+    System.out.println("BUS ID\t\tROUTE ID\t\tSTOPS\t\tSTART TIMING");
 
     int foundResultsCounter = 0;
 
@@ -124,7 +126,7 @@ public class BusManager extends BaseManager {
     }
 
     if(headingSwitch) {
-      System.out.println("Bus ID\tRoute ID\t\tStops\t\t\t\t\tStart Timing");
+      System.out.println("BUS ID\tROUTE ID\t\tSTOPS\t\t\t\t\tSTART TIMING");
     }
 
     int previousBusId = this.getInt(resultSet, 1);

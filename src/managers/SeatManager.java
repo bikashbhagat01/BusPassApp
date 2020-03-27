@@ -1,6 +1,7 @@
 package managers;
 
 import customExceptions.ApplicationException;
+import dbTools.TimeConverter;
 import java.sql.ResultSet;
 import queryHelper.QueryBuilder;
 
@@ -112,24 +113,37 @@ public class SeatManager extends BaseManager {
     return false;
   }
 
-  public void displaySeatAvailabilityPerRoute() throws ApplicationException {
+  public boolean displaySeatAvailabilityPerRoute() throws ApplicationException {
 
     String columns[] = {"timing", "routeid", "availability"};
 
     QueryBuilder queryBuilder = this.getSelectInstance()
             .selectColumns(columns)
             .onTable("bus")
-            .groupBy("routeid")
-            .groupBy("timing");
+            .whereGt("timing", -1)
+            .groupBy("timing")
+            .groupBy("routeid");
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
     ResultSet resultSet = this.getResultSet(sqlQuery);
 
+    if(!this.isNextPresent(resultSet)) {
+      System.out.println("\nNo Seat Availability found on any route\n");
+      return false;
+    }
+    this.goToPrevious(resultSet);
+
+    System.out.println("START TIMING\tROUTE ID\t\tAVAILABLE SEATS");
+
     while (this.isNextPresent(resultSet)) {
-      System.out.println(this.getInt(resultSet, 1) + "\t\t" +
-              this.getInt(resultSet, 2) + "\t\t" +
+      int timingInMinutes = this.getInt(resultSet,1);
+      String timeString = TimeConverter.getTimeAsString(timingInMinutes);
+
+      System.out.println(timeString + "\t\t\t\t\t\t" +
+              this.getInt(resultSet, 2) + "\t\t\t\t\t\t" +
               this.getInt(resultSet, 3) + "\t\t");
     }
+    return true;
   }
 }

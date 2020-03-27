@@ -50,6 +50,8 @@ public class QueryExecutor {
       return false;
     }
 
+    resultSet.previous();
+
     while (resultSet.next()) {
       System.out.println();
 

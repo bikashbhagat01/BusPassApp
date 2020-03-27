@@ -53,10 +53,6 @@ public class VisitorOperation {
   }
 
   public void displaySeatAvailabilityPerRoute() throws ApplicationException {
-
-    // select timing as "Bus Timing", routeid,sum(availability), count(*)
-    // as "No of buses buses runnning at same time" from bus group by routeid, timing;
-
     SeatManager.getInstance().displaySeatAvailabilityPerRoute();
 
   }

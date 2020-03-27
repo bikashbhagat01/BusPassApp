@@ -223,6 +223,12 @@ public class AdminOperation extends BaseOperation {
   }
 
   private boolean addStop() throws UserException, ApplicationException {
+
+    System.out.println("\nCurrently, supported stops : \n");
+    StopManager
+            .getInstance()
+            .displayAllStops();
+
     System.out.println("\nPlease provide a Stop Name to add : \n");
     String stopName = this.getStopName();
 
@@ -233,6 +239,11 @@ public class AdminOperation extends BaseOperation {
     StopManager
             .getInstance()
             .create(newStop);
+
+    System.out.println("\nUpdated List of Stops:");
+    StopManager
+            .getInstance()
+            .displayAllStops();
 
     return true;
   }
@@ -481,8 +492,8 @@ public class AdminOperation extends BaseOperation {
     return true;
   }
 
+  // Executes Query to find Bus Type and their count
   private void displayBusCountOfEachType() throws ApplicationException {
-    // Executes Query to find Bus Type and their count
     BusManager.getInstance().displayBusCount("bustype");
   }
 
