@@ -42,7 +42,7 @@ public class UserOperation extends BaseOperation{
           try {
             requestNewRoute(userId);
           } catch (UserException e) {
-            System.out.println("Returning to previous menu as the below exception has occurred.");
+            System.out.println("Returning to previous menu as the below issue has occurred.\n");
             System.out.println(e.getMessage());
           }
           break;
@@ -53,7 +53,7 @@ public class UserOperation extends BaseOperation{
           try {
             provideFeedback(userId);
           } catch (UserException e) {
-            System.out.println("Returning to previous menu as the below exception has occurred.");
+            System.out.println("Returning to previous menu as the below issue has occurred.\n");
             System.out.println(e.getMessage());
           }
           break;
@@ -73,8 +73,8 @@ public class UserOperation extends BaseOperation{
 
 
   private void displayBusTimingsAndRoutes() throws ApplicationException {
-    System.out.println("Below is information on Start Timings and Routes which have Active " +
-            "and Available Buses");
+    System.out.println("\nBelow is information on Start Timings and Routes which have Active " +
+            "and Available Buses :\n");
 
     BusManager.getInstance().displayAvailableBusTimingsAndRoutes();
   }
@@ -169,58 +169,79 @@ public class UserOperation extends BaseOperation{
     return true;
   }
 
-  private void updatePassword(int userId) throws UserException, ApplicationException {
+  private boolean updatePassword(int userId) throws UserException, ApplicationException {
     System.out.println("Existing Password :\n");
     String oldPassword = this.getExistingPassword(userId);
 
-    System.out.println("Enter New Password :\n");
+    System.out.println("Enter New Password :\n" +
+            "[Should be of at least 8 characters, contain only letters and digits and " +
+            "must contain at least 2 digits]");
     String newPassword = this.getPassword();
+
+    if(this.arePasswordsMatching(oldPassword,newPassword)) {
+      System.out.println("New Password is the same as Current password.");
+      return false;
+    }
 
     System.out.println("Enter New Password Again :\n");
     String newConfirmedPassword = this.getConfirmedPassword(newPassword);
 
     UserManager.getInstance().update(userId, "password", newConfirmedPassword);
+
+    System.out.println("Your password has been updated. Hereafter, you must log-in using your new " +
+            "password\n");
+
+    return true;
   }
 
-  private void updateBloodGroup(int userId) throws UserException, ApplicationException {
-    System.out.println("Blood Group :\n");
+  private boolean updateBloodGroup(int userId) throws UserException, ApplicationException {
+    System.out.println("Blood Group [Format : APOSITIVE, ABNEGATIVE,etc.] :\n");
     String bloodGroup = this.getBloodGroup();
 
     UserManager.getInstance().update(userId, "bloodgroup", bloodGroup);
 
-    System.out.println("Blood Group Updated");
+    System.out.println("\nBlood Group has been updated to : " + bloodGroup);
 
+    return true;
   }
 
-  private void updateEmergencyContact(int userId) throws UserException, ApplicationException {
+  private boolean updateEmergencyContact(int userId) throws UserException, ApplicationException {
     System.out.println("Emergency Contact Name : \n");
     String emergencyContactName = this.getFullName();
 
-    System.out.println("Emergency Contact Number : \n");
+    System.out.println("Emergency Contact Number[Only 10 digits or 12 digits with country code] : \n");
     String emergencyContactNumber = this.getContactNo();
 
     UserManager.getInstance().update(userId, "emergencycontactname", emergencyContactName);
     UserManager.getInstance().update(userId, "emergencycontactno", emergencyContactNumber);
 
-    System.out.println("Emergency Contact Details Updated");
+    System.out.println("Emergency Contact Details has been updated to :\n"
+            + emergencyContactName + " with Phone No. : " +
+            emergencyContactNumber);
+
+    return true;
   }
 
-  private void updateContactNo(int userId) throws UserException, ApplicationException {
-    System.out.println("Contact Number :");
+  private boolean updateContactNo(int userId) throws UserException, ApplicationException {
+    System.out.println("Contact Number[Only 10 digits or 12 digits with country code] :");
     String contactNumber = this.getContactNo();
 
     UserManager.getInstance().update(userId, "contactno", contactNumber);
 
-    System.out.println("Contact Number Updated");
+    System.out.println("Your Contact Number has been Updated to : " + contactNumber);
+
+    return true;
   }
 
-  private void updateEmail(int userId) throws UserException, ApplicationException {
+  private boolean updateEmail(int userId) throws UserException, ApplicationException {
     System.out.println("E-mail Address :\n");
     String email = this.getEmail();
 
     UserManager.getInstance().update(userId, "email", email);
 
-    System.out.println("E-mail address Updated");
+    System.out.println("Your contact E-mail address has been Updated to : " + email);
+
+    return true;
   }
 
   private void updateName(int userId) throws UserException, ApplicationException {
@@ -233,7 +254,7 @@ public class UserOperation extends BaseOperation{
     UserManager.getInstance().update(userId, "fname", firstName);
     UserManager.getInstance().update(userId, "lname", lastName);
 
-    System.out.println("Name Updated");
+    System.out.println("You Name has been updated to : " + firstName + " " + lastName);
   }
 
   private boolean requestNewRoute(int userId) throws ApplicationException, UserException {
@@ -242,13 +263,22 @@ public class UserOperation extends BaseOperation{
      * if such a route does not exist, creates a route request record in table.
      */
 
+    System.out.println("\nFor Your Reference, below are stops which are currently supported :\n");
+
+    StopManager
+            .getInstance()
+            .displayAllStops();
+
+    System.out.println("\n[If your stop is listed above, make sure that you enter Stop Name with " +
+            "the same spelling. If not, you may proceed to request the required new stops]\n");
+
     System.out.println("Enter Details Below: \n");
 
     System.out.println("Start Stop Name :\n");
-    String startStop = this.getStopName();
+    String startStopName = this.getStopName();
 
     System.out.println("End Stop Name :\n");
-    String endStop = this.getStopName();
+    String endStopName = this.getStopName();
 
     System.out.println("Start Timing [in 24 hour format separated by : Or / or -]:\n");
     String timingString = this.getTimeString();
@@ -256,46 +286,47 @@ public class UserOperation extends BaseOperation{
     int timeInMinutes = TimeConverter.getTimeAsMinutes(timingString);
 
     boolean routeExists = true;
-    boolean stopsExist = true;
 
     int startStopId = 0;
     int endStopId = 0;
 
-    if (!(StopManager.getInstance().isPresent("stop", "stopname", startStop) ||
-            StopManager.getInstance().isPresent("stop", "stopname", endStop))) {
-      stopsExist = false;
-    }
+    boolean stopsExist = StopManager.getInstance().areStopsPresent(startStopName,endStopName);
 
-    if (stopsExist == true) {
-      startStopId = StopManager.getInstance().getStopIdForName(startStop);
-      endStopId = StopManager.getInstance().getStopIdForName(endStop);
+    if (stopsExist) {
+      startStopId = StopManager
+              .getInstance()
+              .getStopIdForName(startStopName);
 
-      int[] routeIds = RouteManager.getInstance().findRoutesForStops(startStopId, endStopId);
+      endStopId = StopManager
+              .getInstance()
+              .getStopIdForName(endStopName);
 
-      if (BusManager.getInstance().isBusAvailableForRoutesAndTiming(routeIds, timeInMinutes)) {
-        System.out.println("Available bus(es) for your request.");
+      routeExists = RouteManager
+              .getInstance()
+              .getAvailableBuses(startStopId, endStopId, timeInMinutes);
 
-        BusManager.getInstance().displayAvailableBusTimingsAndRoutes(routeIds, timeInMinutes);
-
+      if(routeExists) {
         return false;
-      } else {
-        routeExists = false;
       }
     }
 
     RouteRequest routeRequest;
 
-    if (stopsExist == true) {
-      routeRequest = AssetFactory.getInstance().getRouteRequestInstance(startStopId, endStopId, userId,
-              routeExists, timeInMinutes);
+    if (stopsExist) {
+      routeRequest = AssetFactory
+              .getInstance()
+              .getRouteRequestInstance(startStopId, endStopId, userId, routeExists, timeInMinutes);
     } else {
-      routeRequest = AssetFactory.getInstance().getRouteRequestInstance(startStop, endStop, userId,
-              routeExists, timeInMinutes);
+      routeRequest = AssetFactory
+              .getInstance()
+              .getRouteRequestInstance(startStopName, endStopName, userId, routeExists, timeInMinutes);
     }
 
     RouteRequestManager.getInstance().create(routeRequest);
 
-    System.out.println("Your Route Request has been sent!");
+    System.out.println("Your Route Request has been sent, as per the below details :\n" +
+            "START STOP : " + startStopName + "\t\tEND STOP: " + endStopName+ "\t\t" +
+            "START TIMING : " + timingString);
 
     return true;
   }
@@ -312,9 +343,13 @@ public class UserOperation extends BaseOperation{
 
     String comment = this.getComment();
 
-    Feedback feedback = AssetFactory.getInstance().getFeedbackInstance(userId, comment);
+    Feedback feedback = AssetFactory
+            .getInstance()
+            .getFeedbackInstance(userId, comment);
 
-    FeedbackManager.getInstance().create(feedback);
+    FeedbackManager
+            .getInstance()
+            .create(feedback);
 
     System.out.println("Thank You for Your Valuable Comment");
 

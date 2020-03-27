@@ -92,11 +92,6 @@ public class QueryBuilder {
     return this;
   }
 
-  public QueryBuilder whereLte(String key, int val) {
-    this.whereOperations.add(new WhereOperation("lte", key, val));
-    return this;
-  }
-
   public QueryBuilder whereLte(String key, String val) {
     this.whereOperations.add(new WhereOperation("lte", key, val));
     return this;

@@ -67,7 +67,7 @@ public class BusManager extends BaseManager {
   }
 
   public boolean displayAvailableBusTimingsAndRoutes() throws ApplicationException {
-    String[] columns = {"busid", "routeid", "stopname", "timing"};
+    String[] columns = {"busid", "routeid", "timing", "stopname"};
 
     QueryBuilder queryBuilder = this.getSelectInstance()
             .selectColumns(columns)
@@ -84,20 +84,20 @@ public class BusManager extends BaseManager {
 
     this.goToPrevious(resultSet);
 
-    displayDetailsFromResultSet(resultSet, true);
+    displaySchedule(resultSet, true);
 
     return true;
   }
 
   public boolean displayAvailableBusTimingsAndRoutes(int[] routeIds, int timing)
           throws ApplicationException {
-    System.out.println("BUS ID\t\tROUTE ID\t\tSTOPS\t\tSTART TIMING");
+    System.out.println("BUS ID\tROUTE ID\tSTART TIMING\tSTOPS FROM START TO END");
 
     int foundResultsCounter = 0;
 
     for (int routeId : routeIds) {
 
-      String[] columns = {"busid", "routeid", "stopname", "timing"};
+      String[] columns = {"busid", "routeid", "timing", "stopname"};
 
       QueryBuilder queryBuilder = this.getSelectInstance()
               .selectColumns(columns)
@@ -110,7 +110,7 @@ public class BusManager extends BaseManager {
 
       if (this.isNextPresent(resultSet)) {
         foundResultsCounter++;
-        displayDetailsFromResultSet(resultSet, false);
+        displaySchedule(resultSet, false);
       }
     }
 
@@ -120,13 +120,13 @@ public class BusManager extends BaseManager {
     return false;
   }
 
-  public boolean displayDetailsFromResultSet(ResultSet resultSet, boolean headingSwitch) throws ApplicationException {
+  public boolean displaySchedule(ResultSet resultSet, boolean headingSwitch) throws ApplicationException {
     if (!this.isNextPresent(resultSet)) {
       return false;
     }
 
     if(headingSwitch) {
-      System.out.println("BUS ID\tROUTE ID\t\tSTOPS\t\t\t\t\tSTART TIMING");
+      System.out.println("BUS ID\tROUTE ID\tSTART TIMING\tSTOPS FROM START TO END\t\t\t");
     }
 
     int previousBusId = this.getInt(resultSet, 1);
@@ -140,34 +140,41 @@ public class BusManager extends BaseManager {
     int currentRouteId = 0;
     int currentTiming = 0;
 
+    boolean firstRecordState = true;
+
     do {
       currentBusId = this.getInt(resultSet, 1);
       currentRouteId = this.getInt(resultSet, 2);
-      currentStopName = this.getString(resultSet, 3);
+      currentStopName = this.getString(resultSet, 4);
 
-      if (currentBusId == previousBusId && currentRouteId == previousRouteId) {
-        stopNamesString += "-->" + currentStopName;
-        currentTiming = this.getInt(resultSet, 4);
-      } else {
+      if(currentBusId == previousBusId && currentRouteId == previousRouteId
+              && firstRecordState) {
+        stopNamesString += currentStopName;
+        firstRecordState = false;
+      } else if (currentBusId == previousBusId && currentRouteId == previousRouteId) {
+          stopNamesString += "-->" + currentStopName;
+          currentTiming = this.getInt(resultSet, 3);
+        } else {
         eachRecord = previousBusId + "\t\t\t\t" +
-                previousRouteId + "\t\t" +
-                stopNamesString + "\t\t" +
-                TimeConverter.getTimeAsString(currentTiming);
+                previousRouteId + "\t\t\t\t" +
+                TimeConverter.getTimeAsString(currentTiming) + "\t\t\t\t\t" +
+                "-->" + stopNamesString + "\t\t";
 
         System.out.println(eachRecord);
 
         stopNamesString = currentStopName;
 
-        currentTiming = this.getInt(resultSet, 4);
+        currentTiming = this.getInt(resultSet, 3);
+
         previousBusId = currentBusId;
         previousRouteId = currentRouteId;
       }
     } while (this.isNextPresent(resultSet));
 
     System.out.println(currentBusId + "\t\t\t\t" +
-            currentRouteId + "\t\t" + "-->" +
-            stopNamesString + "\t\t" +
-            TimeConverter.getTimeAsString(currentTiming));
+            currentRouteId + "\t\t\t\t" +
+            TimeConverter.getTimeAsString(currentTiming) + "\t\t\t\t\t" +
+            "-->" + stopNamesString + "\t\t");
 
     return true;
   }
@@ -222,9 +229,10 @@ public class BusManager extends BaseManager {
     for (int routeId : routeIds) {
       QueryBuilder queryBuilder = this.getSelectInstance()
               .selectAllColumns()
+              .onTable("bus")
               .whereEq("routeid", routeId)
               .whereEq("timing", timing)
-              .whereLte("availability", "bustype");
+              .whereGt("availability", 0);
 
       String sqlQuery = this.buildQuery(queryBuilder);
 

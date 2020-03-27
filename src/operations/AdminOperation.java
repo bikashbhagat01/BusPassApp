@@ -362,6 +362,7 @@ public class AdminOperation extends BaseOperation {
             "You may press Enter twice to return to previous menu\n");
 
     int[] stopIds = new int[stopCount];
+    int[] stopRanks = new int[stopCount];
 
     List<Integer> checkStopsList = new ArrayList<Integer>();
 
@@ -380,6 +381,7 @@ public class AdminOperation extends BaseOperation {
         checkStopsList.add(stopId);
 
         stopIds[count] = stopId;
+        stopRanks[count] = count+1;
         ++count;
       } else {
         System.out.println("Stop ID does not exist or has been entered before.\n " +
@@ -388,7 +390,7 @@ public class AdminOperation extends BaseOperation {
       }
     }
 
-    Route newRoute = AssetFactory.getInstance().getRouteInstance(stopIds);
+    Route newRoute = AssetFactory.getInstance().getRouteInstance(stopIds,stopRanks);
     RouteManager.getInstance().create(newRoute);
 
     System.out.println("\nNew Route with Route ID : " + newRoute.getRouteId() + " has been created\n");

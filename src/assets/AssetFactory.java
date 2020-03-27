@@ -38,9 +38,9 @@ public class AssetFactory {
     return feedback;
   }
 
-  public Route getRouteInstance(int stops[]) throws ApplicationException {
+  public Route getRouteInstance(int stops[], int[] stopRanks) throws ApplicationException {
     int routeId = IdManager.getInstance().getNewId("route");
-    Route route = new Route(routeId, stops);
+    Route route = new Route(routeId, stops, stopRanks);
     return route;
   }
 

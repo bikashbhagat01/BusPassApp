@@ -1,7 +1,6 @@
 package managers;
 
 import customExceptions.ApplicationException;
-import dbTools.TimeConverter;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import assets.Route;
@@ -13,18 +12,19 @@ public class RouteManager extends BaseManager {
   private static RouteManager routeManager;
 
   public static RouteManager getInstance() {
-    if(routeManager == null) {
+    if (routeManager == null) {
       routeManager = new RouteManager();
     }
     return routeManager;
   }
 
   public boolean create(Route route) throws ApplicationException {
-    for(int i = 0; i<route.getStopIds().length; i++) {
+    for (int i = 0; i < route.getStopIds().length; i++) {
       QueryBuilder queryBuilder = this.getInsertInstance()
-                                      .insertValue("routeid", route.getRouteId())
-                                      .insertValue("stopid", route.getStopIds()[i])
-                                      .onTable("route");
+              .insertValue("routeid", route.getRouteId())
+              .insertValue("stopid", route.getStopIds()[i])
+              .insertValue("stoprank", route.getStopRanks()[i])
+              .onTable("route");
 
       String sqlQuery = this.buildQuery(queryBuilder);
 
@@ -35,39 +35,64 @@ public class RouteManager extends BaseManager {
     return true;
   }
 
-  public int[] findRoutesForStops(int startStop, int endStop)
+  public int[] getRoutes(int startStop, int endStop)
           throws ApplicationException {
-    int[] startCommonRoutes = findRoutesForStops(startStop);
-    int[] endCommonRoutes = findRoutesForStops(endStop);
+    int[] startCommonRoutes = getRoutes(startStop);
+    int[] endCommonRoutes = getRoutes(endStop);
 
     List<Integer> startRouteList = new ArrayList<>();
-    List<Integer> resultList = new ArrayList<>();
+    List<Integer> routeIdList = new ArrayList<>();
 
-    for(int startRouteId : startCommonRoutes) {
+    for (int startRouteId : startCommonRoutes) {
       startRouteList.add(startRouteId);
     }
 
-    for(int endRouteId : endCommonRoutes) {
-      if(startRouteList.contains(endRouteId)) {
-        resultList.add(endRouteId);
+    for (int endRouteId : endCommonRoutes) {
+      if (startRouteList.contains(endRouteId)) {
+        routeIdList.add(endRouteId);
+      }
+    }
+
+    List<Integer> resultList = new ArrayList<>();
+
+    for (int routeId : routeIdList) {
+      int startStopRank = this.getStopRank(routeId, startStop);
+      int endStopRank = this.getStopRank(routeId, endStop);
+
+      if ( startStopRank == 1 && startStopRank < endStopRank
+              && startStopRank != -1 && endStopRank != -1) {
+        resultList.add(routeId);
       }
     }
 
     int[] resultArray = new int[resultList.size()];
 
-    for(int i = 0; i < resultList.size(); i++) {
+    for (int i = 0; i < resultList.size(); i++) {
       resultArray[i] = resultList.get(i);
     }
     return resultArray;
   }
 
-  public int[] findRoutesForStops(int stopId) throws ApplicationException {
+  private int getStopRank(int routeId, int stopId) throws ApplicationException {
+
+    QueryBuilder queryBuilder = this.getSelectInstance()
+            .selectColumns("stoprank")
+            .onTable("route")
+            .whereEq("routeid", routeId)
+            .whereEq("stopid", stopId);
+
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    return this.getQueryNumber(sqlQuery);
+  }
+
+  public int[] getRoutes(int stopId) throws ApplicationException {
     String[] columns = {"routeid"};
 
     QueryBuilder queryBuilder = this.getSelectInstance()
-                                    .selectColumns(columns)
-                                    .onTable("route")
-                                    .whereEq("stopid", stopId);
+            .selectColumns(columns)
+            .onTable("route")
+            .whereEq("stopid", stopId);
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
@@ -75,16 +100,13 @@ public class RouteManager extends BaseManager {
 
     List<Integer> resultList = new ArrayList<>();
 
-    int count = 1;
-
-    while(this.isNextPresent(resultSet)){
-      resultList.add(this.getInt(resultSet,count));
-      ++count;
+    while (this.isNextPresent(resultSet)) {
+      resultList.add(this.getInt(resultSet, 1));
     }
 
     int[] resultArray = new int[resultList.size()];
 
-    for(int i = 0; i < resultList.size(); i++) {
+    for (int i = 0; i < resultList.size(); i++) {
       resultArray[i] = resultList.get(i);
     }
     return resultArray;
@@ -104,7 +126,7 @@ public class RouteManager extends BaseManager {
   }
 
   public boolean displayAllRoutes() throws ApplicationException {
-    String[] columns = {"routeid","stopname"};
+    String[] columns = {"routeid", "stopname"};
 
     QueryBuilder queryBuilder = this.getSelectInstance()
             .selectColumns(columns)
@@ -114,7 +136,7 @@ public class RouteManager extends BaseManager {
 
     ResultSet resultSet = this.getResultSet(sqlQuery);
 
-    if(!this.isNextPresent(resultSet)) {
+    if (!this.isNextPresent(resultSet)) {
       System.out.println("No routes were found");
       return false;
     }
@@ -125,7 +147,7 @@ public class RouteManager extends BaseManager {
     String currentStopName = "";
 
     int currentRouteId = 0;
-    int previousRouteId = this.getInt(resultSet,1);
+    int previousRouteId = this.getInt(resultSet, 1);
 
     do {
       currentRouteId = this.getInt(resultSet, 1);
@@ -134,19 +156,37 @@ public class RouteManager extends BaseManager {
         stopNamesString += currentStopName + "--> ";
       } else {
         eachRecord = previousRouteId + "\t\t" +
-                  "--> " + stopNamesString ;
+                "--> " + stopNamesString;
 
-        System.out.println(eachRecord );
+        System.out.println(eachRecord);
 
         stopNamesString = currentStopName + "--> ";
         previousRouteId = currentRouteId;
       }
     } while (this.isNextPresent(resultSet));
 
-    System.out.println( currentRouteId + "\t\t" +
-            "--> " + stopNamesString );
+    System.out.println(currentRouteId + "\t\t" +
+            "--> " + stopNamesString);
 
     return true;
+  }
+
+  public boolean getAvailableBuses(int startStopId, int endStopId, int timing)
+          throws ApplicationException {
+    int[] routeIds = RouteManager
+            .getInstance()
+            .getRoutes(startStopId, endStopId);
+
+    if (BusManager.getInstance().isBusAvailableForRoutesAndTiming(routeIds, timing)) {
+      System.out.println("As per the provided details, the below Bus(es) are already " +
+              "available and active for use.");
+
+      BusManager
+              .getInstance()
+              .displayAvailableBusTimingsAndRoutes(routeIds, timing);
+      return true;
+    }
+    return false;
   }
 }
 

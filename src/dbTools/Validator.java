@@ -84,10 +84,12 @@ public class Validator {
       return false;
     }
 
-    String emailRegex = "^[a-zA-Z0-9]+" +
-                        "([a-zA-Z0-9_+&-]+)@" +
-                        "([a-zA-Z0-9-]+\\.)+[a-z" +
-                        "A-Z]{2,7}$";
+//    String emailRegex = "^[a-zA-Z0-9]+" +
+//                        "([a-zA-Z0-9_+&-]+)@" +
+//                        "([a-zA-Z0-9-]+\\.)+[a-z" +
+//                        "A-Z]{2,7}$";
+
+    String emailRegex = "[a-zA-Z.0-9_]+@[a-zA-Z0-9_]+\\.[a-zA-Z]{2,7}$";
 
     Pattern pat = Pattern.compile(emailRegex);
 
@@ -103,15 +105,11 @@ public class Validator {
 
 
   public static boolean isValidPhoneNoLength(String contactNo) {
-    if(contactNo.length() > 12) {
-      return false;
+    if(contactNo.length() == 12 || contactNo.length() == 10) {
+      return true;
     }
 
-    if(contactNo.length() < 10) {
-      return false;
-    }
-
-    return true;
+    return false;
   }
 
   public static boolean isValidFullNameLength(String fullName) {
@@ -181,8 +179,7 @@ public class Validator {
   }
 
   public static boolean isValidUserIdLength(int userId) {
-
-    return userId < 12;
+    return userId <= 1000000000 && userId >= 99999999;
   }
 
   public static boolean isPositive(int number) {
@@ -194,9 +191,14 @@ public class Validator {
   }
 
   public static boolean isAlphabeticWithSpaceAndDots(String stringValue) {
+
     int alphabetCount = 0, spaceCount = 0, dotCount = 0, totalCount = 0;
 
     for(int i = 0; i < stringValue.length(); i++) {
+      if(stringValue.charAt(i) >= '0' && stringValue.charAt(i) <= '9') {
+        return false;
+      }
+
       if(isAlphabetic(stringValue.charAt(i))) {
         ++alphabetCount;
       } else if(stringValue.charAt(i) == '.') {

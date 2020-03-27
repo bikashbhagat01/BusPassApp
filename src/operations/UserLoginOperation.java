@@ -76,18 +76,19 @@ public class UserLoginOperation extends BaseOperation {
 
   private void createAccount() throws ApplicationException, UserException {
     // Creates a User Account and sends to login page
-    System.out.println("\nPlease Enter the below details as prompted." +
-            "\nPress Enter to confirm entry\n ");
-    System.out.println("\n Employee ID : \n");
-    Scanner sc = OperationFactory.getScannerInstance();
+    System.out.println("\nPlease Enter the below details as prompted and Press Enter to confirm entry." +
+            "\nPress Enter Twice to return to Previous Menu. ");
 
-    int employeeId = sc.nextInt();
+    System.out.println("\n Employee ID [9 Digit Number]: \n");
+    int employeeId = this.getUserId();
+
     boolean userAlreadyExists = UserManager.getInstance().isValidUser(employeeId);
+
     if (userAlreadyExists) {
       System.out.println("User Id for " + employeeId + " already exists\n");
     }
-    if (!userAlreadyExists) {
 
+    if (!userAlreadyExists) {
       System.out.println("\n First Name : \n");
       String firstName = this.getFirstName();
 
@@ -97,10 +98,10 @@ public class UserLoginOperation extends BaseOperation {
       System.out.println("\n Email Address : \n");
       String email = this.getEmail();
 
-      System.out.println("\n Contact No. : \n");
+      System.out.println("\n Contact No.[Only 10 digits or 12 digits with country code] :\n");
       String contactNo = this.getContactNo();
 
-      System.out.println("\n Emergency Contact No. : \n");
+      System.out.println("\n Emergency Contact No.[Only 10 digits or 12 digits with country code] :\n");
       String emergencyContactNo = this.getContactNo();
 
       System.out.println("\n Emergency Contact Name : \n");

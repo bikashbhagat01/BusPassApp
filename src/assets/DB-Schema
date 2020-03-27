@@ -18,7 +18,7 @@ create table feedback(feedbackid int NOT NULL PRIMARY KEY, comments varchar(1000
                       userid int, FOREIGN KEY(userid) REFERENCES user(userid));
 
 === RouteLookup ===
-create table route(id INT NOT NULL PRIMARY KEY auto_increment, routeid int, stopid int);
+create table route(id INT NOT NULL PRIMARY KEY auto_increment, routeid int, stopid int, stoprank int);
 
 === RouteRequest ===
 create table routerequest(routerequestid int NOT NULL PRIMARY KEY, startstop int, endstop int,
@@ -55,8 +55,8 @@ and bustype is not null order by busid;
 [view to get route and their stopnames]
 
 create view routestopname as
-select routeid, stopname from route
-inner join stop using(stopid);
+select routeid, stopname, stoprank from route
+inner join stop using(stopid) order by routeid, stoprank;
 
 ====== routebusmap ======
 [view to get all information of the system without any availability filter]

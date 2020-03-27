@@ -6,10 +6,12 @@ public class Route {
 
   private int routeId;
   private int[] stopIds;
+  private int[] stopRanks;
 
-  public Route(int routeId, int[] stopIds) {
+  public Route(int routeId, int[] stopIds, int[] stopRanks) {
     this.routeId = routeId;
     this.stopIds = stopIds;
+    this.stopRanks = stopRanks;
   }
 
   public int[] getStopIds() {
@@ -18,5 +20,9 @@ public class Route {
 
   public int getRouteId() {
     return routeId;
+  }
+
+  public int[] getStopRanks() {
+    return stopRanks;
   }
 }

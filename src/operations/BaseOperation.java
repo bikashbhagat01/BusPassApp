@@ -5,7 +5,6 @@ import customExceptions.UserException;
 import dbTools.Validator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import managers.StopManager;
 import managers.UserManager;
 
 /**
@@ -22,7 +21,7 @@ public class BaseOperation {
 
   private final static int MAX_PASSWORD_CONFIRM_TRIES = 3;
   private final static int MAX_PASSWORD_TRIES = 3;
-  private final static int MAX_EXISTING_PASSWORD_TRIES = 0;
+  private final static int MAX_EXISTING_PASSWORD_TRIES = 3;
 
   protected String getFirstName() throws UserException {
     Scanner sc = OperationFactory.getScannerInstance();
@@ -152,7 +151,7 @@ public class BaseOperation {
     }
 
     if (!Validator.isValidBloodGroup(bloodGroup)) {
-      throw new UserException("BloodGroups Can only be of length 10 as per below format :" +
+      throw new UserException("BloodGroups can only be of maximum length 10, as per below format :\n" +
               "APOSITIVE, ABNEGATIVE, etc.");
     }
 
@@ -268,7 +267,7 @@ public class BaseOperation {
       userId = sc.nextInt();
     } catch (InputMismatchException e) {
       throw new UserException("\n Please enter correct Employee ID. " +
-              "\n It is a 9-12 digit number" +
+              "\n It is a 9 digit number" +
               "\n You check your Phonetool Or, contact your manager to find further " +
               "information\n");
     }
@@ -279,11 +278,15 @@ public class BaseOperation {
 
     if (!Validator.isValidUserIdLength(userId)) {
       throw new UserException("The entered value is not a valid Employee id" +
-              "\nIt is a 9-12 digit number" +
+              "\nIt is a 9 digit number" +
               "\nYou check your Phonetool Or, Contact your manager to find further " +
               "information\n");
     }
     return userId;
+  }
+
+  protected boolean arePasswordsMatching(String oldPassword, String newPassword) {
+    return Validator.arePasswordsMatching(oldPassword,newPassword);
   }
 
   protected String getAdminId() throws UserException {

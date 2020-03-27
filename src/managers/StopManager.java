@@ -63,4 +63,10 @@ public class StopManager extends BaseManager {
 
     this.executeQuery(sqlQuery);
   }
+
+
+  public boolean areStopsPresent(String startStopName, String endStopName) throws ApplicationException {
+    return this.isPresent("stop", "stopname", startStopName) &&
+            this.isPresent("stop", "stopname", endStopName);
+  }
 }

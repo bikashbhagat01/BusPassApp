@@ -60,7 +60,7 @@ public class UserManager extends BaseManager {
   }
 
   public boolean isValidUser(int userId) throws ApplicationException {
-;
+
     QueryBuilder queryBuilder = this.getSelectInstance()
             .selectColumns("userid")
             .onTable("user")

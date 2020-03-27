@@ -45,6 +45,7 @@ public class AppDriver {
             OperationFactory.getUserLoginInstance().showMenu();
           } catch (ApplicationException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
           }
           break;
 
@@ -55,6 +56,7 @@ public class AppDriver {
             OperationFactory.getVisitorOperationInstance().showMenu();
           } catch (ApplicationException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
           }
           break;
 
