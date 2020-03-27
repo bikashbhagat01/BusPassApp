@@ -15,8 +15,9 @@ public class FeedbackManager extends BaseManager{
     return feedbackManager;
   }
 
-  public void create(Feedback feedback) throws ApplicationException {
+  public boolean create(Feedback feedback) throws ApplicationException {
     QueryBuilder queryBuilder = this.getInsertInstance()
+                                    .onTable("feedback")
                                     .insertValue("feedbackid", feedback.getFeedbackId())
                                     .insertValue("comment", feedback.getComment())
                                     .insertValue("userid", feedback.getUserId());
@@ -25,6 +26,6 @@ public class FeedbackManager extends BaseManager{
 
     this.executeQuery(sqlQuery);
 
-    System.out.println("Feedback is updated\n");
+    return true;
   }
 }

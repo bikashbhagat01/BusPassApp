@@ -34,7 +34,9 @@ public class SeatManager extends BaseManager {
             .whereEq("timing", time)
             .whereGt("availability", 0);
 
-    String sqlQuery = this.buildQuery(queryBuilder) + " ORDER BY bustype DESC;";
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    sqlQuery = sqlQuery.substring(0,sqlQuery.length()-1) + " ORDER BY bustype DESC;";
 
     ResultSet resultSet = this.getResultSet(sqlQuery);
 
@@ -57,7 +59,6 @@ public class SeatManager extends BaseManager {
   }
 
   public boolean updateSeatType(int type, int busId, String vehicleNo) throws ApplicationException {
-    //this is to update seat type in a bus based on a route
     int currentSeatCapacity, currentSeatAvailability, seatAvailabilityReduce, seatAvailabilityIncrease;
     int newVehicleType = type;
 

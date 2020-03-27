@@ -30,6 +30,8 @@ public class AdminOperation extends BaseOperation {
     String choice = "";
 
     while (!exitCode) {
+      System.out.println("\nPlease Select an Option : ");
+
       System.out.println("\n1. Add Or remove Bus\n" +
               "2. Add Or remove Route\n" +
               "3. Assign/Change Route on Bus\n" +
@@ -53,8 +55,7 @@ public class AdminOperation extends BaseOperation {
           try {
             assignBusToRoute();
           } catch (UserException e) {
-            System.out.println("Returning to previous menu as the below exception has occurred.");
-            System.out.println(e.getMessage());
+            this.printMenuException(e);
           }
           break;
 
@@ -62,8 +63,7 @@ public class AdminOperation extends BaseOperation {
           try {
             changeBusType();
           } catch (UserException e) {
-            System.out.println("Returning to previous menu as the below exception has occurred.");
-            System.out.println(e.getMessage());
+            this.printMenuException(e);
           }
           break;
 
@@ -90,8 +90,6 @@ public class AdminOperation extends BaseOperation {
   }
 
   private boolean addOrRemoveRoute() throws ApplicationException {
-
-
     boolean exitCode = false;
     String choice = "";
 
@@ -111,8 +109,7 @@ public class AdminOperation extends BaseOperation {
           try {
             addRoute();
           } catch (UserException e) {
-            System.out.println("Returning to previous menu as the below exception has occurred.");
-            System.out.println(e.getMessage());
+            this.printMenuException(e);
           }
           break;
 
@@ -120,8 +117,7 @@ public class AdminOperation extends BaseOperation {
           try {
             removeRoute();
           } catch (UserException e) {
-            System.out.println("Returning to previous menu as the below exception has occurred.");
-            System.out.println(e.getMessage());
+            this.printMenuException(e);
           }
           break;
 
@@ -129,8 +125,7 @@ public class AdminOperation extends BaseOperation {
           try {
             addStop();
           } catch (UserException e) {
-            System.out.println("Returning to previous menu as the below exception has occurred.");
-            System.out.println(e.getMessage());
+            this.printMenuException(e);
           }
           break;
 
@@ -172,8 +167,7 @@ public class AdminOperation extends BaseOperation {
           try {
             addBus();
           } catch (UserException e) {
-            System.out.println("Returning to previous menu as the below exception has occurred.");
-            System.out.println(e.getMessage());
+            this.printMenuException(e);
           }
           break;
 
@@ -181,8 +175,7 @@ public class AdminOperation extends BaseOperation {
           try {
             removeBus();
           } catch (UserException e) {
-            System.out.println("Returning to previous menu as the below exception has occurred.");
-            System.out.println(e.getMessage());
+            this.printMenuException(e);
           }
           break;
 
@@ -212,7 +205,7 @@ public class AdminOperation extends BaseOperation {
   }
 
   private void displayOnlyBuses() throws ApplicationException {
-    System.out.println("Below is the list of all Buses in current fleet\n" +
+    System.out.println("Below is the list of all Buses in current fleet :\n" +
             "[TIMING : Displayed in Minutes]\n" +
             "[TIMING = -1 : No start timing assigned to Bus]\n" +
             "[ROUTE ID = 0 : No route assigned to Bus]\n");
@@ -248,7 +241,10 @@ public class AdminOperation extends BaseOperation {
     return true;
   }
 
-  private void changeBusType() throws ApplicationException, UserException {
+  private boolean changeBusType() throws ApplicationException, UserException {
+
+    System.out.println("For your reference,");
+    displayOnlyBuses();
     System.out.println("Enter Route Id");
     int routeId = this.getRouteId();
 
@@ -278,6 +274,7 @@ public class AdminOperation extends BaseOperation {
       System.out.println("Route Not Found");
     }
     System.out.println("Bus Type and Vehicle Number Updated! ");
+    return true;
   }
 
   // create a Bus object by taking details from Console
@@ -312,15 +309,8 @@ public class AdminOperation extends BaseOperation {
 
   // Checks if Bus Id exists or not. If yes removed it, else returns to main menu
   private boolean removeBus() throws ApplicationException, UserException {
-
-    System.out.println("\nFor Your Reference, below are buses present in current fleet :\n" +
-            "[TIMING : Displayed in Minutes]\n" +
-            "[TIMING = -1 : No start timing assigned to Bus.]\n" +
-            "[ROUTE ID = 0 : No route assigned to Bus]\n");
-
-    BusManager
-            .getInstance()
-            .displayAllBuses();
+    System.out.println("For your reference,");
+    displayOnlyBuses();
 
     System.out.println("\nPlease enter Bus Id to remove : \n");
     int busIdToRemove = this.getBusId();
@@ -381,7 +371,7 @@ public class AdminOperation extends BaseOperation {
         checkStopsList.add(stopId);
 
         stopIds[count] = stopId;
-        stopRanks[count] = count+1;
+        stopRanks[count] = count + 1;
         ++count;
       } else {
         System.out.println("Stop ID does not exist or has been entered before.\n " +
@@ -390,7 +380,7 @@ public class AdminOperation extends BaseOperation {
       }
     }
 
-    Route newRoute = AssetFactory.getInstance().getRouteInstance(stopIds,stopRanks);
+    Route newRoute = AssetFactory.getInstance().getRouteInstance(stopIds, stopRanks);
     RouteManager.getInstance().create(newRoute);
 
     System.out.println("\nNew Route with Route ID : " + newRoute.getRouteId() + " has been created\n");
@@ -403,11 +393,8 @@ public class AdminOperation extends BaseOperation {
 
   // Checks if Route Id exists or not. If yes, remove route from route table
   private boolean removeRoute() throws ApplicationException, UserException {
-    System.out.println("For your reference, below is the list of all routes");
-
-    RouteManager
-            .getInstance()
-            .displayAllRoutes();
+    System.out.println("For your reference,");
+    displayOnlyRoutes();
 
     System.out.println("Please enter Route Id to remove : \n");
     int routeIdToRemove = this.getRouteId();
@@ -451,6 +438,7 @@ public class AdminOperation extends BaseOperation {
             .isPresent("bus", "busid", busId)) {
       System.out.println("Bus ID not found. You may add a new Bus from Bus Control Menu." +
               "\nReturning to Previous menu");
+
       return false;
     }
 
@@ -508,7 +496,9 @@ public class AdminOperation extends BaseOperation {
             .displayAvailableBusTimingsAndRoutes();
   }
 
+
   public void approveRoute() {
+
     /*if route requests table empty, display no request found
      * if route requests exist, show details to Admin
      * if routeExists flag is true, assign routeId and timing to a bus

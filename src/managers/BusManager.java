@@ -263,4 +263,50 @@ public class BusManager extends BaseManager {
 
     return true;
   }
+
+  public boolean isBusTypeAlreadyPresentForVehicle(String vehicleNo, int busType) throws ApplicationException {
+
+    int num = this.getBusType(vehicleNo);
+
+    if(num == -1) {
+      return true;
+    }
+
+    if(num != busType) {
+      return false;
+    }
+    return true;
+  }
+
+  public int getBusType(String vehicleNo) throws ApplicationException {
+
+    if(!this.isPresent("bus","vehicleno",vehicleNo)) {
+      return -1;
+    }
+
+    QueryBuilder  queryBuilder = this.getSelectInstance()
+            .selectColumns("bustype")
+            .onTable("bus")
+            .whereEq("vehicleno", vehicleNo);
+
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    return this.getQueryNumber(sqlQuery);
+  }
+
+  public int getBusType(String vehicleNo, int busId) throws ApplicationException {
+
+    if(!this.isPresent("bus","vehicleno",vehicleNo)) {
+      return -1;
+    }
+
+    QueryBuilder  queryBuilder = this.getSelectInstance()
+            .selectColumns("bustype")
+            .onTable("bus")
+            .whereEq("busid", busId);
+
+    String sqlQuery = this.buildQuery(queryBuilder);
+    int num = this.getQueryNumber(sqlQuery);
+    return num;
+  }
 }

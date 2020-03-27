@@ -466,7 +466,7 @@ public class BaseOperation {
       throw new UserException("Entered Comment is Invalid");
     }
 
-    if (!Validator.isCommentBlank(comment)) {
+    if (Validator.isCommentBlank(comment)) {
       throw new UserException("Blank Comment Detected");
     }
 
@@ -493,4 +493,10 @@ public class BaseOperation {
 
     return stopId;
   }
+
+  protected void printMenuException(UserException e) {
+    System.out.println("Returning to previous menu as the below issue has occurred.\n");
+    System.out.println(e.getMessage());
+  }
+
 }

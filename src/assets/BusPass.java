@@ -21,4 +21,20 @@ public class BusPass {
   public int getBusPassId() {
     return busPassId;
   }
+
+  public int getUserId() {
+    return userId;
+  }
+
+  public int getBusId() {
+    return busId;
+  }
+
+  public int getRouteId() {
+    return routeId;
+  }
+
+  public int getTiming() {
+    return timing;
+  }
 }

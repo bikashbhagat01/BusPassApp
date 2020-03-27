@@ -3,6 +3,7 @@ package operations;
 import customExceptions.ApplicationException;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class AppDriver {
   public void initiate()  {
@@ -21,7 +22,10 @@ public class AppDriver {
     boolean exitCode = false;
 
     while (!exitCode) {
-      System.out.println("Welcome to Amazon's Employee BusPass Management Application");
+      System.out.println("_______________________________________________________________");
+//      System.out.println("---------------------------------------------------------------");
+      System.out.println("|`Welcome to Amazon's Employee BusPass Management Application`|");
+      loadScreen();
       System.out.println("\nSelect User Type Option :");
       System.out.println("\n1. Admin \n2. User\n3. Visitor \n0. Exit \n");
 
@@ -50,7 +54,7 @@ public class AppDriver {
           break;
 
         case "3":
-          System.out.println("\nWelcome Visitor!\n");
+          System.out.println("Welcome Visitor!\n");
 
           try {
             OperationFactory.getVisitorOperationInstance().showMenu();
@@ -70,7 +74,33 @@ public class AppDriver {
     }
 
     System.out.println("Thank You For Using Amazon's Employee BusPass Management Application\n");
+    loadScreen();
   }
+
+  private void loadScreen(){
+    System.out.println("_______________________________________________________________");
+    System.out.println("---------------------------------------------------------------");
+
+    int del = 0;
+    while(del !=6){
+      try {
+        TimeUnit.MILLISECONDS.sleep(1000/(del+1*2));
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      int k = del;
+      while(k!=0){
+        System.out.print("_~`~");
+        k--;
+      }
+      del++;
+    }
+    System.out.print("_~`~");
+    System.out.println("\n---------------------------------------------------------------");
+  }
+
 }
 
 

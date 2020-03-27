@@ -13,7 +13,7 @@ public class AdminLoginOperation extends BaseOperation {
   private String adminID = Admin.getAdminInstance().getAdminId();
   private String password = Admin.getAdminInstance().getPassword();
 
-  private static int loginTries = 0;
+  private static int loginTries = 1;
   private final static int maxLoginTries = 3;
 
   private static AdminLoginOperation adminLogin;
@@ -31,7 +31,7 @@ public class AdminLoginOperation extends BaseOperation {
     try {
       setLoginDetails();
     } catch (UserException e) {
-      System.out.println("An Error has occurred. Please retry logging in.");
+      System.out.println("An issue has occurred. Please retry logging in.");
     }
   }
 
@@ -39,7 +39,7 @@ public class AdminLoginOperation extends BaseOperation {
     if(adminId.trim().equals(this.adminID) && password.equals(this.password)) {
       OperationFactory.getAdminOperationInstance().showMenu();
     } else {
-      System.out.println("Incorrect Credentials Entered \nPlease enter correct credentials : \n");
+      System.out.println("Please enter correct ID and Password.[Only 3 tries are allowed] \n");
       setLoginDetails();
     }
   }

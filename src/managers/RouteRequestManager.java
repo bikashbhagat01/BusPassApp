@@ -26,7 +26,8 @@ public class RouteRequestManager extends BaseManager{
                                     .insertValue("endstopname", routeRequest.getEndStopName())
                                     .insertValue("requesterid", routeRequest.getRequesterId())
                                     .insertValue("routeexists", routeRequest.isRouteExists())
-                                    .insertValue("stopsexist", routeRequest.isStopsExist());
+                                    .insertValue("stopsexist", routeRequest.isStopsExist())
+                                    .insertValue("timing", routeRequest.getTiming());
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
