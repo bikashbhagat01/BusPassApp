@@ -316,7 +316,7 @@ public class AdminOperation extends BaseOperation {
       return false;
     }
 
-    return this.changeCoreBusType(busId);
+    return this.changeBusType(busId);
   }
 
   private boolean changeInactiveBusType() throws UserException, ApplicationException {
@@ -331,10 +331,10 @@ public class AdminOperation extends BaseOperation {
       return false;
     }
 
-    return changeCoreBusType(busId);
+    return changeBusType(busId);
   }
 
-  private boolean changeCoreBusType(int busId) throws ApplicationException, UserException {
+  private boolean changeBusType(int busId) throws ApplicationException, UserException {
     if (!BusManager
             .getInstance()
             .isPresent("bus", "busid", busId)) {
