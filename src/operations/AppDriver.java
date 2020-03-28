@@ -26,7 +26,7 @@ public class AppDriver {
 //      System.out.println("---------------------------------------------------------------");
       System.out.println("|`Welcome to Amazon's Employee BusPass Management Application`|");
       loadScreen();
-      System.out.println("\nSelect User Type Option :");
+      System.out.println("\nEnter your User Type :");
       System.out.println("\n1. Admin \n2. User\n3. Visitor \n0. Exit \n");
 
       String choice = OperationFactory.getScannerInstance().next();

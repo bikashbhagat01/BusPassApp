@@ -3,8 +3,6 @@ package operations;
 import assets.Admin;
 import customExceptions.ApplicationException;
 import customExceptions.UserException;
-import java.util.Scanner;
-import managers.BaseManager;
 
 // AdminLogin , Singleton as Only 1 ADMIN is Hard-Coded
 public class AdminLoginOperation extends BaseOperation {

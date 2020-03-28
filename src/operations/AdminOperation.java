@@ -35,7 +35,7 @@ public class AdminOperation extends BaseOperation {
       System.out.println("\n1. Bus Control Menu\n" +
               "2. Route Control Menu\n" +
               "3. Change Bus & Route Assignments\n" +
-              "4. Change Type of a Bus[With active Route/Without active Route]\n" +
+              "4. Change Type of a Bus\n" +
               "5. Display Number of Buses of each Type\n" +
               "6. Display timings and route for each bus\n" +
               "0. Exit to Main Menu");
@@ -365,7 +365,7 @@ public class AdminOperation extends BaseOperation {
     if(!SeatManager
             .getInstance()
             .updateSeatType(busType, busId, vehicleNo)) {
-      System.out.println("Bus Type cannot be changes as the value cannot support currently " +
+      System.out.println("Bus Type cannot be changed as the value cannot support currently " +
               "occupied seats");
       return false;
     }
