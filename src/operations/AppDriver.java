@@ -1,29 +1,24 @@
 package operations;
 
 import customExceptions.ApplicationException;
-import java.sql.SQLException;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+
+/* This class is an Outer Layer of the application. which contains the Home Page.
+ * It has 4 options :
+ * 1. Admin --> takes to Admin LogIn
+ * 2. User --> takes to User LogIn
+ * 3. Visitor --> takes to user operation
+ * 0. Exit --> exits out of the application
+ *
+ * Also, it uses time delay to simulate animation for the loading screen of the application.
+ * */
 
 public class AppDriver {
   public void initiate()  {
-
-    /* System Initiate class ::
-    * SWitch Case Routine to as for User type
-    * 1. Admin --> takes to Admin LogIn
-    * 2. User --> takes to User LogIn
-    * 3. Visitor --> takes to user operation
-    *
-
-    * Notes - No Admin and Visitor DB implementation decided yet
-    *
-    * */
-
     boolean exitCode = false;
 
     while (!exitCode) {
       System.out.println("_______________________________________________________________");
-//      System.out.println("---------------------------------------------------------------");
       System.out.println("|`Welcome to Amazon's Employee BusPass Management Application`|");
       loadScreen();
       System.out.println("\nEnter your User Type :");
@@ -73,7 +68,7 @@ public class AppDriver {
       }
     }
 
-    System.out.println("Thank You For Using Amazon's Employee BusPass Management Application\n");
+    System.out.println("Thank You For Using our Employee BusPass Management Application\n");
     loadScreen();
   }
 
@@ -100,7 +95,6 @@ public class AppDriver {
     System.out.print("_~`~");
     System.out.println("\n---------------------------------------------------------------");
   }
-
 }
 
 
@@ -118,30 +112,5 @@ public class AppDriver {
 
 
 
-
-
-
-
-    /*
-    String[] fields = {"Id", "Name", "Age"};
-    QueryExecutor.getInstance().executeSQL("select * from emp; ", fields);
-
-    System.out.println("End Of Query \n");
-
-    Connection conn = ConnectDatabase.getConnection();
-    Statement stmt = conn.createStatement();
-    ResultSet rs = stmt.executeQuery("show tables;");
-    System.out.println(rs.getRow() + " what");
-    // Using QueryExecutor
-    String[] str = {"just Something"};
-    QueryExecutor.getInstance().executeSQL("show tables",str);
-
-    // Creating Unsigned ID in long using UUID
-    long uniqueID = UUID.randomUUID().getLeastSignificantBits()& 0x00000000ffffffffL;
-    System.out.println(uniqueID);
-    // Creating String ID  using UUID
-    UUID uniqueID2 = UUID.randomUUID();
-    System.out.println(uniqueID2);
-    */
 
 

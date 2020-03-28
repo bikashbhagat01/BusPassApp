@@ -1,6 +1,10 @@
 package queryHelper;
 
-// Operation KeyValues
+/**
+ * The class OperationKV holds key-value pair for the Insert and Update operations in a sql query.
+ * It is used by QueryBuilder class to build sqlQueries
+ * **/
+
 class OperationKV {
 
   // Variables store the key(columnName), type(integer, boolean, etc.) & value

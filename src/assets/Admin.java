@@ -1,18 +1,25 @@
 package assets;
 
-// hardCoded Admin login credentials
+/**
+ * The class Admin is a Singleton implementation which contains hard-coded Admin Login Credentials
+ * and is the single place where Admin credentials are defined.
+ * It supports only storage and retrieval of Admin Credentials, and acts as POJO.
+ **/
 
 public class Admin {
-  private String adminId;
-  private String password;
+
   private static Admin admin;
 
-  private Admin() {}
+  private String adminId;
+  private String password;
 
-  // Singleton
-  public static Admin getAdminInstance(){
-    if(admin == null) {
+  private Admin() {
+  }
+
+  public static Admin getAdminInstance() {
+    if (admin == null) {
       admin = new Admin();
+
       admin.adminId = "ADMIN";
       admin.password = "ADMIN";
     }
@@ -27,13 +34,3 @@ public class Admin {
     return password;
   }
 }
-
-
-
-//  private String fName;
-//  private String lName;
-//  private String email;
-//  private String contactNo;
-//  private String emergencyContactNumber;
-//  private String emergencyContactName;
-//  private String bloodGroup;

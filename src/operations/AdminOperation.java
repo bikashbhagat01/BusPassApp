@@ -1,7 +1,5 @@
 package operations;
 
-// All operations that can be used by the Admin
-
 import assets.AssetFactory;
 import assets.Bus;
 import assets.Route;
@@ -17,10 +15,17 @@ import managers.SeatManager;
 import managers.StopManager;
 
 /**
- * This class is implements the login functionality for the ADMIN. It is an extension of
- * BaseOperation class.
- * If login is successful, they are routed to the ADMIN homepage of the application.
- * If login is unsuccessful even after 3 tries, they are routed back to the application homepage.
+ * The class AdminOperation is a child class of BaseOperation.
+ * This Upper Layer class implements the Operations functionality for the Admin. It is an extension
+ * of BaseOperation class.
+ * It utilises Middle Layer/managers package and helper classes/ functions to send db operation
+ * requests such as validate, create, read, etc.
+ * It contains functions related to features which can be used by the Admin.
+ * It does not interact with Lower Layer/dbTools package but interacts with middle layers
+ * via the parent - baseOperation and the Admin via the console.
+ * All Admin actions happen through this class, after a successful login.
+ * It catches UserExceptions via the parent BaseOperation, and shows them to the Admin user for their
+ * understanding.
  **/
 
 public class AdminOperation extends BaseOperation {
@@ -364,7 +369,7 @@ public class AdminOperation extends BaseOperation {
 
     if(!SeatManager
             .getInstance()
-            .updateSeatType(busType, busId, vehicleNo)) {
+            .updateBusTypeWithAvailability(busType, busId, vehicleNo)) {
       System.out.println("Bus Type cannot be changed as the value cannot support currently " +
               "occupied seats");
       return false;
@@ -594,24 +599,4 @@ public class AdminOperation extends BaseOperation {
             .getInstance()
             .displayAvailableBusTimingsAndRoutes();
   }
-
-
-  public void approveRoute() {
-
-    /*if route requests table empty, display no request found
-     * if route requests exist, show details to Admin
-     * if routeExists flag is true, assign routeId and timing to a bus
-     * Search for Stops using StopManager.seacrh() - if found assign
-     * Start and end as relevant StopIds
-     * If stops not found,  ask Admin if they want to create a Stop using StopManager and get a stopId
-     * or they want to deny
-     * If they deny, delete the routeRequest
-     * RouteManager.searchRoute(start,end), which searches for the set of Stops and returns a
-     * set of routeIds where the Stops fall in
-     * if route exists for stops mentioned but time doesn't, then admin assigns a Bus to the route
-     * if route doesn't exist then admin creates route and creates/updates bus for the timing
-     * */
-
-  }
-
 }

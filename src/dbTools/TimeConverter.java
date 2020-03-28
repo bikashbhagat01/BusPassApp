@@ -1,5 +1,11 @@
 package dbTools;
 
+/**
+ * The class TimeConverter is a helper class used to convert 24-hour format time strings to minutes
+ * on a day and vice-verse.
+ * Used by Upper Layers
+ **/
+
 public class TimeConverter {
 
   // Returns time in minutes from a time string with 24-hour format

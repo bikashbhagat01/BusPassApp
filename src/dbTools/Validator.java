@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * The class Validator is a helper class which contains functions to validate field and format
+ * information. It is used by the Upper Layers.
+ **/
+
 public class Validator {
 
+  private static int PASSWORD_LENGTH = 8;
 
   /**"1. A password must have at least eight characters.\n" +
    "2. A password consists of only letters and digits.\n" +
    "3. A password must contain at least two digits \n" +
    */
-
-  private static int PASSWORD_LENGTH = 8;
-
   public static boolean isValidPassword(String password) {
 
     if (password.length() < PASSWORD_LENGTH) {
@@ -83,11 +86,6 @@ public class Validator {
     if (emailAddress == null) {
       return false;
     }
-
-//    String emailRegex = "^[a-zA-Z0-9]+" +
-//                        "([a-zA-Z0-9_+&-]+)@" +
-//                        "([a-zA-Z0-9-]+\\.)+[a-z" +
-//                        "A-Z]{2,7}$";
 
     String emailRegex = "[a-zA-Z.0-9_]+@[a-zA-Z0-9_]+\\.[a-zA-Z]{2,7}$";
 

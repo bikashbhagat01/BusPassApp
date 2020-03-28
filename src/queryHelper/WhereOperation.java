@@ -1,5 +1,11 @@
 package queryHelper;
 
+/**
+ * The class WhereOperation holds key-value pair for the sql operations in which 'where' keyword is
+ * used.
+ * It is used by QueryBuilder class to build sqlQueries
+ * **/
+
 class WhereOperation {
 
   // Variables store the Operation(=,<,>,etc), key(columnName), type(integer, boolean, etc.) & value

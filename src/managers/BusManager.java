@@ -6,6 +6,17 @@ import dbTools.TimeConverter;
 import java.sql.ResultSet;
 import queryHelper.QueryBuilder;
 
+/**
+ * The class BusManager is a child class of BaseManager.
+ * It works as a middle layer between the dbTools package/Lower Layer and the Operations
+ * package/Upper Layer.
+ * It contains functions related to Bus table such as read, create a record, validate data
+ * from table, operation specific functions which require db support, etc.
+ * It is used by the Upper Layers/Operations classes.
+ * It utilizes Lower Layer/dbTools package and helper classes via the parent - BaseManager which
+ * converts system exceptions to ApplicationExceptions.
+ **/
+
 public class BusManager extends BaseManager {
 
   private static BusManager busManager;
@@ -19,13 +30,13 @@ public class BusManager extends BaseManager {
 
   public void create(Bus bus) throws ApplicationException {
     QueryBuilder queryBuilder = this.getInsertInstance()
-                                    .onTable("bus")
-                                    .insertValue("busid", bus.getBusId())
-                                    .insertValue("routeid", bus.getRouteId())
-                                    .insertValue("availability", bus.getAvailability())
-                                    .insertValue("bustype", bus.getBusType())
-                                    .insertValue("timing", bus.getTiming())
-                                    .insertValue("vehicleno", bus.getVehicleNo());
+            .onTable("bus")
+            .insertValue("busid", bus.getBusId())
+            .insertValue("routeid", bus.getRouteId())
+            .insertValue("availability", bus.getAvailability())
+            .insertValue("bustype", bus.getBusType())
+            .insertValue("timing", bus.getTiming())
+            .insertValue("vehicleno", bus.getVehicleNo());
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
@@ -33,11 +44,10 @@ public class BusManager extends BaseManager {
   }
 
   public void update(int busId, String field, int newValue) throws ApplicationException {
-
     QueryBuilder queryBuilder = this.getUpdateInstance()
-                                    .onTable("bus")
-                                    .updateValue(field, newValue)
-                                    .whereEq("busid", busId);
+            .onTable("bus")
+            .updateValue(field, newValue)
+            .whereEq("busid", busId);
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
@@ -45,7 +55,6 @@ public class BusManager extends BaseManager {
   }
 
   public void displayBusCount(String criteria) throws ApplicationException {
-
     String[] columns = {criteria, "count(*)"};
 
     QueryBuilder queryBuilder = this.getSelectInstance()
@@ -110,6 +119,7 @@ public class BusManager extends BaseManager {
 
       if (this.isNextPresent(resultSet)) {
         foundResultsCounter++;
+
         displaySchedule(resultSet, false);
       }
     }
@@ -125,7 +135,7 @@ public class BusManager extends BaseManager {
       return false;
     }
 
-    if(headingSwitch) {
+    if (headingSwitch) {
       System.out.println("BUS ID\tROUTE ID\tSTART TIMING\tSTOPS FROM START TO END\t\t\t");
     }
 
@@ -147,14 +157,14 @@ public class BusManager extends BaseManager {
       currentRouteId = this.getInt(resultSet, 2);
       currentStopName = this.getString(resultSet, 4);
 
-      if(currentBusId == previousBusId && currentRouteId == previousRouteId
+      if (currentBusId == previousBusId && currentRouteId == previousRouteId
               && firstRecordState) {
         stopNamesString += currentStopName;
         firstRecordState = false;
       } else if (currentBusId == previousBusId && currentRouteId == previousRouteId) {
-          stopNamesString += "-->" + currentStopName;
-          currentTiming = this.getInt(resultSet, 3);
-        } else {
+        stopNamesString += "-->" + currentStopName;
+        currentTiming = this.getInt(resultSet, 3);
+      } else {
         eachRecord = previousBusId + "\t\t\t\t" +
                 previousRouteId + "\t\t\t\t" +
                 TimeConverter.getTimeAsString(currentTiming) + "\t\t\t\t\t" +
@@ -219,7 +229,6 @@ public class BusManager extends BaseManager {
     this.executeQuery(sqlQuery);
   }
 
-
   public boolean isBusAvailableForRoutesAndTiming(int[] routeIds, int timing)
           throws ApplicationException {
     if (routeIds.length == 0) {
@@ -246,7 +255,7 @@ public class BusManager extends BaseManager {
   }
 
   public boolean displayAllBuses() throws ApplicationException {
-    String[] columns = {"busid", "routeid","availability","bustype","timing", "vehicleno"};
+    String[] columns = {"busid", "routeid", "availability", "bustype", "timing", "vehicleno"};
 
     QueryBuilder queryBuilder = this.getSelectInstance()
             .selectColumns(columns)
@@ -254,23 +263,22 @@ public class BusManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    if(!this.hasResult(sqlQuery)) {
+    if (!this.hasResult(sqlQuery)) {
       System.out.println("No Bus Records Found");
       return false;
     }
 
     String[] headers = {"BUS ID", "ROUTE ID", "AVAILABILITY", "BUS TYPE", "TIMING", "VEHICLE NO"};
-    this.executeQuery(sqlQuery,headers);
+    this.executeQuery(sqlQuery, headers);
 
     return true;
   }
 
   public boolean hasRoute(int routeId, int busId) throws ApplicationException {
-
     QueryBuilder queryBuilder = this.getSelectInstance()
             .selectColumns("busid")
             .onTable("bus")
-            .whereEq("routeid",routeId)
+            .whereEq("routeid", routeId)
             .whereEq("busid", busId)
             .whereGt("routeid", 0);
 

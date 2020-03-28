@@ -4,6 +4,13 @@ import assets.Admin;
 import customExceptions.ApplicationException;
 import customExceptions.UserException;
 
+/**
+ * This class is implements the log-in page for Admin
+ * Admin can login with their Admin id and password
+ *  - If login is successful, they are routed to the Admin Operation page of the application.
+ *  - If login is unsuccessful even after 3 tries, they are routed back to the application homepage.
+ * **/
+
 // AdminLogin , Singleton as Only 1 ADMIN is Hard-Coded
 public class AdminLoginOperation extends BaseOperation {
 
@@ -42,8 +49,8 @@ public class AdminLoginOperation extends BaseOperation {
     }
   }
 
+  // Gets Admin credentials from console
   private boolean setLoginDetails() throws UserException, ApplicationException {
-    // Get Admin credentials
     loginTries += 1;
 
     System.out.println("Enter Login ID : \n");

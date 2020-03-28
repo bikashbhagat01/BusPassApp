@@ -3,6 +3,15 @@ package managers;
 import customExceptions.ApplicationException;
 import queryHelper.QueryBuilder;
 
+/**
+ * The class IdManager is a Singleton implementation which is a single-point provider of unique ids
+ * to AssetFactory for instance creation of various classes from asset package.
+ * IdManager manages a table - idgenerator - in the db which keeps store of unique latest id
+ * for each class. When a new id is requested, the latest id for the requested class is incremented,
+ * saved in the table and then returned to AssetFactory for instantiation of classes.
+ * This helps to keeping the unique id as a easy-to-use integer value.
+ **/
+
 public class IdManager extends BaseManager {
 
   private static IdManager idManager;

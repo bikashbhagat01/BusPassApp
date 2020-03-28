@@ -1,6 +1,24 @@
 package assets;
 
-// POJO, Only holds data
+/**
+ * The class RouteRequest acts as a POJO which holds entity details for a RouteRequest from a user.
+ * It supports retrieval and storage of RouteRequest details. It is used in Upper Layer-to-Middle
+ * Layer/Operations package-to-Managers package data transmission.
+ * About attributes :
+ * routeRequestId - Unique ID.
+ * startStopId - Unique Stop ID from where the Route should begin.
+ * endStopId - Unique Stop ID from where the Route should.
+ * startStopName - Name of the Stop from where the Route should begin, for scenarios where a stop
+ * is not supported yet and does not have a id.
+ * endStopName - Name of the Stop where the Route should end, for scenarios where a stop
+ * is not supported yet and does not have a id.
+ * requesterId - Employee ID of the User requesting the Route.
+ * routeExists - Stores boolean route existence state, if both stops are currently present in a
+ * Route. Independent of start time.
+ * stopsExist - Stores boolean stops existence state, if either of the stops are not supported and
+ * do not have id(s).
+ * timing - Start Timing requested for the Route.
+ **/
 
 public class RouteRequest {
 
@@ -35,7 +53,7 @@ public class RouteRequest {
     this.stopsExist = false;
     this.routeExists = routeExists;
 
-    if(routeExists) {
+    if (routeExists) {
       this.routeExists = false;
     }
   }

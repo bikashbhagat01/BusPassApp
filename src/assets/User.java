@@ -1,6 +1,11 @@
 package assets;
 
-// POJO, Only holds data
+/**
+ * The class User acts as a POJO which holds entity details for a User.
+ * It supports retrieval and storage of Stop details. It is used in Upper Layer-to-Middle
+ * Layer/Operations package-to-Managers package data transmission.
+ * Employee ID is the Unique ID for instances of this class.
+ **/
 
 public class User {
 

@@ -21,7 +21,8 @@ public class SeatManager extends BaseManager {
     return seatManager;
   }
 
-  public int updateSeatValue(int routeId, int time) throws ApplicationException {
+  // Updates Seat Availability in Bus table when bus pass is requested by user
+  public int updateBusPassWithAvailability(int routeId, int time) throws ApplicationException {
 
     int newAvailability, busBooked;
 
@@ -36,7 +37,7 @@ public class SeatManager extends BaseManager {
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    sqlQuery = sqlQuery.substring(0,sqlQuery.length()-1) + " ORDER BY bustype DESC;";
+    sqlQuery = sqlQuery.substring(0, sqlQuery.length() - 1) + " ORDER BY bustype DESC;";
 
     ResultSet resultSet = this.getResultSet(sqlQuery);
 
@@ -58,8 +59,11 @@ public class SeatManager extends BaseManager {
     return 0;
   }
 
-  public boolean updateSeatType(int type, int busId, String vehicleNo) throws ApplicationException {
-    int currentSeatCapacity, currentSeatAvailability, seatAvailabilityReduce, seatAvailabilityIncrease;
+  // Validates and Updates Seat Availability, when new busType is requested
+  public boolean updateBusTypeWithAvailability(int type, int busId, String vehicleNo) throws ApplicationException {
+    int currentSeatCapacity, currentSeatAvailability, reduceFactor,
+            increaseFactor;
+
     int newVehicleType = type;
 
     String[] columns = {"availability", "bustype"};
@@ -74,18 +78,18 @@ public class SeatManager extends BaseManager {
     ResultSet resultSet = this.getResultSet(sqlQuery);
 
     this.isNextPresent(resultSet);
-//    resultSet.next();
+
     currentSeatAvailability = this.getInt(resultSet, 1);
     currentSeatCapacity = this.getInt(resultSet, 2);
 
-    seatAvailabilityReduce = currentSeatAvailability - (currentSeatCapacity - newVehicleType);
-    seatAvailabilityIncrease = currentSeatAvailability + (newVehicleType - currentSeatCapacity);
+    reduceFactor = currentSeatAvailability - (currentSeatCapacity - newVehicleType);
+    increaseFactor = currentSeatAvailability + (newVehicleType - currentSeatCapacity);
 
     if (newVehicleType > currentSeatCapacity) {
 
       queryBuilder = this.getUpdateInstance()
               .onTable("bus")
-              .updateValue("availability", seatAvailabilityIncrease)
+              .updateValue("availability", increaseFactor)
               .updateValue("bustype", newVehicleType)
               .updateValue("vehicleno", vehicleNo)
               .whereEq("busid", busId);
@@ -97,11 +101,11 @@ public class SeatManager extends BaseManager {
       return true;
     }
 
-    if (seatAvailabilityReduce >= 0) {
+    if (reduceFactor >= 0) {
 
       queryBuilder = this.getUpdateInstance()
               .onTable("bus")
-              .updateValue("availability", seatAvailabilityReduce)
+              .updateValue("availability", reduceFactor)
               .updateValue("bustype", newVehicleType)
               .updateValue("vehicleno", vehicleNo)
               .whereEq("busid", busId);
@@ -130,7 +134,7 @@ public class SeatManager extends BaseManager {
 
     ResultSet resultSet = this.getResultSet(sqlQuery);
 
-    if(!this.isNextPresent(resultSet)) {
+    if (!this.isNextPresent(resultSet)) {
       System.out.println("\nNo Seat Availability found on any route\n");
       return false;
     }
@@ -139,7 +143,7 @@ public class SeatManager extends BaseManager {
     System.out.println("START TIMING\tROUTE ID\t\tAVAILABLE SEATS");
 
     while (this.isNextPresent(resultSet)) {
-      int timingInMinutes = this.getInt(resultSet,1);
+      int timingInMinutes = this.getInt(resultSet, 1);
       String timeString = TimeConverter.getTimeAsString(timingInMinutes);
 
       System.out.println(timeString + "\t\t\t\t\t\t" +

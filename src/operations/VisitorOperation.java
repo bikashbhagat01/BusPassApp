@@ -9,6 +9,7 @@ import managers.SeatManager;
  * about the bus service.
  * Visitors can View Details for Available Routes and Buses, Or they can see the current seat
  * availability for all the routes.
+ * It calls functions from Middle Layer / Manager classes to show information to the visitor
  * **/
 
 public class VisitorOperation {
@@ -54,6 +55,5 @@ public class VisitorOperation {
 
   public void displaySeatAvailabilityPerRoute() throws ApplicationException {
     SeatManager.getInstance().displaySeatAvailabilityPerRoute();
-
   }
 }

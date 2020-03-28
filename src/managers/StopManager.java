@@ -2,8 +2,18 @@ package managers;
 
 import assets.Stop;
 import customExceptions.ApplicationException;
-import dbTools.QueryExecutor;
 import queryHelper.QueryBuilder;
+
+/**
+ * The class StopManager is a child class of BaseManager.
+ * It works as a middle layer between the dbTools package/Lower Layer and the Operations
+ * package/Upper Layer.
+ * It contains functions related to Stop table such as read, create a record, validate data
+ * from table, operation specific functions which require db support, etc.
+ * It is used by the Upper Layers/Operations classes.
+ * It utilizes Lower Layer/dbTools package and helper classes via the parent - BaseManager which
+ * converts system exceptions to ApplicationExceptions.
+ **/
 
 public class StopManager extends BaseManager {
 
@@ -16,9 +26,8 @@ public class StopManager extends BaseManager {
     return stopManager;
   }
 
-
+  // Returns stopId for searched stopName from stopTable
   public int getStopIdForName(String stopName) throws ApplicationException {
-    // returns stopId for searched stopName from stopTable
     String[] columns = {"stopid"};
 
     QueryBuilder queryBuilder = this.getSelectInstance()
@@ -64,8 +73,8 @@ public class StopManager extends BaseManager {
     this.executeQuery(sqlQuery);
   }
 
-
-  public boolean areStopsPresent(String startStopName, String endStopName) throws ApplicationException {
+  public boolean areStopsPresent(String startStopName, String endStopName)
+          throws ApplicationException {
     return this.isPresent("stop", "stopname", startStopName) &&
             this.isPresent("stop", "stopname", endStopName);
   }

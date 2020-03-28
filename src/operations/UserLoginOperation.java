@@ -26,9 +26,6 @@ public class UserLoginOperation extends BaseOperation {
   private final static int maxLoginTries = 5;
   private static int loginTries = 0;
 
-  // try combining userlogin and userOperation using states. Remove bottom to top layer routing via
-  // returns and state alterations
-
   public boolean showMenu() throws ApplicationException {
     boolean exitCode = false;
     String choice = "";
@@ -45,7 +42,6 @@ public class UserLoginOperation extends BaseOperation {
       switch (choice) {
         case "1":
           try {
-            // setLoginDetails ka definition me ja
             setLoginDetails();
           } catch (UserException e) {
             System.out.println("Returning to previous menu as the below exception has occurred.");
@@ -74,8 +70,8 @@ public class UserLoginOperation extends BaseOperation {
     return true;
   }
 
+  // Creates a User Account and sends to login page
   private void createAccount() throws ApplicationException, UserException {
-    // Creates a User Account and sends to login page
     System.out.println("\nPlease Enter the below details as prompted and Press Enter to confirm entry." +
             "\nPress Enter Twice to return to Previous Menu. ");
 
@@ -146,7 +142,6 @@ public class UserLoginOperation extends BaseOperation {
   }
 
   private boolean setLoginDetails() throws ApplicationException, UserException {
-
     loginTries += 1;
 
     System.out.println("Enter Employee ID : \n");
@@ -161,7 +156,6 @@ public class UserLoginOperation extends BaseOperation {
       loginTries = 0;
       return false;
     }
-    // iska
     login(userId, password);
 
     return true;

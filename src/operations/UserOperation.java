@@ -16,6 +16,20 @@ import managers.SeatManager;
 import managers.StopManager;
 import managers.UserManager;
 
+/**
+ * The class UserOperation is a child class of BaseOperation.
+ * This Upper Layer class implements the Operations functionality for the Users. It is an extension
+ * of BaseOperation class.
+ * It utilises Middle Layer/managers package and helper classes/ functions to send db operation
+ * requests such as validate, create, read, etc.
+ * It contains functions related to features which can be used by the User.
+ * It does not interact with Lower Layer/dbTools package but interacts with middle layers
+ * via the parent - baseOperation and the User via the console.
+ * All user actions happen through this class, after a successful login.
+ * It catches UserExceptions via the parent BaseOperation, and shows them to the user for their
+ * understanding.
+ **/
+
 public class UserOperation extends BaseOperation {
 
   public boolean showMenu(int userId) throws ApplicationException {
@@ -375,7 +389,7 @@ public class UserOperation extends BaseOperation {
 
     if (SeatManager
             .getInstance()
-            .updateSeatValue(routeId, timeInMinutes) == 0) {
+            .updateBusPassWithAvailability(routeId, timeInMinutes) == 0) {
       System.out.println("No Seats or Active Bus Available for the provided route and" +
               " the preferred time");
 
@@ -384,7 +398,7 @@ public class UserOperation extends BaseOperation {
 
     int busId = SeatManager
             .getInstance()
-            .updateSeatValue(routeId, timeInMinutes);
+            .updateBusPassWithAvailability(routeId, timeInMinutes);
 
     BusPass busPass = AssetFactory
             .getInstance()

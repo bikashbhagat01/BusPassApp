@@ -1,8 +1,19 @@
 package assets;
 
-// POJO, Only holds data
-
 public class BusPass {
+
+  /**
+   * The class BusPass acts as a POJO which holds entity details for a user's BusPass.
+   * It supports retrieval and storage of user's BusPass details. It is used in Upper Layer-to-Middle
+   * Layer/Operations package-to-Managers package data transmission.
+   * About attributes :
+   * busPassId - Unique ID
+   * routeId - Route ID for the user's BusPass
+   * userId - BusPass owner ID
+   * busId - Bus ID for the user's BusPass
+   * timing - Is the start timing of a bus for the route. Stored in integer minutes for
+   * the time of a day. Default value : -1
+   **/
 
   private int busPassId;
   private int userId;

@@ -5,8 +5,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-// Singleton to execute queries related to DBs, received from DB Managers
-// Only SQL Query Executor linked to DB
+/**
+ * The class QueryExecutor is a Singleton implementation which controls single-point execution of
+ * SQL Queries received from Middle Layer by utilising a connection object from ConnectionManager.
+ * It controls the inflow and execution of sql queries between middle layers and is the only class
+ * using connection from the actual DB.
+ * It has multiple functions to read, write, return boolean values and return resultsets to middle
+ * layer for use.
+ **/
+
 public class QueryExecutor {
 
   private static QueryExecutor queryExecutor;
@@ -21,7 +28,7 @@ public class QueryExecutor {
     return queryExecutor;
   }
 
-  // Only Executes a sqlQuery and returns Success. Only for Writes
+  // Only Executes a sqlQuery and returns Success. Use Case : For Writes
   public boolean executeSQL(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectionManager.getConnection();
     Statement statement = conn.createStatement();
@@ -64,7 +71,7 @@ public class QueryExecutor {
     return true;
   }
 
-  // Checks if a record is present for an sqlQuery or not
+  // Checks if a record is present for an sqlQuery. Returns boolean. For validations.
   public boolean isRecordPresent(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectionManager.getConnection();
     Statement statement = conn.createStatement();
@@ -77,7 +84,7 @@ public class QueryExecutor {
     return false;
   }
 
-  // Returns first single field value for a sqlQuery
+  // Returns first single field integer value for a sqlQuery. For single field reads in certain scenarios.
   public int getQueryNumber(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectionManager.getConnection();
     Statement statement = conn.createStatement();
@@ -90,7 +97,7 @@ public class QueryExecutor {
     return -1;
   }
 
-  // Returns ResultSet object for a sqlQuery
+  // Returns ResultSet object for a sqlQuery. For reads or validations in Middle Layers.
   public ResultSet getResultSet(String sqlQuery) throws SQLException, ClassNotFoundException {
     Connection conn = ConnectionManager.getConnection();
     Statement statement = conn.createStatement();

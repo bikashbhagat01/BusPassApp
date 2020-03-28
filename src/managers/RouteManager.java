@@ -1,11 +1,22 @@
 package managers;
 
+import assets.Route;
 import customExceptions.ApplicationException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import assets.Route;
 import java.util.List;
 import queryHelper.QueryBuilder;
+
+/**
+ * The class RouteManager is a child class of BaseManager.
+ * It works as a middle layer between the dbTools package/Lower Layer and the Operations
+ * package/Upper Layer.
+ * It contains functions related to Route table such as read, create a record, validate data
+ * from table, operation specific functions which require db support, etc.
+ * It is used by the Upper Layers/Operations classes.
+ * It utilizes Lower Layer/dbTools package and helper classes via the parent - BaseManager which
+ * converts system exceptions to ApplicationExceptions.
+ **/
 
 public class RouteManager extends BaseManager {
 
@@ -59,7 +70,7 @@ public class RouteManager extends BaseManager {
       int startStopRank = this.getStopRank(routeId, startStop);
       int endStopRank = this.getStopRank(routeId, endStop);
 
-      if ( startStopRank == 1 && startStopRank < endStopRank
+      if (startStopRank == 1 && startStopRank < endStopRank
               && startStopRank != -1 && endStopRank != -1) {
         resultList.add(routeId);
       }
@@ -142,6 +153,7 @@ public class RouteManager extends BaseManager {
     }
 
     System.out.println("Route ID \t\t\t\t\t Stops from Start to End\n");
+
     String stopNamesString = "";
     String eachRecord = "";
     String currentStopName = "";
@@ -184,6 +196,7 @@ public class RouteManager extends BaseManager {
       BusManager
               .getInstance()
               .displayAvailableBusTimingsAndRoutes(routeIds, timing);
+
       return true;
     }
     return false;

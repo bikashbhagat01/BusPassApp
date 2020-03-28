@@ -2,6 +2,15 @@ package queryHelper;
 
 import java.util.ArrayList;
 
+/**
+ * The class QueryBuilder is a Helper Class and Builder Implementation.
+ * Here, multiple states are defined for each SQL operations.
+ * Method Chaining is used by functions which utilize this class, to create sql queries.
+ * For each state instance, QueryBuilder returns its own object so that method chaining can be achieved
+ * and each part of the query is build based on its attributes.
+ * It utilises list of OperationKV , GroupBy and Where class instances to alter its state and build a
+ * sql string.
+ * **/
 public class QueryBuilder {
 
   // Constants to store Object's state
