@@ -255,6 +255,7 @@ public class BusManager extends BaseManager {
     String sqlQuery = this.buildQuery(queryBuilder);
 
     if(!this.hasResult(sqlQuery)) {
+      System.out.println("No Bus Records Found");
       return false;
     }
 

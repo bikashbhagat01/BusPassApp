@@ -137,7 +137,7 @@ public class RouteManager extends BaseManager {
     ResultSet resultSet = this.getResultSet(sqlQuery);
 
     if (!this.isNextPresent(resultSet)) {
-      System.out.println("No routes were found");
+      System.out.println("No Route records were found");
       return false;
     }
 
