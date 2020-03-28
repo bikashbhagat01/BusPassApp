@@ -377,7 +377,7 @@ public class BaseOperation {
     try {
       busType = sc.nextInt();
     } catch (InputMismatchException e) {
-      throw new UserException("\n Please enter valid Bus Type/ Seat Capacity. " +
+      throw new UserException("Please enter valid Bus Type/ Seat Capacity. " +
               "Bus Type is an integer number.");
     }
 

@@ -264,49 +264,62 @@ public class BusManager extends BaseManager {
     return true;
   }
 
-  public boolean isBusTypeAlreadyPresentForVehicle(String vehicleNo, int busType) throws ApplicationException {
+  public boolean hasRoute(int routeId, int busId) throws ApplicationException {
 
-    int num = this.getBusType(vehicleNo);
+    QueryBuilder queryBuilder = this.getSelectInstance()
+            .selectColumns("busid")
+            .onTable("bus")
+            .whereEq("routeid",routeId)
+            .whereEq("busid", busId)
+            .whereGt("routeid", 0);
 
-    if(num == -1) {
-      return true;
-    }
+    String sqlQuery = this.buildQuery(queryBuilder);
 
-    if(num != busType) {
-      return false;
-    }
-    return true;
+    ResultSet resultSet = this.getResultSet(sqlQuery);
+
+    return this.isNextPresent(resultSet);
   }
 
-  public int getBusType(String vehicleNo) throws ApplicationException {
+  public boolean hasNoRoute(int busId) throws ApplicationException {
 
-    if(!this.isPresent("bus","vehicleno",vehicleNo)) {
-      return -1;
-    }
-
-    QueryBuilder  queryBuilder = this.getSelectInstance()
-            .selectColumns("bustype")
+    QueryBuilder queryBuilder = this.getSelectInstance()
+            .selectColumns("busid")
             .onTable("bus")
+            .whereEq("busid", busId)
+            .whereEq("routeid", 0);
+
+    String sqlQuery = this.buildQuery(queryBuilder);
+
+    ResultSet resultSet = this.getResultSet(sqlQuery);
+
+    return this.isNextPresent(resultSet);
+  }
+
+  public boolean isVehicleNoSame(int busId, String vehicleNo) throws ApplicationException {
+    QueryBuilder queryBuilder = this.getSelectInstance()
+            .selectColumns("busid")
+            .onTable("bus")
+            .whereEq("busid", busId)
             .whereEq("vehicleno", vehicleNo);
 
     String sqlQuery = this.buildQuery(queryBuilder);
 
-    return this.getQueryNumber(sqlQuery);
+    ResultSet resultSet = this.getResultSet(sqlQuery);
+
+    return this.isNextPresent(resultSet);
   }
 
-  public int getBusType(String vehicleNo, int busId) throws ApplicationException {
-
-    if(!this.isPresent("bus","vehicleno",vehicleNo)) {
-      return -1;
-    }
-
-    QueryBuilder  queryBuilder = this.getSelectInstance()
-            .selectColumns("bustype")
+  public boolean isVehicleNoPresentWithOther(int busId, String vehicleNo) throws ApplicationException {
+    QueryBuilder queryBuilder = this.getSelectInstance()
+            .selectColumns("busid")
             .onTable("bus")
-            .whereEq("busid", busId);
+            .whereNeq("busid", busId)
+            .whereEq("vehicleno", vehicleNo);
 
     String sqlQuery = this.buildQuery(queryBuilder);
-    int num = this.getQueryNumber(sqlQuery);
-    return num;
+
+    ResultSet resultSet = this.getResultSet(sqlQuery);
+
+    return this.isNextPresent(resultSet);
   }
 }

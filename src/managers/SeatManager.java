@@ -87,6 +87,7 @@ public class SeatManager extends BaseManager {
               .onTable("bus")
               .updateValue("availability", seatAvailabilityIncrease)
               .updateValue("bustype", newVehicleType)
+              .updateValue("vehicleno", vehicleNo)
               .whereEq("busid", busId);
 
       sqlQuery = this.buildQuery(queryBuilder);
@@ -96,7 +97,7 @@ public class SeatManager extends BaseManager {
       return true;
     }
 
-    if (seatAvailabilityReduce >= currentSeatAvailability) {
+    if (seatAvailabilityReduce >= 0) {
 
       queryBuilder = this.getUpdateInstance()
               .onTable("bus")

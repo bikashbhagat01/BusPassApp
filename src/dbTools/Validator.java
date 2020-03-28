@@ -155,7 +155,7 @@ public class Validator {
   }
 
   public static boolean isValidBusType(int busType) {
-    return busType < 50;
+    return busType <= 50;
   }
 
   public static boolean isValidStopCount(int stopCount) {

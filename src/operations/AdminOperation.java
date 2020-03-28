@@ -32,10 +32,10 @@ public class AdminOperation extends BaseOperation {
     while (!exitCode) {
       System.out.println("\nPlease Select an Option : ");
 
-      System.out.println("\n1. Add Or remove Bus\n" +
-              "2. Add Or remove Route\n" +
-              "3. Assign/Change Route on Bus\n" +
-              "4. Change type of a Bus\n" +
+      System.out.println("\n1. Bus Control Menu\n" +
+              "2. Route Control Menu\n" +
+              "3. Change Bus & Route Assignments\n" +
+              "4. Change Type of a Bus[With active Route/Without active Route]\n" +
               "5. Display Number of Buses of each Type\n" +
               "6. Display timings and route for each bus\n" +
               "0. Exit to Main Menu");
@@ -44,11 +44,11 @@ public class AdminOperation extends BaseOperation {
 
       switch (choice) {
         case "1":
-          addOrRemoveBus();
+          busControlMenu();
           break;
 
         case "2":
-          addOrRemoveRoute();
+          routeControlMenu();
           break;
 
         case "3":
@@ -60,11 +60,7 @@ public class AdminOperation extends BaseOperation {
           break;
 
         case "4":
-          try {
-            changeBusType();
-          } catch (UserException e) {
-            this.printMenuException(e);
-          }
+          changeBusTypeMenu();
           break;
 
         case "5":
@@ -89,12 +85,13 @@ public class AdminOperation extends BaseOperation {
     return true;
   }
 
-  private boolean addOrRemoveRoute() throws ApplicationException {
+  private boolean routeControlMenu() throws ApplicationException {
     boolean exitCode = false;
     String choice = "";
 
     while (!exitCode) {
       System.out.println("\nPlease Select an Option : \n");
+
       System.out.println("1. Add a New Route\n" +
               "2. Remove an Existing Route\n" +
               "3. Add a new Stop\n" +
@@ -146,13 +143,14 @@ public class AdminOperation extends BaseOperation {
     return true;
   }
 
-  private boolean addOrRemoveBus() throws ApplicationException {
+  private boolean busControlMenu() throws ApplicationException {
 
     boolean exitCode = false;
     String choice = "";
 
     while (!exitCode) {
       System.out.println("\nPlease Select an Option : ");
+
       System.out.println("\n1. Add a New Bus\n" +
               "2. Remove an Existing Bus\n" +
               "3. Show all Buses\n" +
@@ -182,6 +180,59 @@ public class AdminOperation extends BaseOperation {
         case "3":
           displayOnlyBuses();
           break;
+
+        case "0":
+          exitCode = true;
+          break;
+
+        default:
+          System.out.println("Please Enter Valid Option\n");
+      }
+    }
+
+    System.out.println("Returning to Previous Menu");
+
+    return true;
+  }
+
+  private boolean changeBusTypeMenu() throws ApplicationException {
+
+    boolean exitCode = false;
+    String choice = "";
+
+    while (!exitCode) {
+      System.out.println("\nPlease Select an Option : ");
+
+      System.out.println("\n1. Change Type of an Active Bus [Already has a Route assigned]\n" +
+              "2. Change Type of an Inactive Bus [Does Not have Route assigned]\n" +
+              "3. Show all Buses\n" +
+              "0. Return to Admin Menu\n");
+
+      choice = OperationFactory
+              .getScannerInstance()
+              .next();
+
+      switch (choice) {
+        case "1":
+          try {
+            changeActiveBusType();
+          } catch (UserException e) {
+            this.printMenuException(e);
+          }
+          break;
+
+        case "2":
+          try {
+            changeInactiveBusType();
+          } catch (UserException e) {
+            this.printMenuException(e);
+          }
+          break;
+
+        case "3":
+          displayOnlyBuses();
+          break;
+
         case "0":
           exitCode = true;
           break;
@@ -241,38 +292,84 @@ public class AdminOperation extends BaseOperation {
     return true;
   }
 
-  private boolean changeBusType() throws ApplicationException, UserException {
+  private boolean changeActiveBusType() throws ApplicationException, UserException {
 
     System.out.println("For your reference,");
     displayOnlyBuses();
-    System.out.println("Enter Route Id");
+
+    System.out.println("\nEnter Route Id");
     int routeId = this.getRouteId();
 
-    if (BusManager
+    if (!BusManager
             .getInstance()
             .isPresent("bus", "routeid", routeId)) {
-      //Show busIds under the route
-      System.out.println("Enter Bus Id");
-      int busId = this.getBusId();
-
-      if (BusManager
-              .getInstance()
-              .isPresent("bus", "busid", busId)) {
-        System.out.println("Enter BusType [Number Of Seats]");
-        int busType = this.getBusType();
-
-        System.out.println("Enter Vehicle No");
-        String vehicleNo = this.getVehicleNo();
-
-        SeatManager
-                .getInstance()
-                .updateSeatType(busType, busId, vehicleNo);
-      } else {
-        System.out.println("Bus Not Found");
-      }
-    } else {
-      System.out.println("Route Not Found");
+      System.out.println("\nRoute Not Linked to any Bus Or, Route does not Exist");
+      return false;
     }
+
+    System.out.println("Enter Bus Id");
+    int busId = this.getBusId();
+
+    if(!BusManager.getInstance().hasRoute(routeId,busId)) {
+      System.out.println("Entered Bus is not linked to provided Route Or, " +
+              "Bus does not have route Or, Bus ID is Invalid");
+      return false;
+    }
+
+    return this.changeCoreBusType(busId);
+  }
+
+  private boolean changeInactiveBusType() throws UserException, ApplicationException {
+    System.out.println("For your reference,");
+    displayOnlyBuses();
+    System.out.println("\nEnter Bus Id");
+    int busId = this.getBusId();
+
+    if(!BusManager.getInstance().hasNoRoute(busId)) {
+      System.out.println("Entered Bus ID is Active and has an assigned Route. " +
+              "\nTo change type of active buses, select option-1 ");
+      return false;
+    }
+
+    return changeCoreBusType(busId);
+  }
+
+  private boolean changeCoreBusType(int busId) throws ApplicationException, UserException {
+    if (!BusManager
+            .getInstance()
+            .isPresent("bus", "busid", busId)) {
+      System.out.println("Bus Not Found");
+
+      return false;
+    }
+
+    System.out.println("Enter BusType [Number Of Seats]");
+    int busType = this.getBusType();
+
+    System.out.println("Enter Vehicle No");
+    String vehicleNo = this.getVehicleNo();
+
+    if(BusManager.getInstance().isVehicleNoSame(busId,vehicleNo)) {
+      System.out.println("This Vehicle No. is already assigned for the Bus." +
+              "\nType change not supported for the same Vehicle No.");
+      return false;
+
+    }
+
+    if(BusManager.getInstance().isVehicleNoPresentWithOther(busId,vehicleNo)) {
+      System.out.println("This Vehicle No. is already assigned to a different bus." +
+              "\nSame Vehicle No. cannot be linked multiple Buses");
+      return false;
+    }
+
+    if(!SeatManager
+            .getInstance()
+            .updateSeatType(busType, busId, vehicleNo)) {
+      System.out.println("Bus Type cannot be changes as the value cannot support currently " +
+              "occupied seats");
+      return false;
+    }
+
     System.out.println("Bus Type and Vehicle Number Updated! ");
     return true;
   }
