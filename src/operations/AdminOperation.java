@@ -370,7 +370,9 @@ public class AdminOperation extends BaseOperation {
       return false;
     }
 
-    System.out.println("Bus Type and Vehicle Number Updated! ");
+    System.out.println("Bus Type and Vehicle Number Updated!\nFor your reference :\n ");
+    displayOnlyBuses();
+
     return true;
   }
 
