@@ -28,7 +28,7 @@ public class AssetFactory {
           throws ApplicationException {
     int busPassId = IdManager.getInstance().getNewId("buspass");
 
-    BusPass busPass = new BusPass(busPassId, userId, busId, routeId, timing);
+    BusPass busPass = new BusPass(busPassId, userId, routeId,busId, timing);
     return busPass;
   }
 

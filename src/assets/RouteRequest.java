@@ -2,13 +2,11 @@ package assets;
 
 // POJO, Only holds data
 
-import java.util.List;
-
 public class RouteRequest {
 
   private int routeRequestId;
-  private int startStop;
-  private int endStop;
+  private int startStopId;
+  private int endStopId;
   private String startStopName;
   private String endStopName;
   private int requesterId;
@@ -19,8 +17,8 @@ public class RouteRequest {
   public RouteRequest(int routeRequestId, int startStop, int endStop, int requesterId,
                       boolean routeExists, int timing) {
     this.routeRequestId = routeRequestId;
-    this.startStop = startStop;
-    this.endStop = endStop;
+    this.startStopId = startStop;
+    this.endStopId = endStop;
     this.requesterId = requesterId;
     this.routeExists = routeExists;
     this.timing = timing;
@@ -33,9 +31,13 @@ public class RouteRequest {
     this.startStopName = startStopName;
     this.endStopName = endStopName;
     this.requesterId = requesterId;
-    this.routeExists = routeExists;
     this.timing = timing;
     this.stopsExist = false;
+    this.routeExists = routeExists;
+
+    if(routeExists) {
+      this.routeExists = false;
+    }
   }
 
   public String getStartStopName() {
@@ -50,12 +52,12 @@ public class RouteRequest {
     return routeRequestId;
   }
 
-  public int getStartStop() {
-    return startStop;
+  public int getStartStopId() {
+    return startStopId;
   }
 
-  public int getEndStop() {
-    return endStop;
+  public int getEndStopId() {
+    return endStopId;
   }
 
   public int getRequesterId() {

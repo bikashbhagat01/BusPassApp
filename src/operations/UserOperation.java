@@ -388,7 +388,7 @@ public class UserOperation extends BaseOperation {
 
     BusPass busPass = AssetFactory
             .getInstance()
-            .getBusPassInstance(userId, routeId, busId, timeInMinutes);
+            .getBusPassInstance(userId,routeId,busId,timeInMinutes);
 
     BusPassManager.getInstance().create(busPass);
 
@@ -399,7 +399,7 @@ public class UserOperation extends BaseOperation {
 
   // Creates a Feedback record for the user comment
   private boolean provideFeedback(int userId) throws ApplicationException, UserException {
-    System.out.println("Enter Your Valuable Comment below [Word Limit 100]\n " +
+    System.out.println("Enter Your Valuable Feedback below [Word Limit 100]\n " +
             "To return to previous menu, press 'Enter' twice\n");
     String comment = this.getComment();
 
@@ -411,8 +411,8 @@ public class UserOperation extends BaseOperation {
             .getInstance()
             .create(feedback);
 
-    System.out.println("The below Comment has been recorded : \n" + comment);
-    System.out.println("\n----------Thank You for Your Valuable Comment------------\n");
+    System.out.println("The below Feedback has been recorded : \n" + comment);
+    System.out.println("\n----------Thank You for Your Valuable Feedback------------\n");
 
     return true;
   }
