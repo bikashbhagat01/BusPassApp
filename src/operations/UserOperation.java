@@ -38,6 +38,7 @@ public class UserOperation extends BaseOperation {
     String choice = "";
 
     while (!exitCode) {
+      System.out.println("\nWelcome to the User Operations Menu");
       System.out.println("\nPlease Select an Option : ");
 
       System.out.println("\n1. View Available Routes\n" +

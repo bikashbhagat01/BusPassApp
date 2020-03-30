@@ -447,7 +447,7 @@ public class BaseOperation {
     }
 
     if (!Validator.isValidTimeString(timeString)) {
-      throw new UserException("Please enter valid Timing value as per the below format :" +
+      throw new UserException("Please enter valid Timing value as per the below format :\n" +
               "1. Should start with two digits from 00 to 23 for Hours.\n" +
               "2. Must be followed by either of the following separators - ':' or '-' or '/' .\n" +
               "3. Should be followed by two digits from 00 to 59 for Minutes.\n");

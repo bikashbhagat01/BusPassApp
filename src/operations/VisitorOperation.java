@@ -20,7 +20,7 @@ public class VisitorOperation {
     String choice = "";
 
     while (!exitCode) {
-
+      System.out.println("\nWelcome to the Visitor Operations Menu");
       System.out.println("\n1. View Details for Available Routes and buses \n" +
               "2. Display Seat Availability\n" +
               "0. Exit to Main Menu\n");

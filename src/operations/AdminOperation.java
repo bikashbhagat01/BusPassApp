@@ -35,6 +35,7 @@ public class AdminOperation extends BaseOperation {
     String choice = "";
 
     while (!exitCode) {
+      System.out.println("\nWelcome to the Admin Operations Menu");
       System.out.println("\nPlease Select an Option : ");
 
       System.out.println("\n1. Bus Control Menu\n" +
@@ -95,6 +96,7 @@ public class AdminOperation extends BaseOperation {
     String choice = "";
 
     while (!exitCode) {
+      System.out.println("\nWelcome to the Route Control Menu");
       System.out.println("\nPlease Select an Option : \n");
 
       System.out.println("1. Add a New Route\n" +
@@ -154,6 +156,7 @@ public class AdminOperation extends BaseOperation {
     String choice = "";
 
     while (!exitCode) {
+      System.out.println("\nWelcome to the Bus Control Menu");
       System.out.println("\nPlease Select an Option : ");
 
       System.out.println("\n1. Add a New Bus\n" +
@@ -206,6 +209,7 @@ public class AdminOperation extends BaseOperation {
     String choice = "";
 
     while (!exitCode) {
+      System.out.println("\nWelcome to the Change Bus Type Menu");
       System.out.println("\nPlease Select an Option : ");
 
       System.out.println("\n1. Change Type of an Active Bus [Already has a Route assigned]\n" +

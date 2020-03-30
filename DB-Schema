@@ -1,0 +1,77 @@
+===== Bustable ====
+create table bus (busid int NOT NULL PRIMARY KEY, routeid int, availability int, bustype int,
+                  timing int, vehicleno varchar(20));
+
+==== BussPass ===
+
+create table buspass(buspassid int NOT NULL PRIMARY KEY,userid int,
+                      busid int, routeid int, timing int,
+                      FOREIGN KEY(userid) REFERENCES user(userid));
+
+==== IdGenerator ===
+
+create table idgenerator(objectname varchar(40), latestid int);
+
+
+=== Feedback ===
+create table feedback(feedbackid int NOT NULL PRIMARY KEY, comments varchar(1000),
+                      userid int, FOREIGN KEY(userid) REFERENCES user(userid));
+
+=== RouteLookup ===
+create table route(id INT NOT NULL PRIMARY KEY auto_increment, routeid int, stopid int, stoprank int);
+
+=== RouteRequest ===
+create table routerequest(routerequestid int NOT NULL PRIMARY KEY, startstop int, endstop int,
+                           startstopname VARCHAR(20), endstopname VARCHAR(20),
+                            requesterid int, routeexists boolean, stopsexist boolean,
+                            timing int);
+
+=== stop ===
+create table stop(stopid int NOT NULL PRIMARY KEY, stopname varchar(20));
+
+=== user ===
+create table user(userid int NOT NULL PRIMARY KEY, fname varchar(50), lname varchar(50),
+                  email varchar(50), contactno varchar(12), emergencycontactno varchar(12),
+                  emergencycontactname varchar(50), bloodgroup varchar(12), password varchar(50));
+
+==== routebusmap ====
+[view to get busid, routeid, stops and timings for display]
+
+create view routebusmap as
+select busid, stopname, routeid, timing from bus inner join(
+select routeid, stopname from route
+inner join stop using(stopid)) as b using(routeid) order by busid;
+
+===== availableroutebusmap =====
+[view to get busid, routeid, stops and timings with availability for display]
+
+create view availableroutebusmap as
+select busid, routeid, stopname, timing from bus inner join(
+select routeid, stopname from route
+inner join stop using(stopid)) as b using(routeid) where availability <= bustype and availability is not null
+and bustype is not null order by busid;
+
+====== routestopname =====
+[view to get route and their stopnames]
+
+create view routestopname as
+select routeid, stopname, stoprank from route
+inner join stop using(stopid) order by routeid, stoprank;
+
+====== routebusmap ======
+[view to get all information of the system without any availability filter]
+
+create view routebusmap as
+SELECT busid, bus.routeid as routeidonbus, availability, bustype, timing,
+routestopname.routeid as routeidforstops, stopname FROM bus
+LEFT JOIN routestopname ON bus.routeid = routestopname.routeid
+UNION
+SELECT busid, bus.routeid as routeidonbus, availability, bustype, timing,
+routestopname.routeid as routeidforstops, stopname FROM bus
+RIGHT JOIN routestopname ON bus.routeid = routestopname.routeid;
+
+====== seatavailability ======
+[Shows visitor the route id, their timing and available seats]
+
+create view seatavailability as
+select timing, routeid, sum(availability) from bus where timing > -1 group by routeid, timing;

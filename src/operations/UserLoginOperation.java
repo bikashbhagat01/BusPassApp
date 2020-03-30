@@ -32,7 +32,7 @@ public class UserLoginOperation extends BaseOperation {
     Scanner sc = OperationFactory.getScannerInstance();
 
     while (!exitCode) {
-
+      System.out.println("\nWelcome to the User Login/Sign-up Page");
         System.out.println("\n1. Existing User " +
                 "\n2. New User" +
                 "\n0. Exit\n");
@@ -72,6 +72,7 @@ public class UserLoginOperation extends BaseOperation {
 
   // Creates a User Account and sends to login page
   private void createAccount() throws ApplicationException, UserException {
+    System.out.println("\nCreate your new User account");
     System.out.println("\nPlease Enter the below details as prompted and Press Enter to confirm entry." +
             "\nPress Enter Twice to return to Previous Menu. ");
 
@@ -133,6 +134,7 @@ public class UserLoginOperation extends BaseOperation {
   // If the user and password combination exist, redirect to UserOperations
   private void login(int userId, String password) throws ApplicationException, UserException {
     if (UserManager.getInstance().isValidUserPassword(userId, password)) {
+      System.out.println("User Login Successful!");
       OperationFactory.getUserOperationInstance().showMenu(userId); // So, yeha se return kar k kidhar setlogin pe?
     } else {
       System.out.println("\nUnable to load account with entered credentials. " +
@@ -143,7 +145,7 @@ public class UserLoginOperation extends BaseOperation {
 
   private boolean setLoginDetails() throws ApplicationException, UserException {
     loginTries += 1;
-
+    System.out.println("\nUser Login \n");
     System.out.println("Enter Employee ID : \n");
     int userId = this.getUserId();
 
