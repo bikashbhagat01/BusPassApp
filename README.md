@@ -1,6 +1,6 @@
 # BusPassApp
 A primitive console based BusPassApp based on core Java and utilises MySQL database.
-Practice project aimed to focus on modularity, OOPs concepts, design patterns, DBMS and other CS fundamentals
+Practice project aimed to focus on modularity, OOP concepts, design patterns, DBMS and CS fundamentals
 
 Below are the minimum software requirements for running the application :
 
